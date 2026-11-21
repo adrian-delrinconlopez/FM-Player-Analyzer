@@ -1,5 +1,7 @@
 # Modelo funcional de datos
 
+<a id="fpa-func-001"></a>
+
 ## FPA-FUNC-001 · Ficha del futbolista
 
 En ambas versiones la partida mantiene una ficha actual por UID. El identificador local enlaza las observaciones históricas incluso después de corregir el UID. La persona puede pertenecer al primer equipo, al segundo o a otro club. La shortlist y la convocatoria son pertenencias independientes. No se ha identificado una ficha ni un motor de valoración de empleados en la aplicación de escritorio. Las columnas de relaciones con empleados que un exportador puede incluir no generan empleados. [Contrato del jugador](../../old_version/desktop/src/core/Player.h) · [Entradas admitidas e ignoradas](../../old_version/desktop/src/core/ImportSchema.cpp).
@@ -28,11 +30,15 @@ En ambas versiones la partida mantiene una ficha actual por UID. El identificado
 
 La fecha, origen, perfil y entradas de una valoración son hechos históricos distintos de los campos editables. Cada táctica asigna roles a puestos de una o dos fases. Una convocatoria y una lista de competición contienen referencias al jugador de esa partida. Las preferencias globales de arranque no participan en su identidad.
 
+<a id="fpa-func-002"></a>
+
 ## FPA-FUNC-002 · Identidad y conciliación
 
 Primero descartar UID vacío, ante duplicado exacto en la carga gana la última fila. Comparar el nombre recortado con el anterior. Una diferencia para el mismo UID produce un aviso de cambio de identidad, pero por sí sola no crea otra persona. La coincidencia de nombre sin relación entre UID tampoco autoriza fusión. Cuando llega X y existe r-X con el mismo nombre, usar r-X. Si además existía X del mismo nombre, fusionarlo. Cuando llega r-X y sólo existe X del mismo nombre, renombrar la ficha conservando su ID local. Con ambos presentes, gana r-X. X frente a r-X con nombres distintos mantiene las identidades y puede producir aviso.
 
 La fusión rellena roles, primario, lado, tiempo acordado y rol de entrenamiento vacíos, conserva naturales manuales prioritarias y combina selección, shortlist y lesión larga por OR. Los campos clásicos de inscripción y las dos extensiones posteriores se heredan por grupos si el grupo superviviente está vacío. El histórico DWRS conserva el destino en colisiones jugador–rol–instante, y la última valoración se reconstruye tras fusionar. En observaciones del mismo periodo prevalece la fecha de juego posterior. Ejemplo, X=437 y r-437 para «A. Ruiz» en el mismo club pasan a una sola ficha r-437 cuando la nueva carga activa la conciliación. «A. Ruiz» con 438 sigue siendo independiente. [Conciliación](../../old_version/desktop/src/core/HtmlImporter.cpp) · [Fusión persistente](../../old_version/desktop/src/core/Database.cpp).
+
+<a id="fpa-func-003"></a>
 
 ## FPA-FUNC-003 · Valor, salario y agente libre
 

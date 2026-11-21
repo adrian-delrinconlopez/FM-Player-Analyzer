@@ -1,5 +1,7 @@
 # Ojeo, mercado y salidas
 
+<a id="fpa-func-016"></a>
+
 ## FPA-FUNC-016 · Matriz y búsqueda de candidatos
 
 Separar primer club y segundo club antes de aplicar filtros de mercado. La sección de ojeo contiene a los externos importados, incluso los que entraron por conocimiento bajo. Ocultar inactivos está activado inicialmente. El filtro de personalidad se aplica si hay datos. Intervalo inicial de edad 15–30 (edad cero pasa el filtro ordinario), normalizada 20–100, valor en pasos de 0,5 millones hasta 200 millones con posición máxima sin límite. Se admiten primera o segunda nacionalidad, ámbito doméstico/extranjero, agentes libres, shortlist y mínimos simultáneos de atributos. Comparar mínimos con el punto medio del atributo, donde ausente=0. En la rama de shortlist se exige pertenencia y filtros de identidad/atributos/requisitos, pero se omiten los límites ordinarios de edad y valor. El modo talento tiene condiciones adicionales en el capítulo 08.
@@ -8,9 +10,15 @@ Un requisito es una o más parejas (posiciones aceptables, rol opcional). Para c
 
 La comparación con un referente se alimenta de la puntuación del titular o del mejor jugador propio para el rol, según la entrada a la búsqueda. El resultado permite añadir o quitar jugadores de la shortlist sin cambiar de club. La búsqueda de nombres admite eliminación de diacríticos, minúsculas y equivalencias ß→ss, ø→o, ł→l, đ→d, æ→ae, œ→oe. La matriz exporta un CSV con cabeceras y filas en el orden filtrado, valores de las columnas del modelo, comillas dobles escapadas y salto final. El separador de los números locales determina el delimitador de campo. [Filtro y exportación](../../old_version/desktop/src/app/pages/SquadMatrixPage.cpp) · [Requisitos y combinación](../../old_version/desktop/src/core/ScoutSearch.cpp) · [Serialización](../../old_version/desktop/src/app/widgets/PlayerTableModel.cpp).
 
+El filtro de personalidad admite categorías y etiquetas específicas. Si hay etiquetas específicas marcadas, sólo se aceptan esas etiquetas exactas. En su ausencia se admiten las categorías marcadas. Sin ninguna restricción pasan todas, incluida personalidad desconocida. Las etiquetas pertenecen a la clasificación personalizable de la partida. [Prioridad de los filtros](../../old_version/desktop/src/app/widgets/PersonalityFilterWidget.cpp).
+
+<a id="fpa-func-017"></a>
+
 ## FPA-FUNC-017 · Mejora individual del resumen
 
 Por cada rol distinto de la táctica (ambas fases si existen), tomar el mayor DWRS entre jugadores del primer club, con mínimo inicial cero, y los tres mejores propios como referencia. Entre externos de ambos clubes excluir inactivos, edad desconocida, edad superior al filtro o valor superior al límite. Elegir el de mayor DWRS estrictamente superior al mejor propio. Igualdad no reemplaza al candidato ya encontrado. No se simula el XI ni se exige formar un puente con el rol de la otra fase. Edad inicial máxima 28, valor inicial 10 millones. Ejemplo: mejor propio 74, externos de 20 años y 5 M con notas 74 y 76 → sólo se sugiere el de 76. [Selección por rol](../../old_version/desktop/src/app/pages/DashboardPage.cpp).
+
+<a id="fpa-func-018"></a>
 
 ## FPA-FUNC-018 · Impacto de un fichaje sobre el equipo
 
@@ -23,6 +31,8 @@ Requiere club, táctica y jugadores propios. Filtros iniciales: sin límite de p
 5. Atribuir la mejora al puesto que acaba ocupando. Ordenar por ganancia A descendente, B descendente y valor ascendente, estable en empate. Conservar hasta 15 opciones por puesto. Ordenar necesidades por su mejor ganancia descendente.
 
 No hay puntuación basada en dividir la mejora por el precio. La simulación no explora combinaciones simultáneas de compras ni garantiza evaluar a todo el mercado, pues usa la preselección anterior. Ejemplo de referencia: pareja de centrales a 70 y 62, llega uno de 75, suma de titulares +13 y el de 62 pasa al B. [Asesor y efectos](../../old_version/desktop/src/core/SigningAdvisor.cpp) · [Filtros aplicados](../../old_version/desktop/src/app/pages/SigningAdvisorTab.cpp) · [Prueba](../../old_version/desktop/src/tests/test_signingadvisor.cpp).
+
+<a id="fpa-func-019"></a>
 
 ## FPA-FUNC-019 · Ceder, vender y registrar una salida
 

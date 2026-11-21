@@ -1,5 +1,7 @@
 # Históricos, vigencia y evolución
 
+<a id="fpa-func-023"></a>
+
 ## FPA-FUNC-023 · Observaciones en el calendario de la partida
 
 Cada importación tabular aceptada registra instante real, fecha de juego si se conoce, origen, formato y cantidad. La última fecha de juego de la partida es la de la última carga registrada que tenga fecha, no necesariamente la mayor. Si falta fecha, hay registro de importación, sin instantáneas mensuales. El seguimiento por defecto comprende primer club, segundo club, shortlist, selección nacional y los UID señalados como ojeados en la lectura FM27 (admite correspondencia X/r-X). Opcionalmente todos los importados. Instantánea por persona y periodo: pares lo/hi, calificación media, valor numérico y textual y sueldo textual. No conserva una ficha íntegra que permita volver atrás club, contrato, listas o roles manuales.
@@ -7,6 +9,8 @@ Cada importación tabular aceptada registra instante real, fecha de juego si se 
 Comparar con el último estado **anterior al primer día del mes**. Son iguales si todos los extremos coinciden, |Δmedia|<0,005, |Δvalor|<0,5 y sueldo textual idéntico. El texto del valor por sí solo no rompe igualdad. Guardar último cambio del mes; si vuelve al estado del mes anterior, retirar la instantánea mensual previa y registrar que se vio al jugador. Una fecha anterior a la ya observada ese mes no reemplaza ni elimina la más reciente. En empate de fecha puede ganar la importación posterior. Condensar temporadas anteriores a temporada actual−2 a la última observación de cada jugador y temporada. El inicio inicial es 1 de julio, configurable por mes y día válido en año no bisiesto. Una temporada que empieza el 1 de enero se etiqueta con un solo año. No se inventan observaciones intermedias.
 
 Ejemplo manual: enero Pace=10; febrero día 5→12, día 20→10. Queda enero, y febrero marcado visto a día 20. Importar después el día 10 con Pace=13 no repone febrero en el histórico. La ficha actual puede recibir ese 13. En el perfil se informan cambios de atributo si ambos extremos inferiores son conocidos y |Δmedia_del_intervalo|≥0,5, comparando instantáneas consecutivas conservadas. Cambios monetarios de al menos 1000 sin centinelas y de media ≥0,005 con ambas positivas se muestran en el resumen individual. [Comparación y condensación](../../old_version/desktop/src/core/ImportHistory.cpp) · [Lectura por jugador](../../old_version/desktop/src/app/pages/PlayerProfilePage.cpp).
+
+<a id="fpa-func-027"></a>
 
 ## FPA-FUNC-027 · Histórico de valoraciones y tendencias
 
@@ -16,6 +20,14 @@ Agrupar instantes válidos distintos ordenados en sesiones si la distancia al in
 
 Ejemplo ejecutado, tres sesiones 50 → 60 por recálculo → 62 por importación: serie ajustada 60,60,62; crecimiento +2, reajuste +10. Si alguien se incorpora en la segunda sesión, su primera valoración no eleva por sí sola la media de crecimiento. [Escritura](../../old_version/desktop/src/core/RatingsUpdater.cpp) · [Series y agregados](../../old_version/desktop/src/core/Development.cpp) · [Casos](../../old_version/desktop/src/tests/test_development.cpp).
 
+<a id="fpa-func-028"></a>
+
 ## FPA-FUNC-028 · Antigüedad del dato y retirada inferida
 
 Carga completa por cantidad si jugadores actuales frescos=0 o filas importables deduplicadas ≥25 % del número de jugadores actualmente frescos. Sólo esas cargas incrementan el contador por partida. Una carga parcial vuelve a sellar a sus presentes con el contador corriente. Antigüedad=max(0,contador−max(0,último_sello)), cero si contador≤0. Obsoleto si umbral≥1 y antigüedad≥umbral (inicial 2). Retirado si club marcado Retired, o edad≥35, obsoleto y fuera del primer club configurado. Inactivo si retirado o, sin estar en shortlist ni primer club, obsoleto. La shortlist protege de inactividad por desactualización pero no de retiro. Ejemplo: jugador externo de 36 años, último sello 3, contador 5 → retirado inferido; la marca de club Retired no es necesaria y sus datos siguen almacenados. Una carga posterior que lo incluya actualiza el sello. [Reloj de cargas](../../old_version/desktop/src/core/Freshness.cpp) · [Estados](../../old_version/desktop/src/core/PlayerStatus.cpp).
+
+### Indicadores de la consulta de evolución
+
+En el grupo de club o selección que se consulta, aplicar filtro de nombre y de juventud (edad positiva dentro del tope por posición). Si se elige un rol concreto, debe estar asignado y tener serie. Para la opción de alineación se prefiere su rol en la alineación si tiene serie válida. Si falta, gana el rol asignado con mayor último valor, el primero en caso de igualdad. Por fila calcular el cambio en la ventana elegida y el total. El valor medio del resumen es la media de los cambios de las filas que quedan, incluidos ceros. Mayor subida y bajada sólo se muestran al alcanzar +0,5 y −0,5 respectivamente, reteniendo al primero en empates. Con grupo vacío queda sin indicadores de cambio. El número de sesiones viene de la serie temporal completa. [Base por jugador y agregación](../../old_version/desktop/src/app/pages/DwrsProgressPage.cpp).
+
+El detalle histórico de la ficha compara cada observación con la inmediatamente anterior conservada, por atributo con extremo inferior conocido en ambas. Anota la diferencia de sus puntos medios si el valor absoluto alcanza 0,5. También devuelve nota de temporada, valor y salario de la observación. La primera observación carece de comparación. [Detalle de ficha](../../old_version/desktop/src/app/pages/PlayerProfilePage.cpp).

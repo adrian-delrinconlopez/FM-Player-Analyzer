@@ -2,6 +2,8 @@
 
 Una puntuación pertenece a la combinación jugador, rol, versión y perfil activo. La absoluta conserva las unidades del modelo. La normalizada sitúa al jugador entre dos referencias teóricas del **mismo rol**. El porcentaje no es una probabilidad de ganar ni un percentil de los jugadores importados. El optimizador consume el DWRS normalizado disponible. El informe individual de pros y contras tiene sus propias reglas.
 
+<a id="fpa-func-006"></a>
+
 ## FPA-FUNC-006 · DWRS Classic
 
 Disponible en ambas versiones. Se parte de los niveles de la tabla siguiente y de las marcas del rol en [el catálogo](16-tablas-de-roles-y-tacticas.md). Cada atributo se utiliza una sola vez. Un atributo de un nivel conserva su nivel incluso si el rol lo marca. Fuera de los niveles sólo participa si el rol lo marca y existe una categoría con peso para esa marca. Esto agrega atributos a porteros. En FM24 se excluyen Communication y Eccentricity del cálculo Classic. Los pesos de la tabla y factores de marca son configurables.
@@ -25,7 +27,11 @@ Disponible en ambas versiones. Se parte de los niveles de la tabla siguiente y d
 
 **Ejemplo calculado manualmente.** Configurar sólo Extremely Important con peso 8, restantes cero. Rol sin marcas sobre Pace o Acceleration. Pace 12–16, Acceleration 9. Los dos coeficientes valen 4, A=92, L=8, U=160. N=55. Con Acceleration ausente, A=56 y N=32. El resultado conserva los dos miembros en el divisor.
 
+Para comparar absolutas en aritmética de coma flotante, la secuencia original suma dentro de cada categoría x por factor, divide por el número de miembros y entonces multiplica por el peso. Aplica esa misma secuencia a los vectores constantes 1 y 20. Después calcula (A−L)/(U−L) y multiplica por 100 antes de redondear al par. Las tablas del [oráculo Classic](20-oraculo-dwrs-classic.md) incluyen la tolerancia de comparación.
+
 El perfil Classic suministrado representa cada coeficiente de categoría antes del factor con base `peso/n`, amplitud `19 peso/n` y forma lineal. En políticas Classic editadas, interpola la contribución entre los enteros contiguos al punto medio. Para (0,0) usa el negativo de la contribución relativa a nivel 2. Suma las bases al final. [Categorías](../../old_version/desktop/src/core/AttributeTiers.cpp) · [Cálculo](../../old_version/desktop/src/core/DwrsEngine.cpp) · [Referencia congelada](../../old_version/desktop/src/tests/test_classicreference.cpp).
+
+<a id="fpa-func-007"></a>
 
 ## FPA-FUNC-007 · DWRS por curvas y cobertura
 
@@ -40,6 +46,8 @@ Con D=0 el rol no tiene escala. Con K≤0 o K<0,7D−10⁻⁹ devolver ausencia 
 **FM27 harvestgreen22.** Cada registro visible medido tiene cuatro muestras en niveles 1, 6, 12 y 18. Ajuste isotónico con bloques inicialmente de un punto y peso unitario. Mientras la media del bloque anterior supere a la siguiente, unirlos y usar la media ponderada por sus tamaños. Expandir las medias a los cuatro nudos. Si último−primero ≤4 puntos, amplitud cero. En otro caso ésa es la amplitud, base cero, forma en cada nudo (nivel ajustado−primero)/amplitud. Interpolar linealmente entre nudos, mantener 1 en 18–20. Sin medir queda peso base cero. Los originales completos se encuentran en [las tablas de parámetros](17-parametros-y-atributos.md). Ejemplo manual con medidas 0, 6, 4, 12 → 0, 5, 5, 12. Nivel 6 contribuye 5 antes del factor, nivel 9 también, nivel 19 contribuye 12. El corte es una decisión del perfil.
 
 **Parte del rol de campo.** Tras aplicar factores 1,5/1,2 a los pesos base, sea D₀ su suma. Para cuota r (por defecto 0,33 en harvestgreen22), añadir un total `T=D₀ r/(1−r)` si D₀>0 y hay marcas visibles de campo. Resolver duplicados dando prioridad a key. Repartir T en proporción 1,5 por key y 1 por preferable, excluyendo los once atributos de portería del diccionario. Añadir la parte de cada atributo a su peso y su contribución lineal `parte × (x−1)/19`, aun cuando su curva global estuviera desactivada. Con D₀=67, una marca de cada tipo y r=0,33 se añaden 19,8 y 13,2. La mezcla se efectúa antes del cálculo de cobertura. [Perfil inicial](../../old_version/desktop/src/core/BuiltinRatingProfiles.cpp) · [Evaluación](../../old_version/desktop/src/core/RatingSnapshot.cpp) · [Ajuste de los nudos](../../old_version/desktop/src/core/RatingCurve.cpp).
+
+<a id="fpa-func-008"></a>
 
 ## FPA-FUNC-008 · Componente específico de portería FM27
 

@@ -1,5 +1,7 @@
 # Inscripción y elegibilidad
 
+<a id="fpa-func-029"></a>
+
 ## FPA-FUNC-029 · Determinar las reglas y las exenciones
 
 Cada partida puede seleccionar liga y activar UEFA por separado. El país de la persona, el entrenamiento local, la inscripción y el bloqueo son hechos diferentes. La condición de formado en el club implica formado en la federación. Las dos marcas se mantienen a mano. También se marca manualmente extracomunitario, porque el acuerdo de la competición y los pasaportes pueden cambiar el resultado.
@@ -27,6 +29,8 @@ Con tamaño S y reservas H/C se aceptan hasta S−H ajenos a la federación y S�
 
 Ejemplo calculado manualmente. Una jugadora de 18 años, ESP, sin marca extracomunitaria ni decisión manual, está exenta en marzo en LaLiga. En septiembre necesita plaza mientras su situación siga incierta. En UEFA su edad da U21, pero necesita formación en club para lista B. [Reglas y fechas](../../old_version/desktop/src/core/Registration.cpp) · [Pruebas ejecutadas](../../old_version/desktop/src/tests/test_registration.cpp).
 
+<a id="fpa-func-030"></a>
+
 ## FPA-FUNC-030 · Proponer una lista
 
 Se necesita club propio y una competición con lista. Reunir club y segundo equipo configurado, excluyendo retirados. Usar las dos tácticas favoritas existentes, sin repetición. En su ausencia tomar la primera táctica disponible en el orden de favoritas. Por cada jugador conservar su mejor categoría entre las tácticas (XI, B, profundidad, reserva), y su mejor DWRS. Orden estable por categoría y después DWRS descendente. Entradas adicionales: portería, exención, bloqueo por competición, salario, tiempo prometido y las marcas anteriores.
@@ -38,6 +42,8 @@ Se necesita club propio y una competición con lista. Reunir club y segundo equi
 5. Devolver inscritos en orden de ranking, exentos, descartes con razón, porteros, cupos, gasto y plazas vacías. Dos personas exentas no añaden dos plazas al tamaño máximo.
 
 El caso ejecutado de LaLiga de [los ejemplos de referencia](14-casos-de-prueba-de-referencia.md) demuestra que cambiar sólo el tiempo prometido puede reducir la lista y dejar parte del presupuesto sin gastar. [Clasificación, propuesta y refinamiento](../../old_version/desktop/src/core/Registration.cpp) · [Selección del grupo](../../old_version/desktop/src/app/pages/RegistrationPage.cpp).
+
+<a id="fpa-func-031"></a>
 
 ## FPA-FUNC-031 · Comprobar, confirmar y aplicar la lista
 

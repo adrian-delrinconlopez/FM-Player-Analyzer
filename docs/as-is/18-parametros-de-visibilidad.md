@@ -118,3 +118,18 @@ Correspondencia del número de nación con el texto devuelto. Cualquier otro nú
 | 183=TAH · 187=ARG · 188=BOL · 189=BRA · 190=CHI · 191=COL · 192=ECU · 193=PAR |
 | 194=PER · 195=URU · 196=VEN · 197=PLE · 210=NCL · 212=DOM · 216=GIB · 219=KOS |
 | 225=GUF · 226=GLP · 227=MTQ · 229=SMN · 230=FRA · 231=FRA · 234=COM · 247=MNE |
+
+## Contrato de la fila visible
+
+Las primeras 14 columnas son Unique ID, Player, Age, Club, Nation, Position, Height, Left Foot, Right Foot, Wage, Transfer Value, Playing Time, Rating y Personality. Siguen los 47 atributos. En lectura directa, edad negativa y estatura no positiva dejan celda vacía. Rating se emite con dos decimales si es positivo. Una fuerza de pie de 18…20 produce Very Strong, 15…17 Strong, 12…14 Fairly Strong, 9…11 Reasonable, 5…8 Weak y por debajo Very Weak. En interpretación tabular de enteros se acepta sólo 1…20. Se asignan niveles 1…6 de menor a mayor, y los seis valores representativos que usa el analizador son 3, 9, 12, 13, 16 y 19. Los textos alemanes Sehr schwach, Schwach, Ordentlich/Ausreichend, Ziemlich stark/Recht stark, Stark y Sehr stark se reconocen sin distinguir caja.
+
+Para Position recorrer en orden GK, D, WB, DM, M, AM, ST. Exigir competencia ≥15. En cada línea emitir lados R, L, C en ese orden (WB sólo R/L). Unir grupos vecinos no vacíos con los mismos lados mediante barra, excepto ST, que se expresa ST (C) y permanece separado. GK y DM no llevan lados. La competencia SW por sí sola no emite posición. Naturales usa la misma conversión después de dejar únicamente competencias iguales a 20.
+
+| Código de tiempo de juego en el contrato | Valor emitido |
+|---|---|
+| 1 / 2 / 3 / 4 / 5 | Star Player / Important Player / Regular Starter / Squad Player / Impact Sub |
+| 7 / 9 / 10 / 11 / 13 / 14 | Fringe Player / Emergency Backup / Breakthrough Prospect / Future Prospect / Youngster / 2nd Team Regular |
+| 15 / 16–18 / 20 / 21 / 22 | First-Choice Goalkeeper / Cup Goalkeeper / Backup / Emergency Backup / Surplus to Requirements |
+| Resto | Vacío |
+
+El parámetro de portería no cambia este mapeo de contrato. [Formación de la fila](../../old_version/desktop/src/core/Fm27SaveImport.cpp) · [Normalización de pies](../../old_version/desktop/src/core/Utils.cpp).

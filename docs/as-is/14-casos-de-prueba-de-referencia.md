@@ -64,13 +64,24 @@ Las entradas son datos funcionales. Cuando un ejemplo empieza por notas por rol,
 
 **GOLDEN MASTER VERIFICADO.** Grupo nacional con dos porteros puntuados 90 y 88 y veinte M (C) de 80 a 61. Sin táctica ni convocatoria previa, pedir diez con tres porteros devuelve diez personas, dos porteros y ocho de campo. [Caso tooFewGoalkeepersFillsWithOutfield](../../old_version/desktop/src/tests/test_nationalcallup.cpp).
 
+## G11 · Dos formatos de entrada hasta las valoraciones persistidas
+
+**GOLDEN MASTER VERIFICADO.** Se ejecutó la carga de FM24 con asignación automática y DWRS Classic inicial, partiendo de una partida vacía independiente por ejecución. Usar exactamente estas diez cabeceras. Codificar en UTF-8 como CSV con coma, o como una tabla HTML, primera fila con cabeceras y las otras dos con celdas de datos.
+
+| UID | Name | Age | Club | Nat | Position | Personality | Wage | Height | Pac |
+|---|---|---:|---|---|---|---|---|---|---|
+| 101 | Ana | 20 | Norte | ESP | GK | Balanced | €500 p/w | 180 cm | 12 |
+| 102 | Bea | 19 | Norte | ESP | D (C) | Balanced | €400 p/w | 171 cm | 12-14 |
+
+En los dos formatos el original leyó **2 filas**, creó **2 jugadores**, asignó roles automáticamente a los **2**, calculó y escribió **17 valoraciones**, y devolvió **17 entradas actuales de 17 roles**. Sólo se suministró un atributo, Pace. Classic mantiene los demás a cero en su cálculo. Al eliminar la columna Pac de la misma tabla CSV, la importación terminó con error por **9 columnas frente al mínimo de 10**. Este caso comprueba la cadena desde el fichero hasta las valoraciones guardadas. [Flujo utilizado](../../old_version/desktop/src/core/ImportPipeline.cpp) · [Ejecutor original](../../old_version/desktop/src/tools/bench_cli.cpp).
+
 ## M01 · Cobertura y curva
 
 **EJEMPLO CALCULADO MANUALMENTE.** Dos atributos activos con pesos 7 y 3, factores 1, bases 2 y 5 y cuotas de rol cero. Con el de peso 7 a 20 y el otro ausente, cobertura 70 %, absoluto 14 y normalizada 100. Intercambiar el conocido da cobertura 30 % y ausencia de nota. Con un solo atributo de peso 1, forma escalón que vale 0 hasta nivel 10 y 1 desde 11, observar 9–11 da normalizada 100/3 y elevar ambos extremos a 10–12 da 200/3. En la meseta 12–14, incrementar en uno no mejora la nota. [Regla de cálculo](03-valoraciones-y-formulas.md).
 
 ## M02 · Una importación parcial y una edición posterior
 
-**EJEMPLO CALCULADO MANUALMENTE.** FM24. Primera carga con diez cabeceras UID, Name, Age, Club, Nat, Position, Personality, Wage, Height, Pac, y fila 42, Ana, 19, A, ESP, M (C), Balanced, vacío, 170 cm, 12-14. Segunda carga de la misma persona con diez cabeceras que sustituyen Pac por otro campo opcional y Age=20. Sigue con Pace 12–14. Una tercera carga con Pac presente y guion lo deja desconocido. En una actualización individual el UID objetivo se conserva incluso si difiere el UID de la fila. [Entrada y actualización](11-importacion-y-visibilidad.md) · [Diccionario de cabeceras](19-contrato-de-tablas-de-entrada.md).
+**EJEMPLO CALCULADO MANUALMENTE.** FM24. Primera carga con diez cabeceras UID, Name, Age, Club, Nat, Position, Personality, Wage, Height, Pac, y fila 42, Ana, 19, A, ESP, M (C), Balanced, vacío, 170 cm, 12-14. Segunda carga de la misma persona con diez cabeceras que sustituyen Pac por Av Rat con celda vacía y Age=20. Sigue con Pace 12–14. Una tercera carga con Pac presente y guion lo deja desconocido. En una actualización individual el UID objetivo se conserva incluso si difiere el UID de la fila. [Entrada y actualización](11-importacion-y-visibilidad.md) · [Diccionario de cabeceras](19-contrato-de-tablas-de-entrada.md).
 
 ## P01 · Sesión real de FM27
 

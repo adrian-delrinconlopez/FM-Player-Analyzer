@@ -1,10 +1,14 @@
 # Análisis de plantilla y selección nacional
 
+<a id="fpa-func-012"></a>
+
 ## FPA-FUNC-012 · Profundidad, segundo equipo y juvenil
 
 Tras A y B, recorrer roles distintos de la táctica en orden léxico (ambas fases si existen). Entre jugadores restantes respetar primaria por fase y ordenar de forma estable por DWRS de ese rol, ausente vale −1 al ordenar. Tomar el primero que no haya cubierto el máximo de roles de profundidad (2 inicial). Si todos superan el límite, tomar el primero igualmente. Emitir una sola opción por rol si su nota es positiva. Aquí se busca por **rol** y no se vuelve a comprobar la posición del puesto. El núcleo es la unión de A, B y los suplentes de profundidad elegidos. Ejemplo, el único suplente puntúa positivamente en tres roles → puede cubrir los tres.
 
 El segundo XI se calcula con jugadores del segundo club si los hay y, en otro caso, con remanentes del primero. Para el juvenil, quitar al segundo XI del remanente y exigir edad ≤20 de campo o ≤25 GK, ajustable. Edad desconocida cuenta como 99. Reutilizar el asignador de **una fase** para estos dos equipos incluso cuando el XI principal es bifásico (usa la forma OOP). Un jugador de profundidad puede participar en los equipos de desarrollo y queda protegido de las recomendaciones de excedente. [Proceso y clasificación](../../old_version/desktop/src/core/SquadBuilder.cpp) · [Uso en el XI](../../old_version/desktop/src/app/pages/BestXiPage.cpp).
+
+<a id="fpa-func-013"></a>
 
 ## FPA-FUNC-013 · Detección y prioridad de carencias
 
@@ -12,11 +16,17 @@ Para cada puesto ocupado tomar DWRS de celda (si es 0 recuperar la del rol) y re
 
 Ejemplo manual: valores 80, 80, 50 y un hueco. El último ocupado tiene caída 30. Si su mejor alternativa es 70 y carece de preferencia lateral, desplazamiento 20, gravedad 30. El vacío obtiene 180 y aparece primero. [Reglas](../../old_version/desktop/src/core/GapAnalysis.cpp) · [Casos](../../old_version/desktop/src/tests/test_gapanalysis.cpp).
 
+<a id="fpa-func-014"></a>
+
 ## FPA-FUNC-014 · Comparar tácticas y cuantificar la plantilla
 
 Para cada táctica solicitada (por omisión todas en orden de definiciones), calcular XI y B. Ignorar tácticas sin mapa. Contar puestos cubiertos sólo si la celda está ocupada y su nota >0. Sobre esos valores calcular media y mediana global y por línea, redondeadas a una decimal, mitad al par. En el mapa base, contar por puesto los jugadores del conjunto con posición compatible y DWRS del rol >0. Esta cuenta independiente puede incluir a un polivalente varias veces o a un jugador fijado en otra posición. Cero indica puesto sin cobertura, uno indica cobertura frágil. Profundidad media = suma de cuentas / número de puestos, a dos decimales, cero con mapa vacío. Orden estable por puestos cubiertos descendente y luego mediana descendente (ausencia cuenta como cero para ordenar). No optimiza el promedio entre tácticas. Ejemplo: 3/3 puestos a 60 adelantan a 2/3 a 90. En FM27 la profundidad aislada se refiere al mapa OOP aunque la nota del XI combine fases. [Comparador](../../old_version/desktop/src/core/TacticExplorer.cpp).
 
 En el resumen del club las métricas económicas usan el núcleo del primer club calculado con la táctica. Total=suma de valores <2 000 000 000, promedio=total/núcleo completo, edad media sólo entre edades positivas. Un jugador no vendible cuenta en el denominador de valor. En cambio el cálculo de titulares y coste de bajas quita lesionados de larga duración, aplica las fijaciones y, en ligas sin lista, excluye bloqueados. Para tres miembros de 20, 22 y edad desconocida, valores 1 M, 2 M y no vendible, resultado 3 M, 1 M y 21 años. La fuerza relativa toma como referencia la mediana de titulares mostrados. Tras redondeo de la diferencia, |d|≤1,5 es neutral, de 1,5 a 4 moderado, más de 4 fuerte, con signo. [Resumen](../../old_version/desktop/src/app/pages/DashboardPage.cpp) · [Escala de comparación](../../old_version/desktop/src/core/DwrsDisplay.cpp).
+
+El resumen de club usa dos grupos distintos. Para número de jugadores, valor y edad toma el núcleo derivado de la plantilla principal bajo la táctica (XI+B+profundidad). Para el titular por puesto y el impacto de una ausencia, parte del primer club, excluye lesionados de larga duración y, si la liga no tiene lista, las marcas domésticas de no inscrito. En FM27 respeta los puentes manuales. Aplica el mejor plan de sustitución. Si es incompleto señala hueco; si es completo usa la diferencia **total nuevo menos total anterior**. Una diferencia de magnitud inferior a 0,05 se representa como ±0. No se debe invertir ese signo al comparar con la pérdida positiva definida para una ausencia. [Grupos y cálculo del impacto](../../old_version/desktop/src/app/pages/DashboardPage.cpp).
+
+<a id="fpa-func-015"></a>
 
 ## FPA-FUNC-015 · Selección nacional y convocatoria
 
