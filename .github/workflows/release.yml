@@ -2,7 +2,7 @@ name: Release
 
 # On every push to main: build + test. If the version in Version.cpp is new
 # (no release/tag for it yet), build the installer and publish a GitHub release
-# automatically. Bump the number in desktop/src/core/Version.cpp and push —
+# automatically. Bump the number in old_version/desktop/src/core/Version.cpp and push —
 # that's it. Code signing (SignPath, see CODE_SIGNING.md) switches on once the
 # repository variable SIGNPATH_ORGANIZATION_ID is set; without it the release
 # is built unsigned exactly as before. Independent Linux jobs build, test and package the AppImage and
@@ -48,7 +48,7 @@ jobs:
           ninja --version
 
       - name: Configure
-        run: cmake -S desktop -B build -G Ninja -DCMAKE_BUILD_TYPE=Release "-DCMAKE_PREFIX_PATH=$env:QT_ROOT_DIR"
+        run: cmake -S old_version/desktop -B build -G Ninja -DCMAKE_BUILD_TYPE=Release "-DCMAKE_PREFIX_PATH=$env:QT_ROOT_DIR"
 
       - name: Build
         run: cmake --build build
@@ -62,7 +62,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          $src = Get-Content desktop/src/core/Version.cpp -Raw
+          $src = Get-Content old_version/desktop/src/core/Version.cpp -Raw
           if ($src -notmatch 'appVersion[\s\S]*?QStringLiteral\("(\d+\.\d+\.\d+)"\)') {
             throw "Version aus Version.cpp konnte nicht gelesen werden."
           }
@@ -92,7 +92,7 @@ jobs:
         if: steps.version.outputs.is_new == 'true'
         shell: pwsh
         run: |
-          $staging = "desktop/installer/staging"
+          $staging = "old_version/desktop/installer/staging"
           if (Test-Path $staging) { Remove-Item $staging -Recurse -Force }
           New-Item -ItemType Directory -Force $staging | Out-Null
           Copy-Item build/src/app/fmplayeranalyzer.exe $staging
@@ -109,7 +109,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: unsigned-exe
-          path: desktop/installer/staging/fmplayeranalyzer.exe
+          path: old_version/desktop/installer/staging/fmplayeranalyzer.exe
           if-no-files-found: error
 
       - name: Sign program file (SignPath)
@@ -132,8 +132,8 @@ jobs:
         if: steps.version.outputs.is_new == 'true' && vars.SIGNPATH_ORGANIZATION_ID != ''
         shell: pwsh
         run: |
-          Copy-Item signed-exe/fmplayeranalyzer.exe desktop/installer/staging/fmplayeranalyzer.exe -Force
-          $sig = Get-AuthenticodeSignature desktop/installer/staging/fmplayeranalyzer.exe
+          Copy-Item signed-exe/fmplayeranalyzer.exe old_version/desktop/installer/staging/fmplayeranalyzer.exe -Force
+          $sig = Get-AuthenticodeSignature old_version/desktop/installer/staging/fmplayeranalyzer.exe
           if ($sig.Status -ne 'Valid') { throw "Programmdatei nicht gültig signiert: $($sig.Status)" }
           Write-Host "Signiert von: $($sig.SignerCertificate.Subject)"
 
@@ -143,7 +143,7 @@ jobs:
         run: |
           choco install innosetup -y --no-progress
           $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-          & $iscc "/DMyAppVersion=${{ steps.version.outputs.version }}" "/DMyAppNumericVersion=${{ steps.version.outputs.version }}" "desktop\installer\setup.iss"
+          & $iscc "/DMyAppVersion=${{ steps.version.outputs.version }}" "/DMyAppNumericVersion=${{ steps.version.outputs.version }}" "old_version/desktop\installer\setup.iss"
           if ($LASTEXITCODE -ne 0) { throw "ISCC fehlgeschlagen." }
 
       # --- Code signing, part 2: the installer ---------------------------------
@@ -153,7 +153,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: unsigned-setup
-          path: desktop/installer/output/FMPlayerAnalyzer-${{ steps.version.outputs.version }}-Windows-x64-Setup.exe
+          path: old_version/desktop/installer/output/FMPlayerAnalyzer-${{ steps.version.outputs.version }}-Windows-x64-Setup.exe
           if-no-files-found: error
 
       - name: Sign installer (SignPath)
@@ -177,8 +177,8 @@ jobs:
         shell: pwsh
         run: |
           $name = "FMPlayerAnalyzer-${{ steps.version.outputs.version }}-Windows-x64-Setup.exe"
-          Copy-Item "signed-setup/$name" "desktop/installer/output/$name" -Force
-          $sig = Get-AuthenticodeSignature "desktop/installer/output/$name"
+          Copy-Item "signed-setup/$name" "old_version/desktop/installer/output/$name" -Force
+          $sig = Get-AuthenticodeSignature "old_version/desktop/installer/output/$name"
           if ($sig.Status -ne 'Valid') { throw "Installer nicht gültig signiert: $($sig.Status)" }
           Write-Host "Signiert von: $($sig.SignerCertificate.Subject)"
 
@@ -189,7 +189,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $version = "${{ steps.version.outputs.version }}"
-          $asset = "desktop/installer/output/FMPlayerAnalyzer-$version-Windows-x64-Setup.exe"
+          $asset = "old_version/desktop/installer/output/FMPlayerAnalyzer-$version-Windows-x64-Setup.exe"
           # The text comes from CHANGELOG.md (job release-notes below).
           $notes = @("--notes", "FM Player Analyzer $version")
           if ("${{ vars.SIGNPATH_ORGANIZATION_ID }}" -ne "") {

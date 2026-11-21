@@ -51,7 +51,7 @@ jobs:
           ninja --version
 
       - name: Configure
-        run: cmake -S desktop -B build -G Ninja -DCMAKE_BUILD_TYPE=Release "-DCMAKE_PREFIX_PATH=$env:QT_ROOT_DIR"
+        run: cmake -S old_version/desktop -B build -G Ninja -DCMAKE_BUILD_TYPE=Release "-DCMAKE_PREFIX_PATH=$env:QT_ROOT_DIR"
 
       - name: Build
         run: cmake --build build
@@ -74,7 +74,7 @@ jobs:
         id: version
         shell: pwsh
         run: |
-          $src = Get-Content desktop/src/core/Version.cpp -Raw
+          $src = Get-Content old_version/desktop/src/core/Version.cpp -Raw
           if ($src -notmatch 'appVersion[\s\S]*?QStringLiteral\("((\d+\.\d+\.\d+)(-test\.(\d+))?)"\)') {
             throw "Version aus Version.cpp konnte nicht gelesen werden."
           }
@@ -86,20 +86,20 @@ jobs:
       - name: Build installer (Inno Setup, as in the release)
         shell: pwsh
         run: |
-          $staging = "desktop/installer/staging"
+          $staging = "old_version/desktop/installer/staging"
           if (Test-Path $staging) { Remove-Item $staging -Recurse -Force }
           Copy-Item -Recurse "portable/FMPlayerAnalyzer-Testbuild" $staging
           Remove-Item "$staging/TESTBUILD.txt"
           choco install innosetup -y --no-progress
           $iscc = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-          & $iscc "/DMyAppVersion=${{ steps.version.outputs.version }}" "/DMyAppNumericVersion=${{ steps.version.outputs.numeric }}" "desktop\installer\setup.iss"
+          & $iscc "/DMyAppVersion=${{ steps.version.outputs.version }}" "/DMyAppNumericVersion=${{ steps.version.outputs.numeric }}" "old_version/desktop\installer\setup.iss"
           if ($LASTEXITCODE -ne 0) { throw "ISCC fehlgeschlagen." }
 
       - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
           name: FMPlayerAnalyzer-${{ steps.version.outputs.version }}-Windows-x64-Setup
-          path: desktop/installer/output/*.exe
+          path: old_version/desktop/installer/output/*.exe
           retention-days: 30
 
       - name: Upload portable zip
@@ -122,8 +122,8 @@ jobs:
           if ($LASTEXITCODE -eq 0) { throw "$tag existiert schon. Für einen neuen Testbuild die Nummer in Version.cpp erhöhen." }
           $zip = "FMPlayerAnalyzer-$version-Windows-portable.zip"
           Compress-Archive -Path "portable/FMPlayerAnalyzer-Testbuild" -DestinationPath $zip -Force
-          $setup = "desktop/installer/output/FMPlayerAnalyzer-$version-Windows-x64-Setup.exe"
-          $notesFile = "desktop/release-notes/$version.md"
+          $setup = "old_version/desktop/installer/output/FMPlayerAnalyzer-$version-Windows-x64-Setup.exe"
+          $notesFile = "old_version/desktop/release-notes/$version.md"
           $notesArgs = if (Test-Path $notesFile) { @("--notes-file", $notesFile) } else { @("--notes", "Public test build $version. Back up %LOCALAPPDATA%\FM24PlayerAnalyzer before installing.") }
           gh release create $tag $setup $zip `
             --repo $env:GITHUB_REPOSITORY `
@@ -145,7 +145,7 @@ jobs:
           $sha = "${{ github.sha }}".Substring(0, 7)
           $zip = "FMPlayerAnalyzer-$version-Testbuild-Windows-portable.zip"
           Compress-Archive -Path "portable/FMPlayerAnalyzer-Testbuild" -DestinationPath $zip -Force
-          $setup = "desktop/installer/output/FMPlayerAnalyzer-$version-Windows-x64-Setup.exe"
+          $setup = "old_version/desktop/installer/output/FMPlayerAnalyzer-$version-Windows-x64-Setup.exe"
           # Replace the previous testbuild (same tag, so the page address stays).
           $PSNativeCommandUseErrorActionPreference = $false
           gh release delete $tag --repo $env:GITHUB_REPOSITORY --yes --cleanup-tag *> $null

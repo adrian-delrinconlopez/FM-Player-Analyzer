@@ -1,7 +1,7 @@
 # FM Player Analyzer
 
 The Analyzer is a C++ desktop application using Qt 6 for FM24 and FM27.
-Desktop code lives in `desktop/`; `legacy/` is a reference and migration source.
+The current application is preserved in `old_version/desktop/`, with its historical migration reference in `old_version/legacy/`. The repository root is reserved for the next version.
 
 ## Working practices
 
@@ -13,7 +13,7 @@ Desktop code lives in `desktop/`; `legacy/` is a reference and migration source.
 
 ## Entry points
 
-Paths below are relative to `desktop/src/`; tests live in `tests/`.
+Paths below are relative to `old_version/desktop/src/`; tests live in `tests/`.
 
 | Area | Entry points | Relevant tests |
 |---|---|---|
@@ -35,7 +35,7 @@ Paths below are relative to `desktop/src/`; tests live in `tests/`.
 
 ## Build and tests
 
-- Windows build from the repository root: `.\desktop\scripts\build.ps1 -Preset msvc-release`. Requirements and other commands are in `desktop/README.md`.
-- After building, run affected suites first, for example `ctest --test-dir desktop/build/msvc-release --output-on-failure -R '^(test_database|test_htmlimporter)$'`. Add meaningful regression tests for otherwise undetected defects.
-- Before a test build or release, run the complete build and suite with `.\desktop\scripts\build.ps1 -Preset msvc-release -Test`. Tests using saves must use temporary files or copies. Report optional real-save FM27 tests and skipped tests separately.
+- Windows build from the repository root: `.\old_version/desktop\scripts\build.ps1 -Preset msvc-release`. Requirements and other commands are in `old_version/desktop/README.md`.
+- After building, run affected suites first, for example `ctest --test-dir old_version/desktop/build/msvc-release --output-on-failure -R '^(test_database|test_htmlimporter)$'`. Add meaningful regression tests for otherwise undetected defects.
+- Before a test build or release, run the complete build and suite with `.\old_version/desktop\scripts\build.ps1 -Preset msvc-release -Test`. Tests using saves must use temporary files or copies. Report optional real-save FM27 tests and skipped tests separately.
 - Never label incomplete feature work as a complete test build. Keep prerelease versions unique and do not overwrite published artifacts.

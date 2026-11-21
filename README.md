@@ -1,6 +1,8 @@
+> The existing application and its documentation are preserved under [`old_version/`](old_version/). The repository root is reserved for the next version.
+
 <div align="center">
 
-<img src="docs/branding/banner.png" alt="FM Player Analyzer" width="100%">
+<img src="old_version/docs/branding/banner.png" alt="FM Player Analyzer" width="100%">
 
 ### Stop guessing who should play. Know it.
 
@@ -31,7 +33,7 @@ too, but is slow for long lists.
 [How the rating works](#-how-the-rating-works-dwrs) ·
 [FAQ](#-faq)
 
-<img src="docs/screenshots/en/dashboard.png" alt="FM Player Analyzer dashboard: positional strength of the squad on a pitch, squad value and player list" width="100%">
+<img src="old_version/docs/screenshots/en/dashboard.png" alt="FM Player Analyzer dashboard: positional strength of the squad on a pitch, squad value and player list" width="100%">
 
 </div>
 
@@ -82,7 +84,7 @@ Starting XI and B-team stand side by side on the pitch in your formation, every
 player with his rating, his role and his agreed playing time. Double-click a
 player for his profile, right-click for everything else.
 
-<img src="docs/screenshots/en/best-xi.png" alt="Best XI page: the starting eleven in possession and out of possession side by side, each player with rating, role and his place in the other line-up" width="100%">
+<img src="old_version/docs/screenshots/en/best-xi.png" alt="Best XI page: the starting eleven in possession and out of possession side by side, each player with rating, role and his place in the other line-up" width="100%">
 
 **Provably optimal, not a rule of thumb.** Most tools walk through the
 formation slot by slot and hand each one its best player. That breaks as soon as
@@ -149,7 +151,7 @@ its own after every save in the game. **Attribute masking as in the game** (on
 by default) shows exact values only for players you know well; everyone else comes with
 attribute ranges, wider the less your scouts know. Switch it off for exact
 values everywhere. Details are in
-[docs/IMPORT-FM27.md](docs/IMPORT-FM27.md) (German).
+[old_version/docs/IMPORT-FM27.md](old_version/docs/IMPORT-FM27.md) (German).
 
 ### Scout by role, not by reputation
 
@@ -159,7 +161,7 @@ weaknesses *for that role* in plain language. In FM27 you switch the role lists
 between **In possession** and **Out of possession**, and you choose which
 columns the scouting table shows.
 
-<img src="docs/screenshots/en/role-analysis.png" alt="Role coverage: players ranked by their rating as Advanced Centre-Back (IP), with strengths and weaknesses for that role" width="100%">
+<img src="old_version/docs/screenshots/en/role-analysis.png" alt="Role coverage: players ranked by their rating as Advanced Centre-Back (IP), with strengths and weaknesses for that role" width="100%">
 
 ### Everything about one player on one page
 
@@ -169,7 +171,7 @@ weaknesses and the rating history. Right-click any player anywhere in the app to
 open his profile, compare him, edit him or put him on the transfer, loan or
 shortlist.
 
-<img src="docs/screenshots/en/profile.png" alt="Player profile with top roles, training recommendation and strengths" width="100%">
+<img src="old_version/docs/screenshots/en/profile.png" alt="Player profile with top roles, training recommendation and strengths" width="100%">
 
 ### Head-to-head comparison
 
@@ -177,7 +179,7 @@ Up to five players side by side: radar charts for playing areas and for the
 attributes that matter most, plus a colour-coded attribute table. Settles the
 "who starts on Saturday" debate in seconds.
 
-<img src="docs/screenshots/en/comparison.png" alt="Comparison of two players with radar charts and a colour-coded attribute table" width="100%">
+<img src="old_version/docs/screenshots/en/comparison.png" alt="Comparison of two players with radar charts and a colour-coded attribute table" width="100%">
 
 ### Find the tactic your squad was built for
 
@@ -190,7 +192,7 @@ FM27 ships with two example tactics ("Control Press · 4-2-3-1" and "Counter
 Surge · 3-4-2-1"), also as game files for FM27. Build your own tactics in the
 tactic editor and share them with others as a file.
 
-<img src="docs/screenshots/en/tactic-explorer.png" alt="Tactic Explorer ranking tactics by coverage and median rating per team part" width="100%">
+<img src="old_version/docs/screenshots/en/tactic-explorer.png" alt="Tactic Explorer ranking tactics by coverage and median rating per team part" width="100%">
 
 ### A training plan that follows the maths
 
@@ -198,7 +200,7 @@ For every player the app works out which training methods raise his rating for
 his role the most — and takes his age into account, because pace is trained at
 19, not at 29. One table for the first team, one for the second team.
 
-<img src="docs/screenshots/en/training.png" alt="Training plan listing a training role and ordered training methods per player" width="100%">
+<img src="old_version/docs/screenshots/en/training.png" alt="Training plan listing a training role and ordered training methods per player" width="100%">
 
 ### Never waste a registration slot again
 
@@ -211,7 +213,7 @@ wage budget and a minimum wage, you enter both right on the squad
 list and the proposal sticks to them. Tick who you really
 registered, save, and Best XI works with that list.
 
-<img src="docs/screenshots/en/registration.png" alt="Registration assistant with quota counters and a goalkeeper table with checkboxes" width="100%">
+<img src="old_version/docs/screenshots/en/registration.png" alt="Registration assistant with quota counters and a goalkeeper table with checkboxes" width="100%">
 
 ### Watch your squad grow
 
@@ -226,7 +228,7 @@ state (season start configurable). Click a player to see his roles, Ctrl-click s
 Recalculations after changed weights are factored out, so only real progress
 counts.
 
-<img src="docs/screenshots/en/development.png" alt="Development table with the rating change and a trend line per player next to the squad trend chart" width="100%">
+<img src="old_version/docs/screenshots/en/development.png" alt="Development table with the rating change and a trend line per player next to the squad trend chart" width="100%">
 
 ### Make it yours
 
@@ -234,7 +236,7 @@ Dark and light mode, colour presets grouped by league, your own colours and
 your club's logo in the header. If you have a graphics folder with crests and
 portraits for FM, the analyzer can use it too (optional, off by default).
 
-<img src="docs/screenshots/en/dashboard-light.png" alt="The dashboard in light mode" width="100%">
+<img src="old_version/docs/screenshots/en/dashboard-light.png" alt="The dashboard in light mode" width="100%">
 
 ### And there is more
 
@@ -433,7 +435,7 @@ Choose *Default (no restriction)*. For FM24 the Premier League is modelled; for
 FM27 eleven leagues are (Bundesliga, Premier League, LaLiga, Serie A, Ligue 1,
 Liga Portugal, Swiss Super League, Austrian Bundesliga, Russian Premier Liga,
 Ukrainian Premier League, Süper Lig, details in
-[docs/REGISTRIERUNG-FM27.md](docs/REGISTRIERUNG-FM27.md)). The UEFA list works
+[old_version/docs/REGISTRIERUNG-FM27.md](old_version/docs/REGISTRIERUNG-FM27.md)). The UEFA list works
 with any league. Checked are squad size and players trained in the country and
 at the club; limits for foreign or non-EU players are not.
 
@@ -468,7 +470,7 @@ ratings; a missing attribute is simply treated as unknown.
 - **Goalkeeping:** `1v1`, `Aer`, `Cmd`, `Han`, `Kic`, `Ref`, `TRO`, `Thr`
 
 The mapping lives in
-[`desktop/src/core/Constants.cpp`](desktop/src/core/Constants.cpp)
+[`old_version/desktop/src/core/Constants.cpp`](old_version/desktop/src/core/Constants.cpp)
 (`fm24AttributeMapping`).
 
 </details>
@@ -480,8 +482,8 @@ The mapping lives in
 
 | Directory | Implementation | Status |
 |---|---|---|
-| [`desktop/`](desktop/) | **C++ 20 / Qt 6 Widgets** — the native Windows app | Active |
-| [`legacy/`](legacy/) | **Python / Streamlit** — the original web-UI version | Kept as behavioural reference |
+| [`old_version/desktop/`](old_version/desktop/) | **C++ 20 / Qt 6 Widgets** — the native Windows app | Active |
+| [`old_version/legacy/`](old_version/legacy/) | **Python / Streamlit** — the original web-UI version | Kept as behavioural reference |
 
 Requirements: Visual Studio 2022 (C++, x64), CMake ≥ 3.28, Ninja and Qt 6.8 LTS
 with the Qt Charts add-on.
@@ -492,9 +494,9 @@ cd desktop
 .\scripts\package.ps1                             # windeployqt + installer
 ```
 
-See [`desktop/README.md`](desktop/README.md) for details. Ideas and the
-technical backlog live in [`desktop/IDEEN.md`](desktop/IDEEN.md) and
-[`desktop/BACKLOG.md`](desktop/BACKLOG.md) (German).
+See [`old_version/desktop/README.md`](old_version/desktop/README.md) for details. Ideas and the
+technical backlog live in [`old_version/desktop/IDEEN.md`](old_version/desktop/IDEEN.md) and
+[`old_version/desktop/BACKLOG.md`](old_version/desktop/BACKLOG.md) (German).
 
 </details>
 

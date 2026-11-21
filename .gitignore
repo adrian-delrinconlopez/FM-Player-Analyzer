@@ -1,27 +1,27 @@
 # ============================================
-# Legacy Python/Streamlit app (legacy/)
+# Legacy Python/Streamlit app (old_version/legacy/)
 # ============================================
 __pycache__/
 *.py[cod]
 *$py.class
 
 # Personal player data — never commit
-legacy/databases/*.db
-legacy/backups/
+old_version/legacy/databases/*.db
+old_version/legacy/backups/
 
 # User config and assets
-legacy/config/config*
-legacy/config/assets/logo.png
-legacy/config/assets/flag.png
+old_version/legacy/config/config*
+old_version/legacy/config/assets/logo.png
+old_version/legacy/config/assets/flag.png
 
 # Streamlit local files
-legacy/.streamlit/secrets.toml
-legacy/.streamlit/config.toml
+old_version/legacy/.streamlit/secrets.toml
+old_version/legacy/.streamlit/config.toml
 
 # Launcher runtime files
-legacy/launcher.log
-legacy/.streamlit_server.pid
-legacy/*.bat
+old_version/legacy/launcher.log
+old_version/legacy/.streamlit_server.pid
+old_version/legacy/*.bat
 
 # Virtual environments
 venv/
@@ -30,14 +30,14 @@ env/
 .env/
 
 # ============================================
-# C++/Qt app (desktop/)
+# C++/Qt app (old_version/desktop/)
 # ============================================
-desktop/build*/
-desktop/installer/Output/
-desktop/installer/output/
-desktop/installer/staging/
-desktop/translations/*.qm
-desktop/src/tests/golden/local/
+old_version/desktop/build*/
+old_version/desktop/installer/Output/
+old_version/desktop/installer/output/
+old_version/desktop/installer/staging/
+old_version/desktop/translations/*.qm
+old_version/desktop/src/tests/golden/local/
 CMakeUserPresets.json
 CMakeLists.txt.user*
 
