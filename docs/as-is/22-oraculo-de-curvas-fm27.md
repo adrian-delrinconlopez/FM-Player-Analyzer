@@ -1,0 +1,87 @@
+# Oráculo de las curvas FM27 por rol
+
+**GOLDEN MASTER VERIFICADO.** Se evaluaron estas tres fichas sintéticas con el perfil FM27 harvestgreen22 de 2.3.1, cuotas iniciales 0,33 en campo y 0,20 en portería. Todos los atributos son exactos. El evaluador original imprimió la normalizada con una decimal. Estas 237 salidas comprueban el resultado a esa precisión, incluida la base propia de cada rol de portería.
+
+Usar los 47 índices a=0…46 en el orden del [diccionario](17-parametros-y-atributos.md). Uniforme12 tiene todos a 12. Gradiente usa 1+((7a+5) módulo 20). Inverso usa 20−((7a+5) módulo 20). Cada ficha admite las 14 posiciones del catálogo para que se evalúen todos los roles. La posición no multiplica el DWRS. La tabla muestra punto decimal. [Definición del perfil](03-valoraciones-y-formulas.md) · [Evaluador empleado](../../old_version/desktop/src/tools/ratingcheck_cli.cpp).
+
+| Rol | Uniforme12 | Gradiente | Inverso |
+|---|---:|---:|---:|
+| ACB | 69.4 | 62.0 | 49.2 |
+| AM-IP | 70.1 | 65.5 | 46.9 |
+| AM-OOP | 70.3 | 61.8 | 49.8 |
+| AP | 70.0 | 64.4 | 47.7 |
+| AWB | 69.7 | 64.4 | 47.3 |
+| BBM | 70.0 | 64.9 | 46.9 |
+| BBP | 70.1 | 64.5 | 47.6 |
+| BCB | 69.5 | 61.4 | 49.9 |
+| BGK | 57.9 | 54.0 | 46.0 |
+| CB-IP | 69.4 | 61.4 | 49.8 |
+| CB-OOP | 69.4 | 61.4 | 49.8 |
+| CCB | 69.2 | 62.4 | 48.7 |
+| CFD-IP | 69.7 | 66.7 | 45.3 |
+| CFD-OOP | 70.3 | 61.8 | 49.8 |
+| CHF | 70.0 | 66.5 | 45.3 |
+| CHM | 70.1 | 66.3 | 45.5 |
+| CM-IP | 70.0 | 62.3 | 49.7 |
+| CM-OOP | 70.2 | 62.1 | 49.8 |
+| CWD | 69.2 | 62.9 | 48.3 |
+| DDM | 69.8 | 62.2 | 49.0 |
+| DLF | 70.1 | 66.2 | 45.9 |
+| DLP | 70.3 | 62.8 | 49.5 |
+| DM-IP | 70.1 | 59.8 | 52.0 |
+| DM-OOP | 70.3 | 61.8 | 49.9 |
+| F9 | 69.9 | 65.1 | 47.1 |
+| FB-IP | 69.7 | 61.7 | 50.0 |
+| FB-OOP | 69.7 | 61.3 | 50.3 |
+| FR | 70.1 | 65.5 | 46.9 |
+| GK-IP | 57.9 | 53.7 | 46.3 |
+| GK-OOP | 57.9 | 50.2 | 49.8 |
+| HB | 69.7 | 60.7 | 50.8 |
+| HFB | 69.7 | 60.5 | 51.2 |
+| HWB | 69.6 | 60.4 | 51.3 |
+| IF | 70.0 | 65.0 | 47.0 |
+| IFB | 69.8 | 63.2 | 48.5 |
+| IOW | 70.2 | 61.2 | 51.2 |
+| IW | 69.9 | 65.6 | 46.6 |
+| IWB | 69.7 | 62.5 | 49.1 |
+| LHK | 57.9 | 52.3 | 47.7 |
+| MPM | 70.1 | 64.1 | 47.9 |
+| NCB | 69.4 | 59.7 | 51.5 |
+| NGK | 57.9 | 52.9 | 47.1 |
+| OAM | 70.3 | 60.5 | 51.9 |
+| OCB | 69.4 | 64.2 | 46.8 |
+| OCF | 70.3 | 60.5 | 51.9 |
+| OWM | 69.5 | 62.7 | 48.7 |
+| P | 70.0 | 63.4 | 48.9 |
+| PCM | 70.0 | 62.3 | 49.1 |
+| PDM | 70.0 | 62.2 | 49.2 |
+| PFB | 70.0 | 62.5 | 49.0 |
+| PW | 69.8 | 65.6 | 46.2 |
+| PWB-IP | 69.8 | 63.9 | 48.0 |
+| PWB-OOP | 69.8 | 62.2 | 49.3 |
+| SAM | 69.5 | 62.0 | 49.3 |
+| SCB | 69.4 | 60.9 | 50.3 |
+| SCF | 69.5 | 62.0 | 49.3 |
+| SCM | 70.0 | 60.5 | 51.5 |
+| SDM | 70.1 | 60.4 | 51.4 |
+| SK | 57.9 | 48.4 | 51.6 |
+| SS | 69.8 | 65.5 | 46.1 |
+| SWD | 69.4 | 61.9 | 49.4 |
+| TAM | 70.1 | 61.2 | 50.2 |
+| TCF | 70.1 | 61.2 | 50.2 |
+| TF | 69.8 | 65.3 | 46.7 |
+| TW | 69.8 | 62.8 | 48.6 |
+| TWM | 69.8 | 62.8 | 48.6 |
+| W-IP | 69.6 | 65.2 | 46.5 |
+| W-OOP | 70.0 | 64.3 | 47.2 |
+| WB-IP | 69.7 | 63.1 | 48.5 |
+| WB-OOP | 69.6 | 61.0 | 50.5 |
+| WCB-IP | 69.5 | 63.2 | 48.1 |
+| WCB-OOP | 69.4 | 61.7 | 49.6 |
+| WCM-IP | 70.1 | 62.8 | 49.3 |
+| WCM-OOP | 70.0 | 63.1 | 48.8 |
+| WDM | 70.1 | 62.7 | 49.0 |
+| WFD | 69.7 | 64.8 | 46.7 |
+| WM | 69.7 | 66.3 | 45.1 |
+| WMF | 69.9 | 65.7 | 45.9 |
+| WOW | 69.5 | 62.7 | 48.7 |
