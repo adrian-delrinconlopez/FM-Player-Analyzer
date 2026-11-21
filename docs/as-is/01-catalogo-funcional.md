@@ -1,6 +1,6 @@
 # Catálogo funcional
 
-Cada identificador designa un comportamiento del baseline. El enlace del ID lleva al contrato de entradas, reglas, salidas, valores de partida, ejemplos y evidencias. Las dependencias remiten a otros ID por sus tres últimos dígitos. La matriz de [trazabilidad y lagunas](15-trazabilidad-y-lagunas.md) distingue lo ejecutado de lo deducido por lectura.
+Cada identificador designa un comportamiento del baseline. El enlace del ID lleva al contrato de entradas, reglas, salidas, valores de partida, ejemplos y evidencias. Cada capacidad tiene un [caso de aceptación con entrada y salida](24-casos-de-aceptacion-por-capacidad.md). Las dependencias remiten a otros ID por sus tres últimos dígitos. La matriz de [trazabilidad y lagunas](15-trazabilidad-y-lagunas.md) distingue lo ejecutado de lo deducido por lectura.
 
 | Identificador | Capacidad | Disponibilidad | Tarea del usuario | Resultado observable | Relación con otros ID |
 |---|---|---|---|---|---|

@@ -11,7 +11,7 @@
 | Cambio propio de 2.3.1 | Restablece la lectura de la tabla de clubes de FM27 27.1 y mantiene soporte para 27.0. [Notas de versión](../../CHANGELOG.md) |
 | Idioma | Español para la especificación. Identificadores y nombres originales cuando la denominación española oficial no está verificada |
 | Fecha de verificación | 21 de noviembre de 2026 |
-| Entrega | 42 capacidades identificadas. 16 capítulos, del 00 al 15, y ocho anexos, del 16 al 23 |
+| Entrega | 42 capacidades identificadas. 16 capítulos, del 00 al 15, y nueve anexos, del 16 al 24 |
 
 ## Cómo leer esta carpeta
 
@@ -45,6 +45,7 @@ El [catálogo funcional](01-catalogo-funcional.md) sirve de entrada por tarea. S
 | [21 · Registro de pruebas](21-ejecucion-de-las-pruebas.md) | Las 52 suites, casos incluidos, resultados y dos omisiones por falta de partida real |
 | [22 · Oráculo de curvas FM27](22-oraculo-de-curvas-fm27.md) | 237 salidas del evaluador original para comprobar las 79 variantes de rol |
 | [23 · Operaciones con fichas y selecciones](23-operaciones-con-fichas-y-selecciones.md) | Comparación, edición, matriz nacional, exportación y salidas tras actualizar la plantilla |
+| [24 · Casos de aceptación por capacidad](24-casos-de-aceptacion-por-capacidad.md) | Un escenario de entrada y salida por cada uno de los 42 ID, con su nivel de verificación |
 
 ## Recorridos de lectura
 
@@ -68,5 +69,5 @@ IP y OOP designan la fase con y sin posesión. A es el XI titular y B el equipo 
 | Modelos y parámetros | Fórmulas y catálogos extraídos separando juego, perfil, campo/portería y fase |
 | Flujos y persistencia | Reglas de selección, mercado, seguimiento, histórico, inscripción y configuración contrastadas con sus consumidores |
 | Ejecución | 52/52 suites aprobadas. En el desglose, 580 registros aprobados (104 de preparación/cierre), 2 casos opcionales omitidos y 0 fallidos |
-| Auditoría independiente del texto | Reconstrucción aritmética a partir de los Markdown: 4.608 casos Classic y 237 resultados de curvas dentro de sus tolerancias |
+| Auditoría independiente del texto | Reconstruidos desde una copia de los Markdown los 4.608 casos Classic y las 237 valoraciones por curvas dentro de sus tolerancias, y las dos variantes de atributos e importes de una ficha FM27 |
 | Límites abiertos | Partidas reales, interoperabilidad binaria, datos históricos particulares, desempates exhaustivos y terminología española oficial. El [dictamen final](15-trazabilidad-y-lagunas.md) precisa el impacto de cada uno |

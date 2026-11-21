@@ -2,6 +2,8 @@
 
 El 21 de noviembre de 2026 se compiló el baseline documentado y se ejecutaron las 52 suites del proyecto. CTest terminó con 52 aprobadas, 0 fallidas. Una ejecución individual adicional recogió cada resultado: 580 registros aprobados y 2 omitidos. De los aprobados, 104 corresponden a preparación y cierre de suite. Una misma función parametrizada puede producir varios registros. Las 4.608 comparaciones de Classic están dentro de un único caso y no se cuentan como 4.608 pruebas independientes.
 
+En la revisión de contenido se repitieron las 52 suites, con 52 aprobadas. Además se consultaron las operaciones del original con entradas controladas fuera de la suite para recoger una fila FM27 completa en las dos políticas de visibilidad, comprobar la validación de fase de un rol importado y comparar las tres interpretaciones de un importe. Son los [casos G12 a G14](14-casos-de-prueba-de-referencia.md#g12). Se cuentan por separado de los 580 registros.
+
 Los nombres identifican las condiciones comprobadas en el original. Las entradas y expectativas portables están en los [casos trabajados](14-casos-de-prueba-de-referencia.md), el [oráculo Classic](20-oraculo-dwrs-classic.md) y el [oráculo de curvas](22-oraculo-de-curvas-fm27.md). La ejecución incluye suites de presentación ajenas al alcance funcional para informar del resultado íntegro.
 
 | Suite de origen | Aprobados incl. preparación y cierre | Omitidos | Casos y, si procede, parámetros |

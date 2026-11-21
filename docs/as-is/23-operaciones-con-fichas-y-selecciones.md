@@ -39,6 +39,24 @@ Con selección configurada y personas convocadas, el resumen devuelve número de
 
 Partir de una sección de la matriz, aplicar sus filtros y ordenación vigentes. Emitir una fila de cabeceras y una por jugador en ese orden, con todas las columnas definidas para el modelo de esa sección y los valores de presentación. Codificación UTF-8 con BOM. Si el separador decimal del sistema es coma usar punto y coma, en otro caso coma. Si un campo contiene el separador, comillas o salto de línea, envolverlo en comillas y duplicar cada comilla interna. Un conjunto sin resultados conserva las cabeceras. Con separador coma y celda López, Ana, la celda se escribe **"López, Ana"**. La salida depende de la selección de roles, filtros y configuración de presentación. [Exportación del conjunto filtrado](../../old_version/desktop/src/app/pages/SquadMatrixPage.cpp) · [Filas y cabeceras](../../old_version/desktop/src/app/widgets/PlayerTableModel.cpp) · [Escape](../../old_version/desktop/src/core/Utils.cpp).
 
+### Columnas que forman el CSV
+
+Las columnas se construyen por sección en el orden siguiente. Las cabeceras de texto se traducen al idioma activo. Las funciones que ocultan columnas ya construidas para la consulta conservan esas columnas en el CSV. El archivo escribe los tres bytes `EF BB BF`, usa LF entre filas y termina en LF. Las celdas exportadas son las que se presentan a la persona. Por ejemplo, para el precio se usa el texto monetario original aunque la ordenación use un número.
+
+| Orden | Club | Ojeo |
+|---|---|---|
+| 1. Identidad | Nombre, edad | Estrella de shortlist (★ o ☆), nombre, edad. Si está obsoleto o retirado, el nombre lleva el prefijo «⚠ » |
+| 2. Talento | — | Si se activó talento, su puntuación redondeada al entero más cercano, mitad alejándose de cero |
+| 3. Búsqueda | — | Si hay requisitos, valor combinado y, si hay referente, diferencia. A continuación roles elegidos como foco o requeridos, diferencia con el mejor propio si procede, cuenta de umbrales cumplidos y una columna por umbral activo en el orden del usuario |
+| 4. Datos generales | Posición y, cuando alguna ficha de la partida tiene personalidad conocida, personalidad | Las mismas y luego club, valor de traspaso y antigüedad |
+| 5. Contrato y detalle | Sueldo. Con detalle adicional se añaden pie izquierdo, pie derecho, estatura y valor de traspaso | Sueldo. Con detalle adicional se añaden pie izquierdo, pie derecho y estatura |
+| 6. Atributos de talento | — | Sólo con talento activo, Determination y Work Rate con las medias truncadas a entero |
+| 7. Roles restantes | Una columna por cada rol de la selección | Una columna por rol restante. Cada rol solicitado tiene columna aun si no figuraba en la selección inicial |
+
+Con táctica elegida se utilizan sus roles sin duplicados, en FM27 los de IP preceden a los de OOP. Sin táctica se usa el catálogo completo ordenado por fase. El rol presenta «–» cuando falta la nota. El contador de umbrales usa «cumplidos/total». En la columna de cada umbral se presenta el punto medio con hasta tres cifras significativas según la configuración regional, o «–» si vale cero. Los dos atributos de talento de la fila 6 tienen una regla de presentación diferente y pueden truncar un medio punto.
+
+Para la diferencia por rol usar la mayor nota de un jugador del primer club sin lesión de larga duración. Para la combinada usar la referencia de la búsqueda, si existe. Primero redondear la nota y la referencia por separado a la precisión DWRS configurada (0…2 decimales, mitad alejándose de cero). Restarlas y presentar el signo positivo si corresponde. Con referente 70,44 y candidato 70,46, a una decimal resulta +0,1 y a cero decimales resulta 0. Cambiar la precisión puede cambiar si la comparación señala una mejora. [Selección y cálculo de las columnas](../../old_version/desktop/src/app/pages/SquadMatrixPage.cpp#L502) · [Orden de roles](../../old_version/desktop/src/core/Definitions.cpp#L313) · [Precisión](../../old_version/desktop/src/core/DwrsDisplay.cpp#L36) · [Salida del CSV](../../old_version/desktop/src/app/widgets/PlayerTableModel.cpp#L186).
+
 <a id="fpa-func-040"></a>
 
 ## FPA-FUNC-040 · Conciliar salidas después de una carga de plantilla
