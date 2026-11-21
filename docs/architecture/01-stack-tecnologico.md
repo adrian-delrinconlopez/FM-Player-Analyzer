@@ -1,0 +1,12 @@
+# Plataforma y compatibilidad documental
+
+| Capa | Selección | Evidencia disponible y límite |
+|---|---|---|
+| Escritorio | CONFIRMADA Windows 11 x64, C#, .NET 10 LTS y WinUI 3 nativo | .NET 10 dispone de soporte LTS. Especificar Windows SDK en el TFM del escritorio y win-x64 como RID. El núcleo puede usar net10.0 sin XAML. [Soporte de .NET](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core) |
+| Windows App SDK | PROPUESTA probar la estable 2.7.0 del 17-11-2026 | La distribución oficial y el paquete incluyen WinUI; verificar XAML, despliegue y controles sobre .NET 10 en ambos IDE. [Versiones estables](https://learn.microsoft.com/en-us/windows/apps/windows-app-sdk/downloads) · [Paquete](https://www.nuget.org/packages/Microsoft.WindowsAppSDK/2.7.0) |
+| Solución e IDE | CONFIRMADA .slnx y proyectos comunes | .NET 10 genera .slnx por defecto. VS Code usa las tareas de CLI del mismo repositorio y VS Enterprise la misma configuración x64. [Formato oficial](https://learn.microsoft.com/en-us/dotnet/core/compatibility/sdk/10.0/dotnet-new-sln-slnx-default) |
+| Persistencia | CONFIRMADA SQLite. PROPUESTA proveedor Microsoft.Data.Sqlite línea 10 mantenida | Su API requiere trabajo de BD fuera del hilo de UI. Comprobar DLL nativa en instalación limpia. [Limitaciones asíncronas](https://learn.microsoft.com/en-us/dotnet/standard/data/sqlite/async) |
+| Captura | CONFIRMADA BepInEx para FM27. Versión de loader, interop y runtime PENDIENTE DE VALIDACIÓN | El exportador público usa net6.0 y referencias de FM27/BepInEx 755. Probar la combinación concreta por tienda y build y registrar su huella. [Evidencia del exportador](https://github.com/ElectroHugin/FM-View-Exporter/blob/2ed5898f6e3b8597b6b8ec5401f41d16b961cdfd/src/FMViewExporter/FMViewExporter.csproj) |
+| IA | CONFIRMADA ChatGPT opcional, cliente local a API oficial | Elegibilidad de OAuth de plan y llamadas a herramientas pendientes de PC-09. [Flujo oficial](https://developers.openai.com/siwc/token-sharing-open-source) |
+
+**Compatibilidad comprobada aquí.** Se contrastaron metadatos NuGet y documentación de los fabricantes. En el host de esta revisión dotnet --list-sdks muestra 3.1.426, se encuentra el ejecutable de VS Code y no se localizó vswhere en su ruta estándar ni winapp en PATH. Es un inventario de este entorno. La verificación binaria y de funcionamiento combinado está pendiente; Fase B no instala SDK ni ejecuta una PoC. La selección de revisiones se cierra al superar PC-04 y PC-10. [Matriz de componentes](06-bibliotecas-y-componentes.md)
