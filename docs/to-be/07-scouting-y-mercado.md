@@ -1,0 +1,15 @@
+# Ojeo y mercado
+
+REQ-SCOUT-001 a 003 y REQ-MARKET-001 a 003. Desde una carencia elegir el titular, la fase o el puente que define el puesto. Buscar en personas visibles por nombre, edad, posiciones, conocimiento, atributos, liga, contrato, precio y sueldo. La matriz distingue jugador sin nota de jugador incompatible. Los conjuntos de requisitos de rol son conjuntivos; el promedio ponderado de fase no compensa un mínimo incumplido. [Búsqueda y simulación heredadas](../as-is/07-scouting-y-mercado.md)
+
+| Operación | Regla de decisión | Qué se presenta |
+|---|---|---|
+| Umbral x ≥ u | Seguro con mínimo observado ≥u, posible si el rango cruza u, incumplido con máximo <u, desconocido sin observación. Para máximos invertir extremos. | Modo inicial «Sólo seguros», opción explícita «Incluir posibles» y recuento por estado. Desconocidos sólo con filtro propio. |
+| Mejora individual | DWRS del candidato menos mejor propio o titular seleccionado, indicando referente; mantener preselección y desempate heredados. | Candidatos, nota cruda, cobertura y diferencia. |
+| Simular entrada o baja | Congelar plantilla, restricciones y perfil; reoptimizar A y B en una copia local. | Diferencias por puesto, cobertura, totales y recolocaciones. Guardar escenario con revisión de origen. |
+| Sustitución financiada | Caja bruta = venta − compra − gastos conocidos; cambio salarial = sueldo nuevo − anterior por periodo comparable. Coste a H semanas = compra + gastos + H·sueldo, mostrando cada término. | Mostrar rango conservador si los importes son intervalos, subtotal si falta algún término. Las cuotas de cesión y el porcentaje salarial a cargo se desglosan. |
+| Oportunidad | Aplicar presupuesto y techo salarial como restricciones separadas; ordenar por mejora deportiva o precio a elección. | Motivo, evidencia y riesgos. Una valoración estimada no es una oferta de venta. |
+
+**Criterios reutilizables propuestos.** FM Player Scoring obtiene referentes por posición con los tres mejores de campo o el mejor portero. Para pesos ≥2 toma el promedio de cada atributo y redondea al entero más cercano (mitades hacia arriba); pesos menores sólo informan. Ejemplo: 12, 14 y 15 → mínimo sugerido 14. Adoptar esta regla únicamente dentro del perfil ponderado con datos exactos para los referentes, orden estable por ID local y mínimo uno. Dar la lista de referentes y permitir editar los mínimos antes de guardar. Los filtros guardan claves y versiones, se vuelven a autorizar al cargar y señalan criterios caducados. [Referencia de criterios](https://github.com/jamiebolden/fm-scoring/blob/00a68ceeee5adf8b1a499b0d75d53e97f24f9391/score.py)
+
+**Listas y preferencias.** Guardar jugador, fecha, motivo y estado de seguimiento. Comparar el candidato con titular y suplente, y su grupo de edad y liga si hay muestra. Un filtro económico sin moneda común indica indeterminado. Para juventud se usa talento explicable y trayectoria observada. El permiso opcional de ver CA/PA no modifica la heurística de talento ni el perfil por defecto. [Preferencias](17-configuracion.md)

@@ -1,0 +1,77 @@
+# Catálogo de requisitos y prioridades
+
+Cada ID es estable. Una revisión conserva el ID si sigue resolviendo la misma tarea. Los cambios de regla se documentan con su revisión y su nueva prueba. F (primera funcional) y C (primera completa) preceden a A (avanzada) y P (posterior). Para F y C se prioriza que una decisión pueda tomarse localmente con evidencia visible. Los capítulos temáticos desarrollan estas obligaciones.
+
+| ID | Entrega | Requisito observable | Comprobación de aceptación |
+|---|---|---|---|
+| REQ-DATA-001 | F | Ficha con observaciones tipadas y procedencia por campo para explicar los huecos. | UID 42, ritmo 12–14 y altura 170 cm permanecen rango y medida tras reabrir. |
+| REQ-DATA-002 | F | La identidad de fuente incluye partida. Coincidencias por nombre o prefijo son propuestas de conciliación, para impedir cruces entre homónimos. | 437 y r-437 quedan vinculados sólo tras evidencia o aceptación; dos Luis homónimos conservan sus series. |
+| REQ-DATA-003 | F | Importe original, intervalo, moneda y periodicidad separados. Fallo de interpretación produce desconocido para evitar falsos agentes libres. | €1,5K en columna EUR semanal da 1.500; texto ilegible y club ausente no implican coste cero ni libertad. |
+| REQ-ROLE-001 | F | Aplicar las posiciones y uniones del catálogo FM27. Asignar y restablecer mantiene el orden del contrato. | Dos posiciones con rol común generan una sola asignación compatible. |
+| REQ-ROLE-002 | F | Diagnóstico por atributos visibles y catálogo de portería de la edición activa. Mostrar la causa de cada fortaleza. | Key 14–16 produce fortaleza de media 15; desconocido queda sin clasificar. |
+| REQ-RATING-001 | F | Conservar la aritmética Classic íntegra como referencia. Para uso deportivo exigir todos los atributos con peso observables, evitando una penalización por desconocimiento. | Caso documentado A=92 y N=55; al faltar Aceleración el oráculo da 32 y la aplicación muestra cobertura insuficiente. |
+| REQ-RATING-002 | F | Evaluar cada entero del intervalo con el peso conocido y la jerarquía de curvas del perfil. | Uniforme12 da 70,1 en AM-IP y 70,3 en AM-OOP. |
+| REQ-RATING-003 | F | Separar base de portería y diferencial de marcas por fase para explicar el resultado. | BGK da 57,9 / 54,0 / 46,0 en las tres fichas del anexo 22. |
+| REQ-TAC-001 | F | Asignar A y B en una fase con el objetivo lexicográfico original. Disponible para una táctica de una fase de FM27. | Dos puestos, P=80/79 y Q=78/ausente dan Q y P, suma 157. |
+| REQ-TAC-002 | F | Resolver IP y OOP con los mismos UID en cada equipo, manteniendo coste, poda y refinamiento del original. | G04 cambia de Gnabry a Olise al pasar de 50 a 70 % IP. |
+| REQ-TAC-003 | C | Fijar jugadores y simular ausencias, guardando el escenario separado de la selección base. | Baja del titular 80, única alternativa legal 71, pérdida 9. |
+| REQ-SQUAD-001 | C | Asignar profundidad, filial y juveniles a partir de los excedentes según las prioridades del AS-IS. | Único sobrante válido en tres roles cubre el tercero por reserva aun con límite inicial 2. |
+| REQ-SQUAD-002 | F | Identificar hueco, desplazamiento y caída de nivel con sus umbrales y referencias. | G05 señala MC desplazado, mejor destino DMC, gravedad 30. |
+| REQ-SQUAD-003 | C | Comparar dos tácticas en la misma revisión de plantilla y exponer cobertura, media, mediana y profundidad. | G05 da 11 titulares, media 71,5, mediana 71 y siete puestos frágiles. |
+| REQ-NAT-001 | P | Convocatoria nacional automática después de acreditar nacionalidades y elegibilidad visibles; se mantiene su objetivo y cuota de porteros. | Al retomar, diez plazas, objetivo tres porteros y sólo dos disponibles producen dos y ocho de campo. |
+| REQ-SCOUT-001 | F | Matriz de candidatos y puentes. Distinguir umbral seguro, posible y sin evidencia para no usar un desconocido como cero. | Ritmo 12–14 con mínimo 13 es posible; con pase desconocido no satisface ambos mínimos seguros. |
+| REQ-SCOUT-002 | C | Medir mejora individual respecto al mejor propio por rol sobre candidatos con importes comparables. | Mejor propio 74, candidatos 74 y 76, única propuesta 76 con ventaja 2. |
+| REQ-MARKET-001 | C | Recalcular el XI hipotético y explicar recolocaciones y variación de coste por separado. | G06 eleva A de 228 a 236 y B en 70; la plantilla base conserva sus miembros. |
+| REQ-MARKET-002 | C | Marcar cesión o venta en el plan local desde excedentes y talento. | Tres excedentes del caso 019 de 16, 17 y 21 años producen sin sugerencia, cesión y venta. |
+| REQ-DEV-001 | C | Conservar fórmula de talento y sustituciones neutrales explícitas. Exigir un rol puntuable y personalidad observada para cualquier bono propio de su categoría. | G07 da 87,5; sin personalidad conocida el desglose fija su término en 0, sin deducirla. |
+| REQ-DEV-002 | C | Calcular ganancia marginal previa al redondeo y explicar elegibilidad, banda y edad. | Atributo lineal a 10, edad 22, factor 2/3: prioridad 200/57. |
+| REQ-DEV-003 | C | Puntuar métodos entrenables por suma de prioridades y generar plan por persona y rol. | Quickness obtiene 3 con prioridades 2 y 1; se excluye rehabilitación. |
+| REQ-HIST-001 | C | Instantáneas incrementales fechadas y política explícita de ramas al retroceder de fecha, evitando sobrescribir el presente. | Enero 10, febrero 12 y vuelta a 10 conservan el cierre mensual igual a enero; carga anterior queda en revisión. |
+| REQ-DATA-004 | F | Admitir exportaciones tabulares visibles FM27 como entrada manual complementaria, con mapa de cabeceras y borrador antes de confirmar. | CSV y HTML de la misma vista FM27 producen los mismos UID y rangos; encabezados ambiguos quedan pendientes. |
+| REQ-FM-001 | F | Sustituir el lector de guardados por el adaptador BepInEx de observaciones autorizadas. | Un intervalo leído en pantalla llega igual al backend; un archivo .fm se rechaza como fuente. |
+| REQ-FM-002 | F | Reemplazar el seguimiento de ficheros por sesión, lote e identificación verificable de carrera. | Reenviar un lote confirmado deja idéntico número de filas y observaciones. |
+| REQ-HIST-002 | C | Conservar tendencias y distinguir cambio deportivo y cambio de fórmula mediante revisiones inmutables. | G08 muestra [60,60,62], variación deportiva +2 y reajuste +10 identificados. |
+| REQ-HIST-003 | C | Calcular antigüedad sólo a partir de observaciones comparables. Toda retirada inferida es reversible y queda etiquetada. | Ausencia de un jugador en una vista parcial no adelanta su contador de retirada. |
+| REQ-REG-001 | C | Versionar reglas, excepciones, fechas y su evidencia por competición. Separar regla modelada y verificada en el juego. | Adulto sin dato de formación consta como incierto; en la simulación no satisface cuota local. |
+| REQ-REG-002 | C | Conservar orden de selección y refinamiento con presupuesto conocido; separar coste no determinado de la factibilidad financiera. | G09 se conserva en referencia; con sueldo desconocido la lista muestra subtotal y viabilidad económica incierta. |
+| REQ-REG-003 | C | Aplicar lista aceptada localmente a la siguiente optimización, con avisos por cupo y posibilidad de vaciarla. | Dos adultos para dos plazas, sólo el de 80 inscrito, media 80; vaciar lista admite ambos y media 70. |
+| REQ-SAVE-001 | F | Partidas independientes, copia consistente e intercambio selectivo de ajustes. Conversión de bases históricas queda pospuesta por falta de corpus. | Copiar táctica deja la nueva carrera sin club, personas, fotos asociadas ni conexión activa del original. |
+| REQ-PROFILE-001 | F | Crear, duplicar, versionar, importar y exportar perfiles con huella de cálculo e historial. | Renombrar conserva huella matemática; editar un punto válido la cambia; sigue accesible la revisión anterior. |
+| REQ-TAC-004 | C | Guardar múltiples tácticas e intercambiar definiciones, validando posiciones y roles antes de activar. | G13 acepta STC con PFB y señala NIX desconocido sin reemplazar la táctica activa. |
+| REQ-ROLE-003 | C | Definir roles locales y asignar, completar o restablecer respetando la fase y la primaria. | Rol manual X y predeterminado Y dan X+Y al completar y sólo Y al restablecer. |
+| REQ-SQUAD-004 | F | Comparar hasta cinco fichas. Separar anotaciones manuales del dato observado. Las medias de áreas informan cobertura y usan sólo conocidos. | Aceleración 12–16 y ritmo desconocido dan media 14 y cobertura 1/2. |
+| REQ-NAT-002 | P | Agrupar la gestión y comparación nacional con la convocatoria para entregar un flujo completo. | Al retomar, candidatos de 72 y 74 contra referencia 70 sugieren 74 sin convocarlo. |
+| REQ-EXPORT-001 | F | CSV regional exporta la proyección visible elegida y el filtro activo para evitar exponer columnas ocultas. | Nombre con coma se escapa; al ocultar Sueldo desaparece su columna y CA/PA desactivados jamás entran. |
+| REQ-DEV-004 | C | Versionar bandas de desarrollo y sus atributos; aplicar límites del editor. | Pico 60, bloqueo 30 y peso 8 se ajustan a 50/50/5. |
+| REQ-SQUAD-005 | C | Sugerir salida sólo en cobertura completa acreditada y pedir confirmación del destino local. | Ausente de una vista parcial conserva club; al cancelar la conciliación completa también. |
+| REQ-FM-003 | P | Instalación de tres vistas y dos tácticas .fmf depende de derechos y utilidad con la nueva vía de entrada. | Si se habilita, verificar los cinco archivos contra el inventario y huellas del contrato 041. |
+| REQ-PROFILE-002 | C | Editar veinte aportaciones de una curva en borrador, con deshacer, rehacer y activación independiente. | Serie 50…69 da base 50 y peso 19; introducir 47 en nivel 10 mantiene el último borrador válido. |
+
+## Capacidades nuevas y transversales
+
+| ID | Entrega | Requisito observable | Comprobación de aceptación |
+|---|---|---|---|
+| REQ-SCOPE-001 | F | Compatibilidad exclusiva FM27 y funcionamiento local sin IA. | Un lote FM24 se rechaza antes de persistir. Sin red se completa plantilla → rol → XI. |
+| REQ-SAVE-002 | F | Vincular sincronización a carrera, mánager y fecha de juego, con confirmación de identidad ambigua. | Dos carreras del mismo club con UID 42 conservan dos personas y dos históricos independientes. |
+| REQ-VIS-001 | F | Proyectar conocimiento efectivo antes de cualquier consulta, cálculo, agregado o exportación. | Cambiar sólo valores secretos deja idénticos filas, totales, orden, herramientas y CSV autorizados. |
+| REQ-VIS-002 | F | Permitir CA y PA sólo con habilitación expresa y fuente validada. Revocar acceso al desactivar. | Activar sin capacidad mantiene «No disponible»; desactivar cancela consultas y descarta proyecciones anteriores. |
+| REQ-FM-004 | F | Negociar versión y capacidades por compilación y rechazar lotes incompatibles o truncados. | Tras cambiar compilación sin validación se conserva el último estado con fecha y se explica el bloqueo. |
+| REQ-PREF-001 | C | Guardar filosofía deportiva por partida y mostrar su influencia separada de DWRS y del presupuesto. | Cambiar la prioridad de juventud altera el orden por preferencia, manteniendo DWRS e XI de referencia. |
+| REQ-RATING-004 | C | Ofrecer perfil ponderado alternativo por posición, con unidad y procedencia identificadas. | Dos atributos exactos 10 y 16 con pesos 1 y 2 dan 14/20; si falta uno no hay nota. |
+| REQ-SCOUT-003 | C | Guardar filtros, listas con fecha y criterios sugeridos a partir de referentes visibles. | Recuperar una búsqueda de otra sesión conserva sus parámetros y revalida cada campo autorizado. |
+| REQ-MARKET-003 | C | Evaluar sustitución, venta, cesión, coste y presupuesto en escenarios locales. | Venta a 8 M y reemplazo a 5 M muestran +3 M brutos de caja antes de salarios o gastos. |
+| REQ-STAFF-001 | A | Evaluar empleados por función y atributos conocidos con fuentes y escalas versionadas. | «Good» y «Elite» con pesos 2 y 1 dan estimación 46/3 sobre 20; palabra desconocida impide valorar. |
+| REQ-DEV-005 | C | Seguir cedidos y jóvenes por destino y rol objetivo, marcando fechas y discontinuidades. | Un cambio de club conserva la serie del UID; sin última observación figura su antigüedad. |
+| REQ-STAT-001 | C | Calcular por 90, tasas, percentiles y comparativas para una población identificable. | 5 goles en 450 min dan 1 por 90; sin minutos válidos no aparece punto. |
+| REQ-STAT-002 | A | Explorar coste y rendimiento en radar, pizza, dispersión y distribuciones con muestra y fuente. | Cambiar liga recalcula N y percentiles; una celda insuficiente muestra la causa en tabla y gráfico. |
+| REQ-HIST-004 | C | Comparar dos cierres de temporada por plantilla, cohorte común y movimientos. | Venta de un jugador produce una baja, conserva su pasado y cambia el denominador del nuevo cierre. |
+| REQ-AI-001 | A | ChatGPT opcional mediante autenticación oficial y consentimiento revocable. | Sin credencial se mantiene toda la analítica local. Un 429 conserva resultados y explica el límite. |
+| REQ-AI-002 | A | Responder con herramientas acotadas y referencias a los cálculos locales. | Una consulta sobre un refuerzo cita revisión, rol, coste y fecha; solicitudes ajenas al permiso no devuelven campos. |
+| REQ-ART-001 | C | Indexar la carpeta graphics elegida, resolver por identificador y cargar bajo demanda. | Dos homónimos tienen fotos distintas; archivo ausente usa iniciales y reindexar actualiza sólo cambios. |
+| REQ-I18N-001 | F | UI inicial en castellano y ficha en orden oficial FM27. Preparar inglés seleccionable en segunda entrega. | Cambiar cultura de prueba conserva orden canónico, ID y puntuación; término sin fuente conserva estado pendiente. |
+| REQ-UI-001 | F | Navegación y componentes nativos accesibles, densos y legibles a distintas escalas. | Se consulta una ficha y se bloquea un puesto sólo con teclado al 150 %. |
+| REQ-UX-001 | F | Prototipo HTML local con datos ficticios tras revisión de Fase B. | Sin conexión se completan los recorridos de aceptación visual y hay cero peticiones remotas. |
+| REQ-PERF-001 | F | Consultar más de 100.000 jugadores con memoria acotada y cancelación. | Con 150.000 filas la lista materializa como máximo la ventana especificada y descarta resultados de filtro obsoletos. |
+| REQ-TECH-001 | F | Una solución .slnx compilable desde CLI, VS Code y Visual Studio Enterprise para Windows 11 x64. | Desde un clon limpio, misma revisión, pruebas y versión de artefactos en ambos IDE y terminal. |
+| REQ-OPS-001 | C | Resguardar datos de una carrera, diagnosticar y restaurar ante fallos. | Una copia mientras hay cambios confirmados en WAL se restaura con esos cambios y con integridad referencial. |
+| REQ-TERM-001 | F | Separar claves del dominio y catálogo verificable de atributos, roles, puestos, instrucciones y abreviaturas. | Se puede remontar cada etiqueta marcada oficial a edición, idioma, vista y evidencia. |
