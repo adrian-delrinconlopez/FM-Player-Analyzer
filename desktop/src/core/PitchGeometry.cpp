@@ -37,12 +37,9 @@ void buildLookups(PitchGeometry &geometry)
     }
 }
 
-// FM24 (legacy constants.py / new_tactic.py). As in the game, who may fill a
-// slot depends on the slot's position, not on the role: DL/DR need D (L)/D (R)
-// (wing-back roles are fine there for such a player), DML/DMR ("WBL"/"WBR" in
-// the game) need WB (L)/WB (R) and take wing-back roles only. Decision
-// 2026-10-18: a pure wing-back no longer fills DL/DR (legacy allowed it).
-PitchGeometry buildFm24()
+// Defensive wide slots use full-back positions. Wide slots in the defensive
+// midfield stratum use wing-back positions.
+PitchGeometry buildPitch()
 {
     const QString dl = QStringLiteral("D (L)"), dr = QStringLiteral("D (R)");
     const QString dc = QStringLiteral("D (C)"), dm = QStringLiteral("DM");
@@ -141,13 +138,10 @@ int PitchGeometry::drawingRow(const QString &stratum) const
     return -1;
 }
 
-const PitchGeometry &pitchGeometry(const QString &versionId)
+const PitchGeometry &pitchGeometry(const QString &)
 {
-    // Dispatch on the FM version like attributeMapping(): new releases get
-    // another branch; unknown or empty ids fall back to the default version.
-    Q_UNUSED(versionId); // only FM24 exists today
-    static const PitchGeometry fm24 = buildFm24();
-    return fm24;
+    static const PitchGeometry geometry = buildPitch();
+    return geometry;
 }
 
 const QHash<QString, SlotPosition> &masterPositionMap(const QString &versionId)

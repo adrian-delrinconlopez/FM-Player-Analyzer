@@ -30,8 +30,7 @@ struct Section {
 };
 
 // The sidebar of a management mode.
-// customRoles = false hides "Neue Rolle" (FM27 ships every game role).
-QList<Section> sidebar(bool national, bool customRoles = true);
+QList<Section> sidebar(bool national);
 
 // The group that holds pageId in the given sidebar, or nullptr.
 const Group *findGroup(const QList<Section> &sections, const QString &pageId);

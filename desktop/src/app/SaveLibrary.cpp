@@ -49,7 +49,7 @@ void readInfo(SaveInfo &info, quint32 *clubFmIdOut)
     {
         QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connName);
         db.setDatabaseName(info.filePath);
-        db.setConnectOptions(QStringLiteral("QSQLITE_BUSY_TIMEOUT=500"));
+        db.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY;QSQLITE_BUSY_TIMEOUT=500"));
         if (db.open()) {
             QSqlQuery settings(db);
             if (settings.exec(QStringLiteral("SELECT key, value FROM settings WHERE key IN "
@@ -106,8 +106,6 @@ void readInfo(SaveInfo &info, quint32 *clubFmIdOut)
         }
     }
     QSqlDatabase::removeDatabase(connName);
-    if (info.fmVersionId.isEmpty())
-        info.fmVersionId = defaultFmVersionId();
 }
 
 bool isOpenSave(AppContext &context, const QString &name)
@@ -262,8 +260,9 @@ QString validateName(AppContext &context, const QString &rawName)
         return SaveText::tr("Der Name darf nicht mit einem Punkt beginnen oder enden.");
     if (name.size() > 80)
         return SaveText::tr("Der Name ist zu lang (höchstens 80 Zeichen).");
-    for (const QString &existing : context.availableDatabases()) {
-        if (existing.compare(name, Qt::CaseInsensitive) == 0)
+    const QDir dir(context.paths().databasesDir());
+    for (const QString &existing : dir.entryList({QStringLiteral("*.db")}, QDir::Files)) {
+        if (existing.chopped(3).compare(name, Qt::CaseInsensitive) == 0)
             return SaveText::tr("Ein Spielstand mit diesem Namen existiert bereits.");
     }
     return {};
@@ -353,6 +352,11 @@ bool importFile(AppContext &context, const QString &sourcePath, const QString &n
     if (!error.isEmpty()) {
         if (errorOut)
             *errorOut = error;
+        return false;
+    }
+    if (!Database::isFm27Save(sourcePath)) {
+        if (errorOut)
+            *errorOut = SaveText::tr("Nur Spielstände für Football Manager 27 werden unterstützt.");
         return false;
     }
     QDir().mkpath(context.paths().databasesDir());

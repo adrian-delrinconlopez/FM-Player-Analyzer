@@ -64,7 +64,7 @@ protected:
 
 private:
     // How the team selection works, shown under the tactic choice.
-    static QString algorithmHint();
+    static QString phaseHint();
     void rebuild();
     // Manual bridges (two-phase tactics): uid -> (slot with ball, slot
     // without ball), stored per tactic in the database settings.
@@ -102,7 +102,7 @@ private:
     void addScoutActions(QMenu &menu, TacticPitchWidget *pitch, const QString &slot);
     void showEmptySlotMenu(TacticPitchWidget *pitch, const QString &slot, const QPoint &globalPos);
     // One row per starter: the extra player who covers his absence and who moves.
-    void fillOutageTable(const QList<OutageCover> &covers, bool twoPhase);
+    void fillOutageTable(const QList<OutageCover> &covers);
 
     ThemeManager &m_theme;
     QScrollArea *m_scroll = nullptr;
@@ -130,10 +130,8 @@ private:
     TacticPitchWidget *m_bTeamPitch = nullptr;
     QPushButton *m_xiButton = nullptr;         // Startelf / B-Team switch
     QPushButton *m_bButton = nullptr;
-    QStackedWidget *m_teamStack = nullptr;     // 0/1: FM27 XI/B-team, 2: FM24, 3: combined teams
+    QStackedWidget *m_teamStack = nullptr;     // 0/1: starting XI/B-team, 2: combined teams
     QWidget *m_teamSwitch = nullptr;           // the switch (two-phase tactics only)
-    TacticPitchWidget *m_singleXiPitch = nullptr; // FM24: starting XI ...
-    TacticPitchWidget *m_singleBPitch = nullptr;  // ... and B-team side by side
     // Tactical view of a two-phase tactic: combined (one pitch, each player
     // between his two places), with ball, without ball, or both side by side.
     enum PhaseView { Combined = 0, InPossession = 1, OutOfPossession = 2, BothPhases = 3 };
@@ -144,7 +142,7 @@ private:
         QWidget *oopColumn = nullptr;
         QWidget *combinedColumn = nullptr;
         TacticPitchWidget *combined = nullptr;
-    } m_teamPages[3];
+    } m_teamPages[2];
     QLabel *m_xiIpTitle = nullptr;
     QLabel *m_bIpTitle = nullptr;
     QLabel *m_phaseNote = nullptr;

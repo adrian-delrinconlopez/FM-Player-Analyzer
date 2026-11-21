@@ -4,86 +4,12 @@
 
 namespace fm {
 
-// FM24 export-header -> internal-column mapping. The internal names on the
-// right are the app's canonical attribute/column names and never change; a
-// future FM release only needs its own header->internal map.
-static const QHash<QString, QString> &fm24AttributeMapping()
-{
-    static const QHash<QString, QString> mapping = {
-        {QStringLiteral("Reg"), QStringLiteral("Registration")},
-        {QStringLiteral("Inf"), QStringLiteral("Information")},
-        {QStringLiteral("Name"), QStringLiteral("Name")},
-        {QStringLiteral("Age"), QStringLiteral("Age")},
-        {QStringLiteral("Wage"), QStringLiteral("Wage")},
-        {QStringLiteral("Transfer Value"), QStringLiteral("Transfer Value")},
-        {QStringLiteral("Nat"), QStringLiteral("Nationality")},
-        {QStringLiteral("2nd Nat"), QStringLiteral("Second Nationality")},
-        {QStringLiteral("Position"), QStringLiteral("Position")},
-        {QStringLiteral("Personality"), QStringLiteral("Personality")},
-        {QStringLiteral("Media Handling"), QStringLiteral("Media Handling")},
-        {QStringLiteral("Av Rat"), QStringLiteral("Average Rating")},
-        {QStringLiteral("Left Foot"), QStringLiteral("Left Foot")},
-        {QStringLiteral("Right Foot"), QStringLiteral("Right Foot")},
-        {QStringLiteral("Height"), QStringLiteral("Height")},
-        {QStringLiteral("1v1"), QStringLiteral("One vs One")},
-        {QStringLiteral("Acc"), QStringLiteral("Acceleration")},
-        {QStringLiteral("Aer"), QStringLiteral("Aerial Reach")},
-        {QStringLiteral("Agg"), QStringLiteral("Aggression")},
-        {QStringLiteral("Agi"), QStringLiteral("Agility")},
-        {QStringLiteral("Ant"), QStringLiteral("Anticipation")},
-        {QStringLiteral("Bal"), QStringLiteral("Balance")},
-        {QStringLiteral("Bra"), QStringLiteral("Bravery")},
-        {QStringLiteral("Cmd"), QStringLiteral("Command of Area")},
-        {QStringLiteral("Cnt"), QStringLiteral("Concentration")},
-        {QStringLiteral("Cmp"), QStringLiteral("Composure")},
-        {QStringLiteral("Cro"), QStringLiteral("Crossing")},
-        {QStringLiteral("Dec"), QStringLiteral("Decisions")},
-        {QStringLiteral("Det"), QStringLiteral("Determination")},
-        {QStringLiteral("Dri"), QStringLiteral("Dribbling")},
-        {QStringLiteral("Fin"), QStringLiteral("Finishing")},
-        {QStringLiteral("Fir"), QStringLiteral("First Touch")},
-        {QStringLiteral("Fla"), QStringLiteral("Flair")},
-        {QStringLiteral("Han"), QStringLiteral("Handling")},
-        {QStringLiteral("Hea"), QStringLiteral("Heading")},
-        {QStringLiteral("Jum"), QStringLiteral("Jumping Reach")},
-        {QStringLiteral("Kic"), QStringLiteral("Kicking")},
-        {QStringLiteral("Ldr"), QStringLiteral("Leadership")},
-        {QStringLiteral("Lon"), QStringLiteral("Long Shots")},
-        {QStringLiteral("Mar"), QStringLiteral("Marking")},
-        {QStringLiteral("OtB"), QStringLiteral("Off the Ball")},
-        {QStringLiteral("Pac"), QStringLiteral("Pace")},
-        {QStringLiteral("Pas"), QStringLiteral("Passing")},
-        {QStringLiteral("Pos"), QStringLiteral("Positioning")},
-        {QStringLiteral("Ref"), QStringLiteral("Reflexes")},
-        {QStringLiteral("Sta"), QStringLiteral("Stamina")},
-        {QStringLiteral("Str"), QStringLiteral("Strength")},
-        {QStringLiteral("Tck"), QStringLiteral("Tackling")},
-        {QStringLiteral("Tea"), QStringLiteral("Teamwork")},
-        {QStringLiteral("Tec"), QStringLiteral("Technique")},
-        {QStringLiteral("Thr"), QStringLiteral("Throwing")},
-        {QStringLiteral("TRO"), QStringLiteral("Rushing Out (Tendency)")},
-        {QStringLiteral("Vis"), QStringLiteral("Vision")},
-        {QStringLiteral("Wor"), QStringLiteral("Work Rate")},
-        {QStringLiteral("UID"), QStringLiteral("Unique ID")},
-        {QStringLiteral("Cor"), QStringLiteral("Corners")},
-        {QStringLiteral("Nat F"), QStringLiteral("Natural Fitness")},
-        {QStringLiteral("Fre"), QStringLiteral("Free Kick Taking")},
-        {QStringLiteral("L Th"), QStringLiteral("Long Throws")},
-        {QStringLiteral("Pen"), QStringLiteral("Penalty Taking")},
-        {QStringLiteral("Pun"), QStringLiteral("Punching")},
-        {QStringLiteral("Club"), QStringLiteral("Club")},
-        {QStringLiteral("Agreed Playing Time"), QStringLiteral("Agreed Playing Time")},
-        {QStringLiteral("Preferred Foot"), QStringLiteral("Preferred Foot")},
-    };
-    return mapping;
-}
-
 // FM27 export-header -> internal-column mapping. FM27 has no export of its
 // own; the headers are those the FM View Exporter writes, i.e. the full column
 // names the game shows (english UI). Reference: docs/IMPORT-FM27.md and the
 // exporter's docs/columns/fm27.csv (column analyzer_field). The game has no
 // "Reg" column any more, so registration status is not imported.
-static const QHash<QString, QString> &fm27AttributeMapping()
+const QHash<QString, QString> &attributeMapping(const QString &)
 {
     static const QHash<QString, QString> mapping = {
         {QStringLiteral("Unique ID"), QStringLiteral("Unique ID")},
@@ -162,38 +88,7 @@ static const QHash<QString, QString> &fm27AttributeMapping()
     return mapping;
 }
 
-static bool isFm27(const QString &versionId)
-{
-    return versionId == QLatin1String("fm27");
-}
-
-const QHash<QString, QString> &attributeMapping(const QString &versionId)
-{
-    // Dispatch on the FM version. New releases get another branch here; unknown
-    // or empty ids fall back to the default version.
-    if (isFm27(versionId))
-        return fm27AttributeMapping();
-    return fm24AttributeMapping();
-}
-
-const QHash<QString, QString> &attributeMapping()
-{
-    return attributeMapping(defaultFmVersionId());
-}
-
-// FM24 columns the app intentionally ignores (legacy IGNORED_EXPORT_COLUMNS).
-static const QSet<QString> &fm24IgnoredExportColumns()
-{
-    static const QSet<QString> ignored = {
-        QStringLiteral("CON"), QStringLiteral("Ability"),
-        QStringLiteral("Position/Role/Duty")};
-    return ignored;
-}
-
-// FM27 columns the app does not read: every other column the game offers
-// (from the exporter's docs/columns/fm27.csv), so only headers the game
-// renamed or added in a patch show up as unknown.
-static const QSet<QString> &fm27IgnoredExportColumns()
+const QSet<QString> &ignoredExportColumns(const QString &)
 {
     static const QSet<QString> ignored = {
         // Scout grade ("B- Very Good"), first column of the Player Database
@@ -350,47 +245,19 @@ static const QSet<QString> &fm27IgnoredExportColumns()
     return ignored;
 }
 
-const QSet<QString> &ignoredExportColumns(const QString &versionId)
-{
-    if (isFm27(versionId))
-        return fm27IgnoredExportColumns();
-    return fm24IgnoredExportColumns();
-}
-
-static const QStringList &fm24RequiredImportColumns()
-{
-    static const QStringList required = {QStringLiteral("UID"), QStringLiteral("Name")};
-    return required;
-}
-
-static const QStringList &fm27RequiredImportColumns()
+const QStringList &requiredImportColumns(const QString &)
 {
     static const QStringList required = {QStringLiteral("Unique ID"), QStringLiteral("Player")};
     return required;
 }
 
-const QStringList &requiredImportColumns(const QString &versionId)
-{
-    if (isFm27(versionId))
-        return fm27RequiredImportColumns();
-    return fm24RequiredImportColumns();
-}
-
-static const QHash<QString, QString> &fm27ExportHeaderAliases()
+const QHash<QString, QString> &exportHeaderAliases(const QString &)
 {
     static const QHash<QString, QString> aliases = {
         {QStringLiteral("Name"), QStringLiteral("Player")},          // Player Database
         {QStringLiteral("Rec."), QStringLiteral("Recommendation")}, // short header in exports
     };
     return aliases;
-}
-
-const QHash<QString, QString> &exportHeaderAliases(const QString &versionId)
-{
-    static const QHash<QString, QString> none;
-    if (isFm27(versionId))
-        return fm27ExportHeaderAliases();
-    return none;
 }
 
 void applyHeaderAliases(QStringList *headers, const QString &versionId)

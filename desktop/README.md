@@ -1,18 +1,21 @@
-# FM24 Player Analyzer — Desktop (C++ / Qt 6)
+# FM Player Analyzer — Desktop (C++ / Qt 6)
 
-Native Windows port of the FM24 Player Analyzer, optimized for very large
-scouting databases (80k+ players).
+Desktop companion for **Football Manager 2027**, optimized for large scouting
+databases. It reads FM27 saves directly and imports CSV and HTML files from
+FM View Exporter. It includes DWRS ratings, squad analysis, possession-phase
+line-ups, player development, scouting, registrations, transfers and tactics.
 
-**Feature-complete** with the legacy Streamlit app: HTML import (incl. the
-newgen-ID unification engine and departure detection), DWRS engine, dashboard,
-squad matrix with talent filter, role assignment/analysis, player profile /
-comparison (radar charts) / development charts, Best XI + gap analysis +
-tactic explorer, full national-team mode, transfer/loan management, and the
-role/tactic editors. Legacy databases are migrated via
-Settings → Database → "Import legacy database".
+Earlier FM24 databases can still be used with an earlier Analyzer release.
+The data folder retains its original name so existing FM27 profiles are found.
 
-The interface is in English by default; a German translation is available under
-the **Language** menu (applied after a restart).
+The interface defaults to English. German and Spanish are available from the
+**Language** menu or the language button on the start screen. Changes take effect
+after restarting.
+
+The Spanish interface catalog is `translations/fmplayeranalyzer_es.ts`. To edit
+the Spanish role names or other game terminology, open
+`translations/football_terms_es.ts` in Qt Linguist or a text editor and update
+the relevant `<translation>` values. Rebuild the app to embed the updated catalogs.
 
 ## Build requirements
 
@@ -48,7 +51,7 @@ or run `windeployqt` on it).
 
 builds the release, stages it with `windeployqt` into `installer/staging/`
 and — if Inno Setup 6 is installed — compiles
-`installer/output/FM24PlayerAnalyzer-Setup-<version>.exe`. Without Inno Setup
+`installer/output/FMPlayerAnalyzer-<version>-Windows-x64-Setup.exe`. Without Inno Setup
 the staging folder works as a portable install. The app version comes from
 `src/core/Version.cpp`.
 

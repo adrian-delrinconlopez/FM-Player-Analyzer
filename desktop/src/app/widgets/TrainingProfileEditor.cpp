@@ -1,6 +1,5 @@
 #include "TrainingProfileEditor.h"
 
-#include "RatingProfileEditor.h"
 #include "core/Attributes.h"
 
 #include <QCheckBox>
@@ -197,14 +196,14 @@ void TrainingProfileEditor::fillAttributes(const TrainingProfile &profile)
     for (int i = 0; i < int(attrNames().size()); ++i)
         order << i;
     std::sort(order.begin(), order.end(), [](int a, int b) {
-        return RatingProfileEditor::attributeLabel(a).localeAwareCompare(
-                   RatingProfileEditor::attributeLabel(b)) < 0;
+        return attributeLabel(a).localeAwareCompare(
+                   attributeLabel(b)) < 0;
     });
     for (int index : order) {
         const QString name = attrNames()[size_t(index)];
         const int row = m_attributes->rowCount();
         m_attributes->insertRow(row);
-        auto *label = new QTableWidgetItem(RatingProfileEditor::attributeLabel(index));
+        auto *label = new QTableWidgetItem(attributeLabel(index));
         label->setTextAlignment(Qt::AlignLeft | Qt::AlignVCenter);
         label->setData(Qt::UserRole, name);
         m_attributes->setItem(row, 0, label);

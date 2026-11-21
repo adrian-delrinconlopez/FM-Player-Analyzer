@@ -287,16 +287,7 @@ public:
     // Convenience settings accessors (stored in the DB settings table).
     QString userClub() { return m_database->setting(QStringLiteral("user_club")); }
     QString secondTeamClub() { return m_database->setting(QStringLiteral("second_team_club")); }
-    // FM release of this database: selects export layout, roles/tactics and
-    // attribute weights. Chosen when the save is created.
-    QString fmVersionId()
-    {
-        return m_database->setting(QStringLiteral("fm_version"), defaultFmVersionId());
-    }
-    // Switches the active database to another FM version and loads its
-    // profile. Only allowed while the database holds no players; false (with
-    // a message) otherwise or on failure.
-    bool setFmVersion(const QString &versionId, QString *errorOut = nullptr);
+    QString fmVersionId() const { return defaultFmVersionId(); }
 
     // Start folder for the FM export file dialogs.
     QString htmlExportDir() { return m_config->effectiveHtmlExportDir(fmVersionId()); }

@@ -39,7 +39,7 @@ std::optional<RatingSelection> RatingSelectionStore::load(QString *error)
     RatingSelection result;
     result.game = json.value("game").toString(); result.generation = json.value("generation").toString();
     result.computationKey = json.value("computationKey").toString(); result.migrationDecision = json.value("migrationDecision").toString();
-    if (result.generation.isEmpty() || (result.game != "fm24" && result.game != "fm27")
+    if (result.generation.isEmpty() || result.game != "fm27"
         || (result.migrationDecision != "pending" && result.migrationDecision != "kept"
             && result.migrationDecision != "switched" && result.migrationDecision != "not-needed")) return fail(error, "invalid-rating-selection");
     const auto profile = RatingProfile::fromJson(json.value("profile").toObject(), error); if (!profile) return {};

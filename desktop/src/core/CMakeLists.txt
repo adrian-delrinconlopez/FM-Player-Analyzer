@@ -53,8 +53,6 @@ add_library(fmcore STATIC
     ImportTable.cpp
     ImportPipeline.h
     ImportPipeline.cpp
-    LegacyMigrator.h
-    LegacyMigrator.cpp
     MinCostFlow.h
     MinCostFlow.cpp
     NationalCallup.h

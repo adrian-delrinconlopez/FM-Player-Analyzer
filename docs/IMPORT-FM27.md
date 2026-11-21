@@ -14,13 +14,9 @@ Vertrag zwischen ihnen.
    Andere Ansichten gehen auch, solange `Unique ID` und `Player` dabei sind.
 3. Kader, Spielersuche oder Scouting öffnen, **F9** drücken. Die Datei landet in
    `Dokumente\Sports Interactive\FM View Exporter`.
-4. Im Analyzer einen Spielstand mit der Version **Football Manager 2027** anlegen
-   (Einstellungen → Datenbank → Neu; neue Spielstände sind standardmäßig FM27).
+4. Im Analyzer einen neuen Spielstand anlegen.
 5. Dashboard → *Neue Spielerdaten importieren* → CSV- oder HTML-Datei wählen. Der
    Dateidialog öffnet direkt den Ordner des Exporters.
-
-Die Version hängt am Spielstand. Ein FM24-Spielstand lehnt FM27-Dateien ab
-(„Pflichtspalte UID fehlt“), weil FM27 die Spalten anders nennt.
 
 ## Spielstand direkt einlesen (ab 2.1.0)
 
@@ -64,85 +60,85 @@ Was übernommen wird, regelt die Einstellung **Attribut-Maskierung wie im Spiel*
 
 ## Spaltenzuordnung
 
-FM24 exportierte Kürzel (`Acc`, `UID`, ...). Der Exporter schreibt dagegen genau die
+Der Exporter schreibt die
 Spaltenköpfe, die FM27 zeigt (englische Spieloberfläche). Die Reihenfolge der Spalten
 ist egal, der Analyzer sucht sie über den Namen. Quelle im Code:
-`desktop/src/core/ImportSchema.cpp` (`fm27AttributeMapping()`).
+`desktop/src/core/ImportSchema.cpp` (`attributeMapping()`).
 
 ### Pflicht
 
-| Spalte in FM27 | Feld im Analyzer | FM24-Kopf |
-| --- | --- | --- |
-| `Unique ID` | Unique ID | `UID` |
-| `Player` (Spielerdatenbank: `Name`) | Name | `Name` |
+| Spalte in FM27 | Feld im Analyzer |
+| --- | --- |
+| `Unique ID` | Unique ID |
+| `Player` (Spielerdatenbank: `Name`) | Name |
 
 ### Stammdaten
 
-| Spalte in FM27 | Feld im Analyzer | FM24-Kopf | Hinweis |
-| --- | --- | --- | --- |
-| `Position` | Position | `Position` | |
-| `Age` | Age | `Age` | |
-| `Club` | Club | `Club` | |
-| `Nation` | Nationality | `Nat` | Kürzel (`GER`) oder voller Name (`Germany`), gespeichert wird das Kürzel; bei zwei `Nation`-Spalten zählt die erste |
-| `2nd Nat` | Second Nationality | `2nd Nat` | voller Name, gespeichert wird das Kürzel |
-| `Height` | Height | `Height` | `193 cm` |
-| `Preferred Foot` | Preferred Foot | `Preferred Foot` | |
-| `Left Foot` | Left Foot | `Left Foot` | |
-| `Right Foot` | Right Foot | `Right Foot` | |
-| `Personality` | Personality | `Personality` | |
-| `Media Handling` | Media Handling | `Media Handling` | |
-| `Playing Time` | Agreed Playing Time | `Agreed Playing Time` | |
-| `Wage` | Wage | `Wage` | |
-| `Transfer Value` | Transfer Value | `Transfer Value` | Spanne → untere Grenze |
-| `Rating` | Average Rating | `Av Rat` | `-` = keine Spiele |
-| `Inf` | Information | `Inf` | wird gelesen, aber nicht ausgewertet |
+| Spalte in FM27 | Feld im Analyzer | Hinweis |
+| --- | --- | --- |
+| `Position` | Position | |
+| `Age` | Age | |
+| `Club` | Club | |
+| `Nation` | Nationality | Kürzel (`GER`) oder voller Name (`Germany`), gespeichert wird das Kürzel; bei zwei `Nation`-Spalten zählt die erste |
+| `2nd Nat` | Second Nationality | voller Name, gespeichert wird das Kürzel |
+| `Height` | Height | `193 cm` |
+| `Preferred Foot` | Preferred Foot | |
+| `Left Foot` | Left Foot | |
+| `Right Foot` | Right Foot | |
+| `Personality` | Personality | |
+| `Media Handling` | Media Handling | |
+| `Playing Time` | Agreed Playing Time | |
+| `Wage` | Wage | |
+| `Transfer Value` | Transfer Value | Spanne → untere Grenze |
+| `Rating` | Average Rating | `-` = keine Spiele |
+| `Inf` | Information | wird gelesen, aber nicht ausgewertet |
 
 ### Attribute (40)
 
-| Spalte in FM27 | Feld im Analyzer | FM24-Kopf |
-| --- | --- | --- |
-| `Aerial Reach` | Aerial Reach | `Aer` |
-| `Command Of Area` | Command of Area | `Cmd` |
-| `Handling` | Handling | `Han` |
-| `Kicking` | Kicking | `Kic` |
-| `One On Ones` | One vs One | `1v1` |
-| `Reflexes` | Reflexes | `Ref` |
-| `Rushing Out (Tendency)` | Rushing Out (Tendency) | `TRO` |
-| `Throwing` | Throwing | `Thr` |
-| `Aggression` | Aggression | `Agg` |
-| `Anticipation` | Anticipation | `Ant` |
-| `Bravery` | Bravery | `Bra` |
-| `Composure` | Composure | `Cmp` |
-| `Concentration` | Concentration | `Cnt` |
-| `Decisions` | Decisions | `Dec` |
-| `Determination` | Determination | `Det` |
-| `Flair` | Flair | `Fla` |
-| `Leadership` | Leadership | `Ldr` |
-| `Off The Ball` | Off the Ball | `OtB` |
-| `Positioning` | Positioning | `Pos` |
-| `Team Work` | Teamwork | `Tea` |
-| `Vision` | Vision | `Vis` |
-| `Work Rate` | Work Rate | `Wor` |
-| `Acceleration` | Acceleration | `Acc` |
-| `Agility` | Agility | `Agi` |
-| `Balance` | Balance | `Bal` |
-| `Jumping Reach` | Jumping Reach | `Jum` |
-| `Pace` | Pace | `Pac` |
-| `Stamina` | Stamina | `Sta` |
-| `Strength` | Strength | `Str` |
-| `Corners` | Corners | `Cor` |
-| `Crossing` | Crossing | `Cro` |
-| `Dribbling` | Dribbling | `Dri` |
-| `Finishing` | Finishing | `Fin` |
-| `First Touch` | First Touch | `Fir` |
-| `Heading` | Heading | `Hea` |
-| `Long Shots` | Long Shots | `Lon` |
-| `Marking` | Marking | `Mar` |
-| `Passing` | Passing | `Pas` |
-| `Tackling` | Tackling | `Tck` |
-| `Technique` | Technique | `Tec` |
+| Spalte in FM27 | Feld im Analyzer |
+| --- | --- |
+| `Aerial Reach` | Aerial Reach |
+| `Command Of Area` | Command of Area |
+| `Handling` | Handling |
+| `Kicking` | Kicking |
+| `One On Ones` | One vs One |
+| `Reflexes` | Reflexes |
+| `Rushing Out (Tendency)` | Rushing Out (Tendency) |
+| `Throwing` | Throwing |
+| `Aggression` | Aggression |
+| `Anticipation` | Anticipation |
+| `Bravery` | Bravery |
+| `Composure` | Composure |
+| `Concentration` | Concentration |
+| `Decisions` | Decisions |
+| `Determination` | Determination |
+| `Flair` | Flair |
+| `Leadership` | Leadership |
+| `Off The Ball` | Off the Ball |
+| `Positioning` | Positioning |
+| `Team Work` | Teamwork |
+| `Vision` | Vision |
+| `Work Rate` | Work Rate |
+| `Acceleration` | Acceleration |
+| `Agility` | Agility |
+| `Balance` | Balance |
+| `Jumping Reach` | Jumping Reach |
+| `Pace` | Pace |
+| `Stamina` | Stamina |
+| `Strength` | Strength |
+| `Corners` | Corners |
+| `Crossing` | Crossing |
+| `Dribbling` | Dribbling |
+| `Finishing` | Finishing |
+| `First Touch` | First Touch |
+| `Heading` | Heading |
+| `Long Shots` | Long Shots |
+| `Marking` | Marking |
+| `Passing` | Passing |
+| `Tackling` | Tackling |
+| `Technique` | Technique |
 
-Gescoutete Attribute kommen als Spanne (`12-15`) und werden wie bei FM24 als
+Gescoutete Attribute kommen als Spanne (`12-15`) und werden als
 Unter- und Obergrenze gespeichert.
 
 Beide CSV-Stile des Exporters gehen: *English* (Komma, `7.05`) und *German*
@@ -151,14 +147,10 @@ Note mit Punkt oder Komma.
 
 ### Nicht gelesen
 
-Alle anderen Spalten, die FM27 anbietet, kennt der Analyzer und überspringt sie
-still, darunter `Punching`, `Natural Fitness`,
-`Free Kick Taking`, `Long Throws` und `Penalty Taking` (wie bei FM24 nicht unter
-den bewerteten Attributen) sowie `Rec.` / `Recommendation` (Scout-Empfehlung von A+ bis F,
-erste Spalte der Ansicht für die Spielerdatenbank). Als *unbekannte Spalte* meldet der Import nur Köpfe, die
+Der Analyzer überspringt bekannte Spalten, die er nicht auswertet, etwa die Scout-Empfehlung. Als *unbekannte Spalte* meldet der Import nur Köpfe, die
 in keiner der beiden Listen stehen, also z. B. Spalten, die ein Patch umbenannt hat.
 
-## Was bei FM27 (noch) anders ist
+## Hinweise zum Import
 
 - **Fehlende Spalten überschreiben nichts:** Fehlt einer Datei eine Spalte, behält
   der Analyzer den bisher gespeicherten Wert. Beispiel: Die Ansicht für
@@ -167,15 +159,15 @@ in keiner der beiden Listen stehen, also z. B. Spalten, die ein Patch umbenannt 
   zunächst keine.
 
 - **Keine Registrierung:** FM27 hat keine Spalte `Reg`. Der Registrierungs-Assistent
-  ist für FM27-Spielstände deshalb aus.
+  verwendet die Angaben im Analyzer und die Regeln der ausgewählten Liga.
 - **Rollen und Taktiken:** die 79 FM27-Rollen (40 mit Ball, 39 ohne Ball) mit Key- und
   Preferable-Attributen aus dem Spiel, erzeugt aus `desktop/data/fm27/` durch
   `desktop/scripts/make_definitions_fm27.py` (`definitions_fm27.json`). Eine FM27-Taktik hat zwei
   unabhängige Aufstellungen (mit Ball, ohne Ball) ohne feste Paare; die Best XI wählt die Spieler
   und für jeden einen Platz in beiden Aufstellungen per Min-Cost-Flow
-  (`SquadBuilder::calculateTwoPhaseSquad`). Zusätzlich zu FM24 liest der Analyzer die
-  Torwart-Attribute `Communication` und `Eccentricity`; FM24-Spielstände bewerten sie nicht.
-- **Gewichte:** Attributkategorien und Gewichte sind vorläufig die von FM24
+  (`SquadBuilder::calculateTwoPhaseSquad`). Der Analyzer liest auch die
+  Torwart-Attribute `Communication` und `Eccentricity`.
+- **Gewichte:** DWRS Classic nutzt die bisherigen Attributkategorien und Gewichte
   (eigener Abschnitt `[Weights_fm27]` in `config.ini`).
 
 ## Beide Programme synchron halten
@@ -183,7 +175,7 @@ in keiner der beiden Listen stehen, also z. B. Spalten, die ein Patch umbenannt 
 - Maßgeblich für die Spaltennamen ist das Spaltenverzeichnis des Exporters:
   [`docs/columns/fm27.csv`](https://github.com/ElectroHugin/FM-View-Exporter/blob/main/docs/columns/fm27.csv),
   Spalte `analyzer_field`. Jede Zeile mit Eintrag dort steht in
-  `fm27AttributeMapping()`, alle übrigen in `fm27IgnoredExportColumns()`.
+  `attributeMapping()`, alle übrigen in `fm27IgnoredExportColumns()`.
 - Benennt ein FM27-Patch eine Spalte um, zeigt der Import sie als unbekannt an.
   Dann beide Stellen anpassen: `fm27.csv` im Exporter und `ImportSchema.cpp` hier.
 - Der Test `test_csvimport` (`fm27ExporterCsv`, `fm27MappingComplete`) prüft eine
@@ -199,7 +191,5 @@ Persönlichkeitsnamen noch die Vereinsbindung für „Devoted“. Sobald eines d
 für die Auswahl nötig wäre, wird kein Name geraten. Auch ungültige Werte liefern
 keinen Namen. CSV/HTML können weiterhin den direkt vom Spiel angezeigten Namen liefern.
 
-Unter Einstellungen → Persönlichkeiten lassen sich gut/neutral/schlecht für FM24
-und FM27 getrennt ändern. Die Einteilung liegt im jeweiligen versionsabhängigen
-Definitionsdokument des Spielstands; unverändert gelten die bisherigen FM24-Defaults.
+Unter Einstellungen → Persönlichkeiten lässt sich die Einstufung im aktuellen FM27-Spielstand ändern.
 Talent-Score, Filter und Analyse lesen dieselbe Einteilung.

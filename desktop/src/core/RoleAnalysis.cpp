@@ -13,14 +13,6 @@ namespace RoleAnalysis {
 
 namespace {
 
-// Legacy hardcodes the GK role list here (independent of definitions.json).
-const QStringList &gkRolesHardcoded()
-{
-    static const QStringList roles = {QStringLiteral("GK-D"), QStringLiteral("SK-D"),
-                                      QStringLiteral("SK-S"), QStringLiteral("SK-A")};
-    return roles;
-}
-
 int tierRank(const QString &tier)
 {
     if (tier == QLatin1String("personality"))
@@ -72,7 +64,7 @@ RoleReport analyzePlayerForRole(const Definitions &definitions, const Player &pl
         for (const QString &attr : weights.preferable)
             already.insert(attr);
 
-        const bool isGk = gkRolesHardcoded().contains(role);
+        const bool isGk = definitions.gkRoles().contains(role);
         const QString version = definitions.fmVersionId();
         const auto &categories =
             isGk ? gkStatCategories(version) : globalStatCategories(version);
@@ -115,32 +107,32 @@ RoleReport analyzePlayerForRole(const Definitions &definitions, const Player &pl
 QString formatProLine(const ProCon &pro, const QString &roleName)
 {
     if (pro.tier == QLatin1String("personality"))
-        return QCoreApplication::translate("RoleAnalysis", "Gute Persönlichkeit: %1").arg(pro.attr);
+        return QCoreApplication::translate("RoleAnalysis", "Gute Persönlichkeit: %1").arg(personalityLabel(pro.attr));
     const int value = qRound(pro.value);
     if (pro.tier == QLatin1String("key")) {
         return pro.elite
                    ? QCoreApplication::translate("RoleAnalysis",
                                                  "Herausragend: %1 (%2), Schlüssel für %3")
-                         .arg(pro.attr).arg(value).arg(roleName)
+                         .arg(attributeLabel(pro.attr)).arg(value).arg(roleName)
                    : QCoreApplication::translate("RoleAnalysis", "Stark: %1 (%2), Schlüssel für %3")
-                         .arg(pro.attr).arg(value).arg(roleName);
+                         .arg(attributeLabel(pro.attr)).arg(value).arg(roleName);
     }
     return pro.elite ? QCoreApplication::translate("RoleAnalysis", "Herausragend: %1 (%2)")
-                           .arg(pro.attr).arg(value)
+                           .arg(attributeLabel(pro.attr)).arg(value)
                      : QCoreApplication::translate("RoleAnalysis", "Stark: %1 (%2)")
-                           .arg(pro.attr).arg(value);
+                           .arg(attributeLabel(pro.attr)).arg(value);
 }
 
 QString formatConLine(const ProCon &con, const QString &roleName)
 {
     if (con.tier == QLatin1String("personality"))
         return QCoreApplication::translate("RoleAnalysis", "Schwierige Persönlichkeit: %1")
-            .arg(con.attr);
+            .arg(personalityLabel(con.attr));
     const int value = qRound(con.value);
     if (con.tier == QLatin1String("key"))
         return QCoreApplication::translate("RoleAnalysis", "Schwach: %1 (%2), Schlüssel für %3")
-            .arg(con.attr).arg(value).arg(roleName);
-    return QCoreApplication::translate("RoleAnalysis", "Schwach: %1 (%2)").arg(con.attr).arg(value);
+            .arg(attributeLabel(con.attr)).arg(value).arg(roleName);
+    return QCoreApplication::translate("RoleAnalysis", "Schwach: %1 (%2)").arg(attributeLabel(con.attr)).arg(value);
 }
 
 std::vector<TopRole> topRolesForPlayer(

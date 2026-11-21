@@ -17,15 +17,6 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: fm-version
-    attributes:
-      label: Football Manager version
-      options:
-        - FM27
-        - FM24
-    validations:
-      required: true
-  - type: dropdown
     id: data-source
     attributes:
       label: Where does your data come from?
@@ -33,7 +24,7 @@ body:
         - Save file (.fm), read directly
         - Save file (.fm), "Follow save live"
         - FM View Exporter (CSV, FM27)
-        - HTML export from FM (web page, FM24)
+        - FM27-compatible HTML export
         - Not sure / not relevant
     validations:
       required: true

@@ -104,8 +104,10 @@ QStringList AppContext::availableDatabases() const
     QDir dir(m_paths.databasesDir());
     QStringList names;
     const QStringList files = dir.entryList({QStringLiteral("*.db")}, QDir::Files, QDir::Name);
-    for (const QString &file : files)
-        names.append(file.chopped(3)); // strip ".db"
+    for (const QString &file : files) {
+        if (Database::isFm27Save(dir.filePath(file)))
+            names.append(file.chopped(3));
+    }
     return names;
 }
 
@@ -131,6 +133,11 @@ bool AppContext::openDatabaseImpl(const QString &dbName, const QString &copyProf
     // connection the new one just opened.
     const QString path = m_paths.databaseFile(dbName);
     const bool isNew = !QFile::exists(path);
+    if (!isNew && !Database::isFm27Save(path)) {
+        if (errorOut)
+            *errorOut = tr("Nur Spielstände für Football Manager 27 werden unterstützt.");
+        return false;
+    }
     auto database = std::make_unique<Database>(
         Database::uniqueConnectionName(QStringLiteral("main_%1").arg(dbName)));
     if (!database->open(path)) {
@@ -138,10 +145,12 @@ bool AppContext::openDatabaseImpl(const QString &dbName, const QString &copyProf
             *errorOut = database->errorString();
         return false;
     }
-    // New saves are marked explicitly; unmarked ones predate the setting and
-    // are FM24 (defaultFmVersionId).
     if (isNew) {
-        database->setSetting(QStringLiteral("fm_version"), newestFmVersionId());
+        if (!database->setSetting(QStringLiteral("fm_version"), defaultFmVersionId())) {
+            if (errorOut)
+                *errorOut = database->errorString();
+            return false;
+        }
         // Every rating this save will ever hold uses the current formula (the
         // new-save wizard may import before the main window first checks).
         database->setSetting(QStringLiteral("dwrs_scheme"), QString::number(kDwrsSchemeVersion));
@@ -173,7 +182,7 @@ bool AppContext::openDatabaseImpl(const QString &dbName, const QString &copyProf
     migrateProfileImages(*database);
 
     if (!activateFmVersion(*database,
-                           database->setting(QStringLiteral("fm_version"), defaultFmVersionId()),
+                           defaultFmVersionId(),
                            errorOut)) {
         restorePrevious();
         return false;
@@ -208,8 +217,12 @@ bool AppContext::createDatabase(const QString &dbName, const QString &fmVersionI
             *errorOut = tr("Ein Spielstand mit dem Namen „%1“ existiert bereits.").arg(dbName);
         return false;
     }
-    return openDatabaseImpl(dbName, copyProfileFrom, errorOut)
-           && setFmVersion(fmVersionId, errorOut);
+    if (fmVersionId != defaultFmVersionId()) {
+        if (errorOut)
+            *errorOut = tr("Nur Spielstände für Football Manager 27 werden unterstützt.");
+        return false;
+    }
+    return openDatabaseImpl(dbName, copyProfileFrom, errorOut);
 }
 
 bool AppContext::copyProfile(Database &target, const QString &sourceName, QString *errorOut)
@@ -222,8 +235,11 @@ bool AppContext::copyProfile(Database &target, const QString &sourceName, QStrin
     // Read the source through its own connection and without writing to it.
     // A source last used with 2.0.x has no profile yet: it used the shared
     // settings, which are then what gets copied.
+    const QString sourcePath = m_paths.databaseFile(sourceName);
+    if (!Database::isFm27Save(sourcePath))
+        return fail(tr("Nur Spielstände für Football Manager 27 werden unterstützt."));
     Database source(Database::uniqueConnectionName(QStringLiteral("profilecopy")));
-    if (!source.open(m_paths.databaseFile(sourceName)))
+    if (!source.open(sourcePath))
         return fail(source.errorString());
     ProfileStore from(source);
     const bool sourceHasProfile = from.isInitialized();
@@ -528,10 +544,8 @@ void AppContext::initializeRatingSelection(Database &db)
                     && m_ratingLibrary.insert(*own).isEmpty())
                     m_ratingLibrary.save(m_paths.ratingLibraryFile());
             }
-        } else {
-            const QString id = game == QStringLiteral("fm27") ? kHarvestgreenId : kClassicId;
-            if (m_ratingLibrary.profiles().contains(id))
-                profile = m_ratingLibrary.profiles().value(id);
+        } else if (m_ratingLibrary.profiles().contains(kHarvestgreenId)) {
+            profile = m_ratingLibrary.profiles().value(kHarvestgreenId);
         }
         if (!profile) {
             QTemporaryDir temporary;
@@ -642,29 +656,6 @@ QString AppContext::keepPreviousRatingProfile()
         return error;
     m_ratingSelection = selection;
     return {};
-}
-
-bool AppContext::setFmVersion(const QString &versionId, QString *errorOut)
-{
-    if (versionId == fmVersionId())
-        return true;
-    // Role assignments, ratings and history refer to the old version's roles.
-    if (m_store.size() > 0) {
-        if (errorOut)
-            *errorOut = tr("Die Football-Manager-Version ist an den Spielstand gebunden, "
-                           "sobald er Spieler enthält. Für eine andere Version bitte einen "
-                           "neuen Spielstand anlegen.");
-        return false;
-    }
-    if (!activateFmVersion(*m_database, versionId, errorOut))
-        return false;
-    if (!m_database->setSetting(QStringLiteral("fm_version"), versionId)) {
-        if (errorOut)
-            *errorOut = m_database->errorString();
-        return false;
-    }
-    emit dataChanged();
-    return true;
 }
 
 void AppContext::reloadFromDatabase()

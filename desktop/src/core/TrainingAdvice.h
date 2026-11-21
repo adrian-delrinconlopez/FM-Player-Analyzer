@@ -126,6 +126,7 @@ struct TrainingFocus {
 // The fixed focus->attributes table (see the mapping list). Placed here beside
 // the attribute-group table, mirroring the other hardcoded game-fact mappings.
 const std::vector<TrainingFocus> &trainingFocuses();
+QString focusLabel(const QString &name);
 
 struct FocusRecommendation {
     QString focus;

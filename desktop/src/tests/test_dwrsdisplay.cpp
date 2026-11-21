@@ -20,6 +20,8 @@ private slots:
         QCOMPARE(formatDwrsPercent(100.0), QStringLiteral("100,0%"));
         QCOMPARE(formatDwrsDelta(1.26), QStringLiteral("+1,3"));
         QCOMPARE(formatDwrsDelta(-0.04), QStringLiteral("0,0"));
+        setDwrsLocale(QLocale(QStringLiteral("es_ES")));
+        QCOMPARE(formatDwrs(86.35), QStringLiteral("86,4"));
         setDwrsLocale(QLocale(QLocale::English));
         QCOMPARE(formatDwrs(86.35), QStringLiteral("86.4"));
         setDwrsDecimals(0);

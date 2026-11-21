@@ -6,7 +6,6 @@
 #include "Constants.h"
 #include "Database.h"
 #include "Freshness.h"
-#include "LegacyMigrator.h"
 #include "Registration.h"
 #include "Utils.h"
 
@@ -23,6 +22,48 @@
 namespace fm {
 
 namespace {
+
+bool parseAttrValue(const QString &value, int *lo, int *hi)
+{
+    *lo = 0;
+    *hi = 0;
+    const QString s = value.trimmed();
+    if (s.isEmpty() || s == QLatin1String("-"))
+        return true;
+
+    const int dash = s.indexOf(QLatin1Char('-'));
+    bool okLo = false, okHi = false;
+    if (dash > 0) {
+        const int l = s.left(dash).trimmed().toInt(&okLo);
+        const int h = s.mid(dash + 1).trimmed().toInt(&okHi);
+        if (okLo && okHi && l >= 1 && h <= 20 && l <= h) {
+            *lo = l;
+            *hi = h;
+            return true;
+        }
+        return false;
+    }
+
+    const int v = s.toInt(&okLo);
+    if (okLo && v >= 1 && v <= 20) {
+        *lo = v;
+        *hi = v;
+        return true;
+    }
+    return false;
+}
+
+int parseHeightCm(const QString &value)
+{
+    QString s = value.trimmed();
+    s.remove(QLatin1String("cm"));
+    s = s.trimmed();
+    bool ok = false;
+    const int v = s.toInt(&ok);
+    return ok ? v : 0;
+}
+
+
 
 constexpr int kUpsertBatchSize = 2000;
 
@@ -355,7 +396,7 @@ void HtmlImporter::applyColumn(Player &player, const QString &fullColumnName, co
         player.averageRating = ok ? v : 0.0;
     } else if (fullColumnName == QLatin1String("Height")) {
         player.heightRaw = value;
-        player.heightCm = LegacyMigrator::parseHeightCm(value);
+        player.heightCm = parseHeightCm(value);
     } else if (fullColumnName == QLatin1String("Left Foot")) {
         player.leftFoot = value;
     } else if (fullColumnName == QLatin1String("Right Foot")) {
@@ -366,7 +407,7 @@ void HtmlImporter::applyColumn(Player &player, const QString &fullColumnName, co
         const int attrIndex = attrIndexByName(fullColumnName);
         if (attrIndex >= 0) {
             int lo = 0, hi = 0;
-            LegacyMigrator::parseAttrValue(value, &lo, &hi);
+            parseAttrValue(value, &lo, &hi);
             player.attrLo[attrIndex] = static_cast<uint8_t>(lo);
             player.attrHi[attrIndex] = static_cast<uint8_t>(hi);
         }

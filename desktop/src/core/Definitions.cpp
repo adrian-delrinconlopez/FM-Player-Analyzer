@@ -5,6 +5,7 @@
 #include "Constants.h"
 #include "PitchGeometry.h"
 
+#include <QCoreApplication>
 #include <QFile>
 #include <QJsonArray>
 #include <QJsonDocument>
@@ -302,12 +303,18 @@ QString Definitions::baseRoleAbbr(const QString &role)
 
 QString Definitions::roleLabel(const QString &role) const
 {
+    const QString tag = rolePhaseTag(role);
+    return tag.isEmpty() ? role : baseRoleAbbr(role) + QLatin1Char('-') + tag;
+}
+
+QString Definitions::rolePhaseTag(const QString &role) const
+{
     const QString phase = m_rolePhases.value(role);
     if (phase == QLatin1String("ip"))
-        return baseRoleAbbr(role) + QStringLiteral("-IP");
+        return QCoreApplication::translate("FootballPhase", "IP");
     if (phase == QLatin1String("oop"))
-        return baseRoleAbbr(role) + QStringLiteral("-OOP");
-    return role;
+        return QCoreApplication::translate("FootballPhase", "OOP");
+    return {};
 }
 
 QStringList Definitions::tacticRoleList(const QString &tactic) const
@@ -450,7 +457,8 @@ void Definitions::rebuildCache()
         QHash<QString, QString> roles;
         const QJsonObject roleObj = catIt.value().toObject();
         for (auto roleIt = roleObj.begin(); roleIt != roleObj.end(); ++roleIt) {
-            const QString displayName = roleIt.value().toString();
+            const QByteArray name = roleIt.value().toString().toUtf8();
+            const QString displayName = QCoreApplication::translate("FM27Roles", name.constData());
             roles.insert(roleIt.key(), displayName);
             m_roleDisplayMap.insert(roleIt.key(), displayName);
             m_validRoles.append(roleIt.key());
@@ -495,14 +503,11 @@ void Definitions::rebuildCache()
     const QJsonObject phases = m_root.value(QLatin1String("role_phases")).toObject();
     for (auto it = phases.begin(); it != phases.end(); ++it)
         m_rolePhases.insert(it.key(), it.value().toString());
-    // One marking for every phase-split role (FM27): the full name always ends
-    // in " (IP)" or " (OOP)", so "Central Midfielder" with and without ball
-    // can be told apart everywhere (FM's own terms, like the role names).
+    // Distinguish identically named roles in the two phases of FM27.
     for (auto it = m_roleDisplayMap.begin(); it != m_roleDisplayMap.end(); ++it) {
-        const QString phase = m_rolePhases.value(it.key());
-        if (phase == QLatin1String("ip") || phase == QLatin1String("oop"))
-            it.value() += phase == QLatin1String("ip") ? QStringLiteral(" (IP)")
-                                                       : QStringLiteral(" (OOP)");
+        const QString tag = rolePhaseTag(it.key());
+        if (!tag.isEmpty())
+            it.value() += QStringLiteral(" (%1)").arg(tag);
     }
 
     m_tacticRoles.clear();

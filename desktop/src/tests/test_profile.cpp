@@ -28,7 +28,7 @@ void writeSharedConfig(const QString &path)
 {
     { AppConfig seed(path); } // the defaults, as 2.0.4 seeded them
     QSettings ini(path, QSettings::IniFormat);
-    ini.setValue(QStringLiteral("Weights/extremely_important"), QStringLiteral("11"));
+    ini.setValue(QStringLiteral("Weights_fm27/extremely_important"), QStringLiteral("11"));
     ini.setValue(QStringLiteral("Phases/ip_share_percent"), QStringLiteral("70"));
     ini.setValue(QStringLiteral("Import/html_export_dir"), QStringLiteral("/exports/fm24"));
     ini.setValue(QStringLiteral("ThemeSettings/current_mode"), QStringLiteral("day"));
@@ -86,7 +86,7 @@ private slots:
         QVERIFY(config.setWeight(kFm24, kTop, 4.0));
         QVERIFY(config.saveThemeSettings({{QStringLiteral("current_mode"), QStringLiteral("night")}}));
         QCOMPARE(config.weight(kFm24, kTop), 4.0);
-        QCOMPARE(readIni(ini, QStringLiteral("Weights/extremely_important")), QStringLiteral("11"));
+        QCOMPARE(readIni(ini, QStringLiteral("Weights_fm27/extremely_important")), QStringLiteral("11"));
         QCOMPARE(readIni(ini, QStringLiteral("ThemeSettings/current_mode")), QStringLiteral("day"));
         // The start screen remembers the last save's look.
         QCOMPARE(readIni(ini, QStringLiteral("StartTheme/current_mode")), QStringLiteral("night"));
@@ -360,7 +360,7 @@ private slots:
         AppConfig config(ini);
         QVERIFY(!config.hasProfile());
         QVERIFY(config.setWeight(kFm24, kTop, 7.0));
-        QCOMPARE(readIni(ini, QStringLiteral("Weights/extremely_important")), QStringLiteral("7"));
+        QCOMPARE(readIni(ini, QStringLiteral("Weights_fm27/extremely_important")), QStringLiteral("7"));
         QVERIFY(AppConfig::isProfileKey(QStringLiteral("Weights_fm27/top_importance")));
         QVERIFY(AppConfig::isProfileKey(QStringLiteral("ThemeSettings/current_mode")));
         QVERIFY(!AppConfig::isProfileKey(QStringLiteral("Database/db_name")));

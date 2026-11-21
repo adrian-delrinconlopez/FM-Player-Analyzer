@@ -44,7 +44,7 @@ private slots:
         QVERIFY(std::abs(*score.normalized - 900.0/19) < 1e-12);
         RatingProfile profile;
         profile.id = QStringLiteral("test"); profile.name = QStringLiteral("Test");
-        profile.compatibleGames = {QStringLiteral("fm24")};
+        profile.compatibleGames = {QStringLiteral("fm27")};
         profile.attributes.insert(QStringLiteral("Pace"), curve);
         auto imported = RatingProfile::fromJson(profile.toJson(), nullptr);
         QVERIFY(imported); QCOMPARE(imported->toJson(), profile.toJson());

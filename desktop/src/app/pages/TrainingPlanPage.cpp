@@ -159,7 +159,7 @@ QString TrainingPlanPage::focusText(const Player &player, const QString &role) c
     QStringList parts;
     const int limit = std::min<int>(3, static_cast<int>(advice.focus.size()));
     for (int i = 0; i < limit; ++i)
-        parts << advice.focus[i].focus;
+        parts << TrainingAdvice::focusLabel(advice.focus[i].focus);
     return parts.join(QStringLiteral("  →  "));
 }
 

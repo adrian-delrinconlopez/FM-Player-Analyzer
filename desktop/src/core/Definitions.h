@@ -134,6 +134,7 @@ public:
     // all carry the phase the same way: "WB-IP", "SDM-OOP" (the ids only add
     // it where an abbreviation exists in both phases). Other roles: the id.
     QString roleLabel(const QString &role) const;
+    QString rolePhaseTag(const QString &role) const;
     // Game abbreviation without the phase suffix ("CFD-OOP" -> "CFD").
     static QString baseRoleAbbr(const QString &role);
     // Natural order, roles with ball before roles without (FM27).

@@ -8,7 +8,6 @@
 #include "core/Database.h"
 #include "widgets/DropZone.h"
 
-#include <QButtonGroup>
 #include <QCheckBox>
 #include <QComboBox>
 #include <QCompleter>
@@ -21,7 +20,6 @@
 #include <QPushButton>
 #include <QStackedWidget>
 #include <QStyle>
-#include <QToolButton>
 #include <QVBoxLayout>
 
 #include <algorithm>
@@ -38,33 +36,6 @@ bool isSaveFile(const QString &path)
 // The club and the other first settings follow in the welcome assistant
 // (WelcomeWizard), which opens once the save holds players.
 enum Step { NameStep = 0, ImportStep = 1 };
-
-// A collapsible explanation: a small arrow button that shows/hides the text.
-QWidget *foldableHint(const QString &title, const QString &text, QWidget *parent)
-{
-    auto *box = new QWidget(parent);
-    auto *layout = new QVBoxLayout(box);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(4);
-    auto *toggle = new QToolButton(box);
-    toggle->setObjectName(QStringLiteral("foldButton"));
-    toggle->setText(title);
-    toggle->setCheckable(true);
-    toggle->setToolButtonStyle(Qt::ToolButtonTextBesideIcon);
-    toggle->setArrowType(Qt::RightArrow);
-    toggle->setCursor(Qt::PointingHandCursor);
-    auto *body = new QLabel(text, box);
-    body->setObjectName(QStringLiteral("kpiCaption"));
-    body->setWordWrap(true);
-    body->hide();
-    layout->addWidget(toggle, 0, Qt::AlignLeft);
-    layout->addWidget(body);
-    QObject::connect(toggle, &QToolButton::toggled, body, [toggle, body](bool on) {
-        toggle->setArrowType(on ? Qt::DownArrow : Qt::RightArrow);
-        body->setVisible(on);
-    });
-    return box;
-}
 
 } // namespace
 
@@ -157,56 +128,6 @@ QWidget *NewSaveWizard::buildNamePage()
     nameHint->setObjectName(QStringLiteral("kpiCaption"));
     layout->addWidget(nameHint);
     connect(m_nameEdit, &QLineEdit::textEdited, m_nameError, &QLabel::hide);
-
-    layout->addSpacing(14);
-    auto *versionLabel = new QLabel(tr("Football-Manager-Version"), page);
-    versionLabel->setObjectName(QStringLiteral("fieldLabel"));
-    layout->addWidget(versionLabel);
-
-    auto *cards = new QHBoxLayout;
-    cards->setSpacing(10);
-    m_versionGroup = new QButtonGroup(this);
-    m_versionGroup->setExclusive(true);
-    int index = 0;
-    for (const FmDataVersion &version : fmDataVersions()) {
-        if (!version.supported)
-            continue;
-        QStringList formats;
-        for (const QString &format : version.importFormats)
-            formats << format.toUpper();
-        auto *card = new QPushButton(page);
-        auto *cardLayout = new QVBoxLayout(card);
-        cardLayout->setContentsMargins(16, 12, 16, 12);
-        cardLayout->setSpacing(2);
-        auto *cardTitle = new QLabel(SaveLibrary::shortVersionLabel(version.id), card);
-        cardTitle->setObjectName(QStringLiteral("choiceTitle"));
-        auto *cardText = new QLabel(
-            QStringLiteral("%1\n%2").arg(version.displayName,
-                                          tr("Import: %1").arg(formats.join(QStringLiteral(", ")))),
-            card);
-        cardText->setObjectName(QStringLiteral("kpiCaption"));
-        cardLayout->addWidget(cardTitle);
-        cardLayout->addWidget(cardText);
-        for (QLabel *label : {cardTitle, cardText})
-            label->setAttribute(Qt::WA_TransparentForMouseEvents);
-        card->setMinimumHeight(cardLayout->sizeHint().height());
-        card->setObjectName(QStringLiteral("choiceCard"));
-        card->setCheckable(true);
-        card->setProperty("versionId", version.id);
-        card->setCursor(Qt::PointingHandCursor);
-        card->setChecked(version.id == newestFmVersionId());
-        m_versionGroup->addButton(card, index++);
-        cards->addWidget(card, 1);
-    }
-    layout->addLayout(cards);
-
-    layout->addSpacing(6);
-    layout->addWidget(foldableHint(
-        tr("Warum lässt sich die Version später nicht ändern?"),
-        tr("Rollen, Bewertungen und Verlauf eines Spielstands beziehen sich auf die Rollen "
-           "seiner FM-Version. Für einen anderen Football Manager legst du deshalb einen "
-           "eigenen Spielstand an. Deine bisherigen Spielstände bleiben unverändert."),
-        page));
 
     // Each save has its own profile; a new one starts clean or as a copy.
     layout->addSpacing(14);
@@ -303,34 +224,19 @@ void NewSaveWizard::goTo(int step)
         m_cancelButton->setText(tr("Später einrichten"));
         m_skipButton->hide(); // "Fertig" without a file does the same
         m_nextButton->setText(m_importFile.isEmpty() ? tr("Fertig") : tr("Importieren"));
-        // A version that reads save games starts there: the save is the
-        // fastest and most complete source; exports stay possible.
         const QString versionId = m_context.fmVersionId();
-        const bool readsSaves = fmDataVersion(versionId).importFormats.contains(QStringLiteral("fm"));
         if (m_stepLabels.size() > 3)
-            m_stepLabels.at(3)->setText(readsSaves ? tr("Spielstand einlesen") : tr("Erster Import"));
-        if (readsSaves) {
-            m_importIntro->setText(tr("Wähle deine Spielstand-Datei aus Football Manager. Der "
-                                      "Analyzer liest sie direkt, auch große Datenbanken schnell."));
-            m_dropZone->setPrompt(tr("Spielstand hierher ziehen"),
-                                  tr("%1-Spielstand (.fm) – oder klicken, um ihn auszuwählen")
-                                      .arg(SaveLibrary::shortVersionLabel(versionId)));
-            m_dropZone->setDialog(tr("Spielstand auswählen"),
-                                  tr("Spielstände und Exporte (*.fm *.csv *.html *.htm);;Alle Dateien (*)"));
-            m_dropZone->setStartDir(AppConfig::defaultSavesDir(versionId));
-            m_exportHint->setText(tr("Optional. Exporte aus dem FM View Exporter (CSV oder HTML) "
-                                     "kannst du ebenfalls hier einlesen."));
-        } else {
-            m_importIntro->setText(tr("Ziehe einen Spieler-Export aus dem Football Manager "
-                                      "hierher, zum Beispiel deinen Kader oder eine "
-                                      "Scouting-Liste. Weitere Exporte kannst du jederzeit "
-                                      "später importieren."));
-            m_dropZone->setPrompt({}, {});
-            m_dropZone->setDialog({}, {});
-            m_dropZone->setStartDir(m_context.htmlExportDir());
-            m_exportHint->clear();
-        }
-        m_exportHint->setVisible(readsSaves);
+            m_stepLabels.at(3)->setText(tr("Spielstand einlesen"));
+        m_importIntro->setText(tr("Wähle deine Spielstand-Datei aus Football Manager. Der "
+                                  "Analyzer liest sie direkt, auch große Datenbanken schnell."));
+        m_dropZone->setPrompt(tr("Spielstand hierher ziehen"),
+                              tr("%1-Spielstand (.fm) – oder klicken, um ihn auszuwählen")
+                                  .arg(SaveLibrary::shortVersionLabel(versionId)));
+        m_dropZone->setDialog(tr("Spielstand auswählen"),
+                              tr("Spielstände und Exporte (*.fm *.csv *.html *.htm);;Alle Dateien (*)"));
+        m_dropZone->setStartDir(AppConfig::defaultSavesDir(versionId));
+        m_exportHint->setText(tr("Optional. Exporte aus dem FM View Exporter (CSV oder HTML) "
+                                 "kannst du ebenfalls hier einlesen."));
         m_dropZone->setFile(m_importFile);
         m_followCheck->setVisible(isSaveFile(m_importFile));
         break;
@@ -366,11 +272,7 @@ bool NewSaveWizard::createSave()
     const QString name = m_nameEdit->text().trimmed();
     QString error = SaveLibrary::validateName(m_context, name);
     if (error.isEmpty()) {
-        const QString versionId =
-            m_versionGroup->checkedButton()
-                ? m_versionGroup->checkedButton()->property("versionId").toString()
-                : newestFmVersionId();
-        if (m_context.createDatabase(name, versionId,
+        if (m_context.createDatabase(name, defaultFmVersionId(),
                                      m_profileSourceCombo->currentData().toString(), &error))
             m_createdName = name;
     }

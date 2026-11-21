@@ -311,7 +311,7 @@ void EditPlayerPage::showEditor()
     const QStringList aptOptions = isGk ? gkAptOptions() : fieldPlayerAptOptions();
     m_aptCombo->clear();
     for (const QString &option : aptOptions)
-        m_aptCombo->addItem(option == QLatin1String("None") ? tr("Keine") : option,
+        m_aptCombo->addItem(option == QLatin1String("None") ? tr("Keine") : playingTimeLabel(option),
                             option == QLatin1String("None") ? QString() : option);
     const int aptIndex = m_aptCombo->findData(player->agreedPlayingTime);
     m_aptCombo->setCurrentIndex(aptIndex >= 0 ? aptIndex : 0);

@@ -21,17 +21,6 @@ body:
       description: What do you want to find out or do in your game? What is hard today?
     validations:
       required: true
-  - type: dropdown
-    id: fm-version
-    attributes:
-      label: Football Manager version
-      description: Which game is this about?
-      options:
-        - FM27
-        - FM24
-        - Both / not version specific
-    validations:
-      required: true
   - type: input
     id: app-version
     attributes:

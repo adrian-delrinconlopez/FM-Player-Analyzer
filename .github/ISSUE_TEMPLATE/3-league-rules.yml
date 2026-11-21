@@ -15,20 +15,11 @@ body:
       placeholder: e.g. Eredivisie, Netherlands
     validations:
       required: true
-  - type: dropdown
-    id: fm-version
-    attributes:
-      label: Football Manager version
-      options:
-        - FM27
-        - FM24
-    validations:
-      required: true
   - type: textarea
     id: rules
     attributes:
       label: Screenshot of the rules
-      description: In FM open the competition, then *Rules → Squad Selection Rules*, and drag the screenshot here.
+      description: In FM27 open the competition, then *Rules → Squad Selection Rules*, and drag the screenshot here.
     validations:
       required: true
   - type: textarea

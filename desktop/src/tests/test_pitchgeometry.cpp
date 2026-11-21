@@ -57,10 +57,8 @@ const QHash<QString, int> &legacyStratumOrder()
     return order;
 }
 
-// The natural role sorter as Definitions built it before (GK roles detected by
-// the "GK"/"SK" substring, legacy tables above, including the old DL/DR
-// wing-back eligibility).
-QHash<QString, QPair<int, int>> legacyNaturalSorter(const Definitions &defs)
+// Reference order calculated from the fixed pitch tables and listed role positions.
+QHash<QString, QPair<int, int>> expectedNaturalSorter(const Definitions &defs)
 {
     QHash<QString, QStringList> roleToPositions;
     for (auto it = defs.positionToRoleMapping().constBegin();
@@ -70,7 +68,7 @@ QHash<QString, QPair<int, int>> legacyNaturalSorter(const Definitions &defs)
     }
     QHash<QString, QPair<int, int>> sorter;
     for (const QString &role : defs.validRoles()) {
-        if (role.contains(QLatin1String("GK")) || role.contains(QLatin1String("SK"))) {
+        if (roleToPositions.value(role).contains(QLatin1String("GK"))) {
             sorter.insert(role, {0, 0});
             continue;
         }
@@ -99,7 +97,7 @@ QStringList definitionsFiles()
 {
     return {QStringLiteral(LEGACY_DIR) + QStringLiteral("/config/definitions.json"),
             QStringLiteral(LEGACY_DIR)
-                + QStringLiteral("/../desktop/src/app/resources/definitions.json")};
+                + QStringLiteral("/../desktop/src/app/resources/definitions_fm27.json")};
 }
 
 } // namespace
@@ -109,9 +107,9 @@ class TestPitchGeometry : public QObject
     Q_OBJECT
 
 private slots:
-    void fm24TablesUnchanged()
+    void fm27TablesMatchSupportedPositions()
     {
-        const auto &positions = masterPositionMap(QStringLiteral("fm24"));
+        const auto &positions = masterPositionMap(QStringLiteral("fm27"));
         QCOMPARE(positions.size(), legacySlotPositions().size());
         for (auto it = legacySlotPositions().constBegin(); it != legacySlotPositions().constEnd();
              ++it) {
@@ -124,10 +122,10 @@ private slots:
         QHash<QString, QStringList> expected = legacySlotGamePositions();
         expected.insert(QStringLiteral("DL"), {QStringLiteral("D (L)")});
         expected.insert(QStringLiteral("DR"), {QStringLiteral("D (R)")});
-        QCOMPARE(tacticalSlotToGamePositions(QStringLiteral("fm24")), expected);
-        QCOMPARE(stratumOrder(QStringLiteral("fm24")), legacyStratumOrder());
+        QCOMPARE(tacticalSlotToGamePositions(QStringLiteral("fm27")), expected);
+        QCOMPARE(stratumOrder(QStringLiteral("fm27")), legacyStratumOrder());
 
-        // Unknown ids and the wrappers fall back to FM24.
+        // Unknown ids and the wrappers use the same geometry.
         QCOMPARE(tacticalSlotToGamePositions(QStringLiteral("fm99")), expected);
         QCOMPARE(tacticalSlotToGamePositions(), expected);
         QCOMPARE(stratumOrder(), legacyStratumOrder());
@@ -135,7 +133,7 @@ private slots:
 
     void drawingGrid()
     {
-        const PitchGeometry &g = pitchGeometry(QStringLiteral("fm24"));
+        const PitchGeometry &g = pitchGeometry(QStringLiteral("fm27"));
         QCOMPARE(g.drawingRow(QStringLiteral("Strikers")), 1);
         QCOMPARE(g.drawingRow(QStringLiteral("Attacking Midfield")), 2);
         QCOMPARE(g.drawingRow(QStringLiteral("Midfield")), 3);
@@ -155,7 +153,7 @@ private slots:
 
     void editorSlots()
     {
-        const PitchGeometry &g = pitchGeometry(QStringLiteral("fm24"));
+        const PitchGeometry &g = pitchGeometry(QStringLiteral("fm27"));
         QStringList editorKeys;
         for (const PitchRow &row : g.rows) {
             for (const PitchSlot &slot : row.pitchSlots) {
@@ -211,7 +209,7 @@ private slots:
         for (const QString &file : definitionsFiles()) {
             Definitions defs;
             QVERIFY2(defs.load(file), qPrintable(file));
-            QCOMPARE(defs.naturalRoleSorter(), legacyNaturalSorter(defs));
+            QCOMPARE(defs.naturalRoleSorter(), expectedNaturalSorter(defs));
         }
     }
 
@@ -224,7 +222,7 @@ private slots:
                       {QStringLiteral("DL"), QStringLiteral("DCL"), QStringLiteral("DCR"),
                        QStringLiteral("DR")});
         layout.insert(QStringLiteral("Strikers"), {QStringLiteral("STC")});
-        const auto anchors = slotAnchors(QStringLiteral("fm24"), layout);
+        const auto anchors = slotAnchors(QStringLiteral("fm27"), layout);
         // Two centre-backs without a middle one close up towards the centre.
         QCOMPARE(anchors.value(QStringLiteral("DCL")).x(), 0.37);
         QCOMPARE(anchors.value(QStringLiteral("DCR")).x(), 0.63);
@@ -233,7 +231,7 @@ private slots:
         QCOMPARE(anchors.value(QStringLiteral("DL")).y(), drawingRowY(5));
         QCOMPARE(anchors.value(QStringLiteral("STC")), QPointF(0.5, drawingRowY(1)));
         QCOMPARE(anchors.value(QStringLiteral("GK")), QPointF(0.5, drawingRowY(6)));
-        QVERIFY(!slotAnchors(QStringLiteral("fm24"), layout, false).contains(QStringLiteral("GK")));
+        QVERIFY(!slotAnchors(QStringLiteral("fm27"), layout, false).contains(QStringLiteral("GK")));
     }
 
     void combinedAnchorIsTheMidpoint()
@@ -242,8 +240,8 @@ private slots:
         // combined marker sits halfway, whatever the possession weighting.
         QHash<QString, QStringList> ip{{QStringLiteral("Midfield"), {QStringLiteral("MCR")}}};
         QHash<QString, QStringList> oop{{QStringLiteral("Defense"), {QStringLiteral("DR")}}};
-        const QPointF a = slotAnchors(QStringLiteral("fm24"), ip).value(QStringLiteral("MCR"));
-        const QPointF b = slotAnchors(QStringLiteral("fm24"), oop).value(QStringLiteral("DR"));
+        const QPointF a = slotAnchors(QStringLiteral("fm27"), ip).value(QStringLiteral("MCR"));
+        const QPointF b = slotAnchors(QStringLiteral("fm27"), oop).value(QStringLiteral("DR"));
         const QPointF mid = combinedAnchor(a, b);
         QCOMPARE(mid.x(), (a.x() + b.x()) / 2);
         QCOMPARE(mid.y(), (a.y() + b.y()) / 2);

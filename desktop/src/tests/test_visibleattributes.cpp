@@ -11,37 +11,36 @@ class TestVisibleAttributes : public QObject {
 private slots:
     void importPersistAndEvaluate()
     {
-        for (const auto &game : {QStringLiteral("fm24"), QStringLiteral("fm27")}) {
-            QTemporaryDir directory;
-            Database db(Database::uniqueConnectionName(QStringLiteral("visible")));
-            QVERIFY(db.open(directory.filePath(QStringLiteral("test.db"))));
-            const auto mapping = attributeMapping(game);
-            QStringList headers{game == QStringLiteral("fm24") ? QStringLiteral("UID") : QStringLiteral("Unique ID"),
-                                game == QStringLiteral("fm24") ? QStringLiteral("Name") : QStringLiteral("Player"),
-                                QStringLiteral("Age"), QStringLiteral("Club"), QStringLiteral("Position")};
-            QStringList values{QStringLiteral("123"), QStringLiteral("Example"), QStringLiteral("20"),
-                               QStringLiteral("Test"), QStringLiteral("ST (C)")};
-            for (const auto &attribute : {QStringLiteral("Natural Fitness"), QStringLiteral("Free Kick Taking"),
-                                          QStringLiteral("Long Throws"), QStringLiteral("Penalty Taking"), QStringLiteral("Punching")}) {
-                QVERIFY(mapping.values().contains(attribute));
-                headers.append(mapping.key(attribute));
-                values.append(attribute == QStringLiteral("Penalty Taking") ? QStringLiteral("-") : QStringLiteral("12-16"));
-            }
-            const auto html = QStringLiteral("<table><tr><th>%1</th></tr><tr><td>%2</td></tr></table>")
-                                  .arg(headers.join(QStringLiteral("</th><th>")), values.join(QStringLiteral("</td><td>")));
-            const auto imported = HtmlImporter::importHtml(html, db, {}, {}, game);
-            QVERIFY2(imported.success, qPrintable(imported.error));
-            const auto players = db.loadPlayers();
-            QCOMPARE(players.size(), size_t(1));
-            QCOMPARE(players[0].attrLo[idx(Attr::NaturalFitness)], uint8_t(12));
-            QCOMPARE(players[0].attrHi[idx(Attr::NaturalFitness)], uint8_t(16));
-            QCOMPARE(players[0].attrLo[idx(Attr::PenaltyTaking)], uint8_t(0));
-            const auto curve = harvestgreenCurve({-12.6, -4, 0, 2.8}, 4);
-            QVERIFY(curve);
-            const auto score = evaluateCurves({{*curve, players[0].attrLo[idx(Attr::NaturalFitness)],
-                                                 players[0].attrHi[idx(Attr::NaturalFitness)], 1}});
-            QVERIFY(score.normalized);
+        const QString game = QStringLiteral("fm27");
+        QTemporaryDir directory;
+        Database db(Database::uniqueConnectionName(QStringLiteral("visible")));
+        QVERIFY(db.open(directory.filePath(QStringLiteral("test.db"))));
+        const auto mapping = attributeMapping(game);
+        QStringList headers{QStringLiteral("Unique ID"),
+                            QStringLiteral("Player"),
+                            QStringLiteral("Age"), QStringLiteral("Club"), QStringLiteral("Position")};
+        QStringList values{QStringLiteral("123"), QStringLiteral("Example"), QStringLiteral("20"),
+                           QStringLiteral("Test"), QStringLiteral("ST (C)")};
+        for (const auto &attribute : {QStringLiteral("Natural Fitness"), QStringLiteral("Free Kick Taking"),
+                                      QStringLiteral("Long Throws"), QStringLiteral("Penalty Taking"), QStringLiteral("Punching")}) {
+            QVERIFY(mapping.values().contains(attribute));
+            headers.append(mapping.key(attribute));
+            values.append(attribute == QStringLiteral("Penalty Taking") ? QStringLiteral("-") : QStringLiteral("12-16"));
         }
+        const auto html = QStringLiteral("<table><tr><th>%1</th></tr><tr><td>%2</td></tr></table>")
+                              .arg(headers.join(QStringLiteral("</th><th>")), values.join(QStringLiteral("</td><td>")));
+        const auto imported = HtmlImporter::importHtml(html, db, {}, {}, game);
+        QVERIFY2(imported.success, qPrintable(imported.error));
+        const auto players = db.loadPlayers();
+        QCOMPARE(players.size(), size_t(1));
+        QCOMPARE(players[0].attrLo[idx(Attr::NaturalFitness)], uint8_t(12));
+        QCOMPARE(players[0].attrHi[idx(Attr::NaturalFitness)], uint8_t(16));
+        QCOMPARE(players[0].attrLo[idx(Attr::PenaltyTaking)], uint8_t(0));
+        const auto curve = harvestgreenCurve({-12.6, -4, 0, 2.8}, 4);
+        QVERIFY(curve);
+        const auto score = evaluateCurves({{*curve, players[0].attrLo[idx(Attr::NaturalFitness)],
+                                             players[0].attrHi[idx(Attr::NaturalFitness)], 1}});
+        QVERIFY(score.normalized);
     }
     void migrationBacksUpAndPreservesUnknowns()
     {

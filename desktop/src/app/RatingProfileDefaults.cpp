@@ -1,6 +1,7 @@
 #include "RatingProfileDefaults.h"
 #include "core/BuiltinRatingProfiles.h"
 #include "core/AppConfig.h"
+#include "core/Constants.h"
 #include <QFile>
 #include <QJsonDocument>
 #include <QTemporaryDir>
@@ -10,13 +11,10 @@ QList<RatingProfile> loadBuiltinRatingProfiles(QString *error)
 {
     if (error) error->clear();
     const auto fail = [&](const QString &message) { if (error) *error = message; return QList<RatingProfile>{}; };
-    QList<Definitions> definitions;
-    for (const auto &game : {QStringLiteral("fm24"), QStringLiteral("fm27")}) {
-        Definitions d;
-        const auto path = game == "fm24" ? QStringLiteral(":/defaults/definitions.json") : QStringLiteral(":/defaults/definitions_fm27.json");
-        if (!d.load(path, game)) return fail(d.errorString());
-        definitions.append(d);
-    }
+    Definitions fm27;
+    if (!fm27.load(QStringLiteral(":/defaults/definitions_fm27.json"), defaultFmVersionId()))
+        return fail(fm27.errorString());
+    const QList<Definitions> definitions = {fm27};
     // Use clean defaults without reading or changing any save or host settings.
     QTemporaryDir temporary;
     if (!temporary.isValid()) return fail(QStringLiteral("temporary-defaults-unavailable"));

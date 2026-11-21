@@ -21,16 +21,15 @@ namespace fm {
 // the per-database settings ("fm_version"). Each release has its own profile:
 // export layout, roles/tactics (definitions file) and attribute importance.
 struct FmDataVersion {
-    QString id;                  // stable settings key, e.g. "fm24"
-    QString displayName;         // e.g. "Football Manager 2024"
+    QString id;                  // stable settings key, e.g. "fm27"
+    QString displayName;         // e.g. "Football Manager 2027"
     bool supported;              // false = shown in the picker but not yet importable
-    QString definitionsFileName; // roles/tactics in the data dir, e.g. "definitions.json"
+    QString definitionsFileName; // roles/tactics in the data dir, e.g. "definitions_fm27.json"
     QString exportFolderName;    // game folder under "Documents/Sports Interactive"
     QStringList importFormats;   // export formats the importer reads, e.g. {"html", "csv"}
     bool provisionalWeights = false; // true = attribute tiers/weights are assumed, not yet measured
     bool registrationRules = false;  // true = league/UEFA registration rules are modelled
     QStringList unratedAttributes;   // attributes this release neither imports nor rates
-    bool customRoles = true;         // false = every game role ships built in; no "Neue Rolle"
 };
 
 // All FM releases the app knows (newest first). To add a release: an entry
@@ -39,15 +38,13 @@ struct FmDataVersion {
 // (globalStatCategories(), gkStatCategories(), weightDefaults(),
 // gkWeightDefaults()), and a bundled ":/defaults/<definitionsFileName>".
 const QList<FmDataVersion> &fmDataVersions();
-// Version of databases that carry no "fm_version" setting: those predate the
-// setting and are always FM24. Never change this, or old saves get misread.
+// Default for new profiles. Opening an existing database requires an explicit version.
 QString defaultFmVersionId();
 // Newest supported version: preselected for newly created databases.
 QString newestFmVersionId();
 // Registry entry for an id; unknown/empty ids fall back to the default version.
 const FmDataVersion &fmDataVersion(const QString &versionId);
-// False if the attribute (Attr index) is not part of that release's data
-// (e.g. Communication/Eccentricity in FM24): DWRS and attribute lists skip it.
+// Whether the attribute is available for rating.
 bool attributeRated(const QString &versionId, int attrIndex);
 
 // Version of the DWRS formula. Bump it whenever a change makes the ratings
@@ -64,6 +61,8 @@ inline constexpr double kPreferableMultiplierDefault = 1.2;
 // Personality name -> "good" | "neutral" | "bad" (defaults; definitions.json
 // may override).
 const QHash<QString, QString> &personalityDefaults();
+QString personalityLabel(const QString &personality);
+QString playingTimeLabel(const QString &playingTime);
 
 // Agreed Playing Time options.
 const QStringList &fieldPlayerAptOptions();

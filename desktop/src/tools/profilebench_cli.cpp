@@ -152,7 +152,7 @@ Save createSave(const QString &path, int count, const QStringList &roles, int sn
         tx.commit();
     }
     save.reimportMs = t.nsecsElapsed() / 1e6;
-    db.setSetting(QStringLiteral("fm_version"), QStringLiteral("fm24"));
+    db.setSetting(QStringLiteral("fm_version"), QStringLiteral("fm27"));
     checkpoint(db);
     return save;
 }
@@ -171,7 +171,7 @@ double openShared(const QString &dbPath, const QString &definitionsPath, const Q
         db.open(dbPath);
         AppConfig config(iniPath);
         Definitions defs;
-        defs.load(definitionsPath, QStringLiteral("fm24"));
+        defs.load(definitionsPath, QStringLiteral("fm27"));
         config.themeSettings();
         Loaded l;
         l.store.reset(db.loadPlayers());
@@ -198,9 +198,9 @@ QPair<double, double> openProfile(const QString &dbPath, const QString &iniPath)
         config.themeSettings();
         ProfileStore store(db);
         ProfileStore::DefinitionsResult defsResult;
-        store.loadDefinitions(QStringLiteral("fm24"), g_shippedJson, {}, defsResult);
+        store.loadDefinitions(QStringLiteral("fm27"), g_shippedJson, {}, defsResult);
         Definitions defs;
-        defs.loadFromJson(defsResult.json, QStringLiteral("fm24"));
+        defs.loadFromJson(defsResult.json, QStringLiteral("fm27"));
         firstPaint.push_back(t.nsecsElapsed() / 1e6);
         Loaded l;
         l.store.reset(db.loadPlayers());
@@ -216,7 +216,7 @@ QPair<double, double> openProfile(const QString &dbPath, const QString &iniPath)
 // setter), with changed values each run.
 void writeAllSettings(AppConfig &config, int run)
 {
-    const QString v = QStringLiteral("fm24");
+    const QString v = QStringLiteral("fm27");
     const double d = 0.01 * (run % 7);
     for (auto it = weightDefaults(v).constBegin(); it != weightDefaults(v).constEnd(); ++it)
         config.setWeight(v, it.key(), it.value() + d);
@@ -287,7 +287,7 @@ int main(int argc, char **argv)
     }
 
     Definitions defs;
-    if (!defs.load(definitionsPath, QStringLiteral("fm24"))) {
+    if (!defs.load(definitionsPath, QStringLiteral("fm27"))) {
         std::fprintf(stderr, "FEHLER: %s\n", qUtf8Printable(defs.errorString()));
         return 1;
     }
@@ -346,7 +346,7 @@ int main(int argc, char **argv)
         t.start();
         config.attachProfile(db, AppConfig::ProfileSeed::SharedConfig, &error);
         ProfileStore store(db);
-        store.writeDocument(ProfileStore::definitionsDocument(QStringLiteral("fm24")),
+        store.writeDocument(ProfileStore::definitionsDocument(QStringLiteral("fm27")),
                             definitionsJson, true);
         const double seedMs = t.nsecsElapsed() / 1e6;
         config.detachProfile();

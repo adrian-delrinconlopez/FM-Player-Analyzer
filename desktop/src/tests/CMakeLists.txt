@@ -21,7 +21,6 @@ fm_add_test(test_themecolors)
 fm_add_test(test_definitions)
 fm_add_test(test_appconfig)
 fm_add_test(test_playerstore)
-fm_add_test(test_migrator)
 fm_add_test(test_dwrs)
 fm_add_test(test_htmlimporter)
 fm_add_test(test_csvimport)
@@ -97,7 +96,9 @@ set_tests_properties(test_navigation PROPERTIES
 # FM27 role data (generated definitions_fm27.json).
 fm_add_test(test_definitions_fm27)
 target_compile_definitions(test_definitions_fm27 PRIVATE
-    DEFINITIONS_FM27="${CMAKE_SOURCE_DIR}/src/app/resources/definitions_fm27.json")
+    DEFINITIONS_FM27="${CMAKE_SOURCE_DIR}/src/app/resources/definitions_fm27.json"
+    FOOTBALL_TERMS_QM="${CMAKE_BINARY_DIR}/src/app/football_terms_es.qm")
+add_dependencies(test_definitions_fm27 fm_translation_catalogs)
 
 # Save profiles end to end (app/AppContext + bundled definitions): open,
 # switch, restart, update from 2.0.4. Temporary data folder, headless.
@@ -118,8 +119,7 @@ set_tests_properties(test_profileswitch PROPERTIES
 # Tactics per save: edit/delete, shipped updates, exchange files.
 fm_add_test(test_tacticlibrary)
 target_compile_definitions(test_tacticlibrary PRIVATE
-    DEFINITIONS_FM27="${CMAKE_SOURCE_DIR}/src/app/resources/definitions_fm27.json"
-    DEFINITIONS_FM24="${CMAKE_SOURCE_DIR}/src/app/resources/definitions.json")
+    DEFINITIONS_FM27="${CMAKE_SOURCE_DIR}/src/app/resources/definitions_fm27.json")
 fm_add_test(test_ratingcurve)
 fm_add_test(test_ratingprofile)
 fm_add_test(test_ratingprofilelibrary)
@@ -140,7 +140,9 @@ add_test(NAME test_ratingprofileeditor COMMAND test_ratingprofileeditor)
 set_tests_properties(test_ratingprofileeditor PROPERTIES ENVIRONMENT "QT_QPA_PLATFORM=offscreen" ENVIRONMENT_MODIFICATION "PATH=path_list_prepend:$<TARGET_FILE_DIR:Qt6::Core>")
 target_sources(test_ratingcurveeditor PRIVATE ${CMAKE_SOURCE_DIR}/src/app/widgets/FlowLayout.cpp)
 target_sources(test_ratingprofileeditor PRIVATE ${CMAKE_SOURCE_DIR}/src/app/theming/ThemeManager.cpp)
-target_compile_definitions(test_ratingprofileeditor PRIVATE EDITOR_QM="${CMAKE_BINARY_DIR}/src/app/fmplayeranalyzer_en.qm")
+target_compile_definitions(test_ratingprofileeditor PRIVATE
+    EDITOR_QM_DIR="${CMAKE_BINARY_DIR}/src/app")
+add_dependencies(test_ratingprofileeditor fm_translation_catalogs)
 fm_add_test(test_builtinratingprofiles)
 target_compile_definitions(test_builtinratingprofiles PRIVATE DEFINITIONS_DIR="${CMAKE_SOURCE_DIR}/src/app/resources" HARVEST_DATA="${CMAKE_SOURCE_DIR}/../docs/dwrs/harvestgreen-comparison.json")
 target_sources(test_profileswitch PRIVATE ${CMAKE_SOURCE_DIR}/src/app/RatingProfileDefaults.cpp)

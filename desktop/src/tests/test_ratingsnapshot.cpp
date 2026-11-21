@@ -15,7 +15,7 @@ private slots:
         QVERIFY(definitions.load(QStringLiteral(LEGACY_DIR) + QStringLiteral("/config/definitions.json")));
         profile.id = QStringLiteral("test");
         profile.name = QStringLiteral("Test");
-        profile.compatibleGames = {QStringLiteral("fm24")};
+        profile.compatibleGames = {QStringLiteral("fm27")};
         profile.attributes.insert(QStringLiteral("Pace"), *harvestgreenCurve({-40, -26.8, 0, 19.4}, 4));
     }
     void compiledMatchesPureEvaluation() {
@@ -148,15 +148,15 @@ private slots:
     void rejectsIncompatibleBindings() {
         auto p = profile;
         QString error;
-        p.roles[QStringLiteral("fm24/both/nonexistent")][QStringLiteral("Pace")].weight = 1;
+        p.roles[QStringLiteral("fm27/both/nonexistent")][QStringLiteral("Pace")].weight = 1;
         QVERIFY(!RatingSnapshot::compile(p, definitions, &error));
         QVERIFY(error.startsWith(QStringLiteral("unknown-role:")));
         p = profile;
-        p.rolePositions[QStringLiteral("fm24/both/AF-A")] = QStringLiteral("fm24/GK");
+        p.rolePositions[QStringLiteral("fm27/both/AF-A")] = QStringLiteral("fm27/GK");
         QVERIFY(!RatingSnapshot::compile(p, definitions, &error));
         QVERIFY(error.startsWith(QStringLiteral("incompatible-role-position:")));
         p = profile;
-        p.compatibleGames = {QStringLiteral("fm27")};
+        p.compatibleGames = {QStringLiteral("fm24")};
         QVERIFY(!RatingSnapshot::compile(p, definitions, &error));
         QCOMPARE(error, QStringLiteral("incompatible-game"));
     }

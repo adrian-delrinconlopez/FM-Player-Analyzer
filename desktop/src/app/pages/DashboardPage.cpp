@@ -160,7 +160,7 @@ public:
             auto *dest = new QComboBox(content);
             dest->setEditable(true);
             dest->addItem(freeAgentTag());
-            dest->addItem(retiredTag());
+            dest->addItem(tr("Karriereende"), retiredTag());
             dest->setCurrentText(freeAgentTag());
             dest->setToolTip(tr("Neuer Verein eintippen oder Status wählen "
                                 "(FrA = Free Agent, Retired = Karriereende)."));
@@ -191,8 +191,13 @@ public:
     std::vector<DepartureChoice> choices() const
     {
         std::vector<DepartureChoice> result;
-        for (const Row &row : m_rows)
-            result.push_back({row.uid, row.gone->isChecked(), row.dest->currentText().trimmed()});
+        for (const Row &row : m_rows) {
+            QString destination = row.dest->currentText().trimmed();
+            const int index = row.dest->findText(destination);
+            if (index >= 0 && row.dest->itemData(index).isValid())
+                destination = row.dest->itemData(index).toString();
+            result.push_back({row.uid, row.gone->isChecked(), destination});
+        }
         return result;
     }
 
@@ -784,7 +789,11 @@ void DashboardPage::updateStarterView(const std::vector<const Player *> &clubPla
         if (!player->longTermInjured && !(skipUnregistered && player->registration.leagueBlocked))
             pool.push_back(player);
     }
-    const Definitions &definitions = m_context.definitions();
+    if (!m_context.definitions().isTwoPhaseTactic(tactic)) {
+        m_starters = StarterView();
+        showStarterView();
+        return;
+    }
     const RoleRatings &ratings = m_context.ratings();
     const SquadBuilder &builder = m_context.squadBuilder();
     const auto bridges = loadManualBridges(m_context, tactic, &pool);
@@ -806,26 +815,20 @@ void DashboardPage::updateStarterView(const std::vector<const Player *> &clubPla
     view.key = key;
     view.valid = true;
     view.tactic = tactic;
-    view.twoPhase = definitions.isTwoPhaseTactic(tactic);
     view.ipShare = m_context.config().ipSharePercent();
-    if (view.twoPhase) {
-        const TwoPhaseSquadResult squad = builder.calculateTwoPhaseSquad(
-            pool, tactic, ratings, view.ipShare / 100.0, true, bridges);
-        view.ip = squad.startingIp;
-        view.oop = squad.startingOop;
-        view.slotsOfUid = squad.slotsOfUid;
-        view.valueOfUid = squad.valueOfUid;
-    } else {
-        view.xi = builder.calculateSquadForTactic(pool, tactic, ratings).startingXi;
-    }
+    const TwoPhaseSquadResult squad = builder.calculateTwoPhaseSquad(
+        pool, tactic, ratings, view.ipShare / 100.0, true, bridges);
+    view.ip = squad.startingIp;
+    view.oop = squad.startingOop;
+    view.slotsOfUid = squad.slotsOfUid;
+    view.valueOfUid = squad.valueOfUid;
 
     const auto nameOf = [this](const QString &uid) {
         const Player *p = m_context.store().findByUid(uid);
         return p ? getLastName(p->name) : uid;
     };
-    const bool twoPhase = view.twoPhase;
-    const auto places = [twoPhase](const QPair<QString, QString> &pair) {
-        return twoPhase ? tr("mit %1 · ohne %2").arg(pair.first, pair.second) : pair.first;
+    const auto places = [](const QPair<QString, QString> &pair) {
+        return tr("mit %1 · ohne %2").arg(pair.first, pair.second);
     };
     const auto delta = [](double value) {
         const QString text = QLocale().toString(std::abs(value), 'f', 1);
@@ -860,7 +863,7 @@ void DashboardPage::updateStarterView(const std::vector<const Player *> &clubPla
 void DashboardPage::showStarterView()
 {
     const StarterView &view = m_starters;
-    m_phaseSwitch->setVisible(view.valid && view.twoPhase);
+    m_phaseSwitch->setVisible(view.valid);
     if (!view.valid) {
         m_strengthGrid->clearData();
         m_strengthGridOop->clearData();
@@ -912,7 +915,7 @@ void DashboardPage::showStarterView()
         return markers;
     };
 
-    const bool both = view.twoPhase && m_phaseView == 3;
+    const bool both = m_phaseView == 3;
     m_strengthGridOop->setVisible(both);
     m_gridTitle->setVisible(both);
     m_gridTitleOop->setVisible(both);
@@ -922,68 +925,64 @@ void DashboardPage::showStarterView()
     for (StrengthGridWidget *grid : {m_strengthGrid, m_strengthGridOop})
         grid->setFmVersionId(version);
 
-    if (!view.twoPhase) {
-        m_strengthGrid->setMarkers(singleMarkers(view.xi, definitions.tacticRoles().value(view.tactic)));
+    const auto &lineUps = definitions.twoPhaseTactics().value(view.tactic);
+    if (m_phaseView == 1) {
+        m_strengthGrid->setMarkers(singleMarkers(view.ip, lineUps.ip));
+    } else if (m_phaseView == 2) {
+        m_strengthGrid->setMarkers(singleMarkers(view.oop, lineUps.oop));
+    } else if (both) {
+        m_gridTitle->setText(tr("Mit Ball"));
+        m_gridTitleOop->setText(tr("Ohne Ball"));
+        m_strengthGrid->setMarkers(singleMarkers(view.ip, lineUps.ip));
+        m_strengthGridOop->setMarkers(singleMarkers(view.oop, lineUps.oop));
     } else {
-        const auto &lineUps = definitions.twoPhaseTactics().value(view.tactic);
-        if (m_phaseView == 1) {
-            m_strengthGrid->setMarkers(singleMarkers(view.ip, lineUps.ip));
-        } else if (m_phaseView == 2) {
-            m_strengthGrid->setMarkers(singleMarkers(view.oop, lineUps.oop));
-        } else if (both) {
-            m_gridTitle->setText(tr("Mit Ball"));
-            m_gridTitleOop->setText(tr("Ohne Ball"));
-            m_strengthGrid->setMarkers(singleMarkers(view.ip, lineUps.ip));
-            m_strengthGridOop->setMarkers(singleMarkers(view.oop, lineUps.oop));
-        } else {
-            // Combined: each starter midway between his two places, his
-            // weighted value; free places stay at their own slot.
-            const QHash<QString, QPointF> ipAnchors =
-                slotAnchors(version, layoutOf(lineUps.ip), true);
-            const QHash<QString, QPointF> oopAnchors =
-                slotAnchors(version, layoutOf(lineUps.oop), true);
-            QList<StrengthGridWidget::Marker> markers;
-            for (const QString &ipSlot : lineUps.ipOrder) {
-                const XiCell cell = view.ip.value(ipSlot);
-                if (!cell.isFilled()) {
-                    StrengthGridWidget::Marker marker;
-                    marker.anchor = ipAnchors.value(ipSlot);
-                    marker.header = tr("mit: %1").arg(abbr(lineUps.ip.value(ipSlot)));
-                    marker.impact = tr("frei");
-                    marker.tooltip = tr("%1 mit Ball ist frei.").arg(ipSlot);
-                    markers.append(marker);
-                    continue;
-                }
-                const QString oopSlot = view.slotsOfUid.value(cell.playerUid).second;
+        // Combined: each starter midway between his two places, his
+        // weighted value; free places stay at their own slot.
+        const QHash<QString, QPointF> ipAnchors =
+            slotAnchors(version, layoutOf(lineUps.ip), true);
+        const QHash<QString, QPointF> oopAnchors =
+            slotAnchors(version, layoutOf(lineUps.oop), true);
+        QList<StrengthGridWidget::Marker> markers;
+        for (const QString &ipSlot : lineUps.ipOrder) {
+            const XiCell cell = view.ip.value(ipSlot);
+            if (!cell.isFilled()) {
                 StrengthGridWidget::Marker marker;
-                marker.uid = cell.playerUid;
-                marker.goalkeeper = ipSlot == QLatin1String("GK");
-                marker.anchor = combinedAnchor(ipAnchors.value(ipSlot), oopAnchors.value(oopSlot));
-                marker.header = QStringLiteral("%1 · %2").arg(abbr(lineUps.ip.value(ipSlot)),
-                                                             abbr(lineUps.oop.value(oopSlot)));
-                marker.value = view.valueOfUid.value(cell.playerUid);
-                marker.impact = view.impact.value(cell.playerUid);
-                marker.tooltip = tr("%1 (mit Ball %2, ohne Ball %3)")
-                                     .arg(cell.name, ipSlot, oopSlot)
-                                 + QLatin1Char('\n') + view.tooltip.value(cell.playerUid);
-                markers.append(marker);
-            }
-            for (const QString &oopSlot : lineUps.oopOrder) {
-                if (view.oop.value(oopSlot).isFilled())
-                    continue;
-                StrengthGridWidget::Marker marker;
-                marker.anchor = oopAnchors.value(oopSlot);
-                marker.header = tr("ohne: %1").arg(abbr(lineUps.oop.value(oopSlot)));
+                marker.anchor = ipAnchors.value(ipSlot);
+                marker.header = tr("mit: %1").arg(abbr(lineUps.ip.value(ipSlot)));
                 marker.impact = tr("frei");
-                marker.tooltip = tr("%1 ohne Ball ist frei.").arg(oopSlot);
+                marker.tooltip = tr("%1 mit Ball ist frei.").arg(ipSlot);
                 markers.append(marker);
+                continue;
             }
-            m_strengthGrid->setMarkers(markers);
+            const QString oopSlot = view.slotsOfUid.value(cell.playerUid).second;
+            StrengthGridWidget::Marker marker;
+            marker.uid = cell.playerUid;
+            marker.goalkeeper = ipSlot == QLatin1String("GK");
+            marker.anchor = combinedAnchor(ipAnchors.value(ipSlot), oopAnchors.value(oopSlot));
+            marker.header = QStringLiteral("%1 · %2").arg(abbr(lineUps.ip.value(ipSlot)),
+                                                         abbr(lineUps.oop.value(oopSlot)));
+            marker.value = view.valueOfUid.value(cell.playerUid);
+            marker.impact = view.impact.value(cell.playerUid);
+            marker.tooltip = tr("%1 (mit Ball %2, ohne Ball %3)")
+                                 .arg(cell.name, ipSlot, oopSlot)
+                             + QLatin1Char('\n') + view.tooltip.value(cell.playerUid);
+            markers.append(marker);
         }
+        for (const QString &oopSlot : lineUps.oopOrder) {
+            if (view.oop.value(oopSlot).isFilled())
+                continue;
+            StrengthGridWidget::Marker marker;
+            marker.anchor = oopAnchors.value(oopSlot);
+            marker.header = tr("ohne: %1").arg(abbr(lineUps.oop.value(oopSlot)));
+            marker.impact = tr("frei");
+            marker.tooltip = tr("%1 ohne Ball ist frei.").arg(oopSlot);
+            markers.append(marker);
+        }
+        m_strengthGrid->setMarkers(markers);
     }
 
     QString what;
-    if (!view.twoPhase || m_phaseView == 1 || m_phaseView == 2 || both)
+    if (m_phaseView == 1 || m_phaseView == 2 || both)
         what = tr("Groß: DWRS des Starters in seiner Rolle.");
     else
         what = tr("Groß: Wert des Starters über beide Aufstellungen (%1 % mit Ball).")
@@ -1071,7 +1070,7 @@ void DashboardPage::updateClubTable(const std::vector<const Player *> &clubPlaye
         }
         m_clubTable->setItem(row, 3, personality);
 
-        m_clubTable->setItem(row, 4, new QTableWidgetItem(player->agreedPlayingTime));
+        m_clubTable->setItem(row, 4, new QTableWidgetItem(playingTimeLabel(player->agreedPlayingTime)));
         m_clubTable->setItem(
             row, 5,
             new NumericItem(player->averageRating > 0.0

@@ -4,7 +4,7 @@
 
 ### Stop guessing who should play. Know it.
 
-The free desktop companion for **Football Manager 2024 and 2027** that turns your squad
+The free desktop companion for **Football Manager 2027** that turns your squad
 and scouting exports into clear answers: your provably optimal Best XI, the hidden weak
 spot in your team, the wonderkid worth signing and the tactic your squad was
 built for.
@@ -15,7 +15,7 @@ built for.
 [![Downloads](https://img.shields.io/github/downloads/ElectroHugin/FM-Player-Analyzer/total?label=downloads)](https://github.com/ElectroHugin/FM-Player-Analyzer/releases)
 [![License: GPL v3](https://img.shields.io/badge/license-GPLv3-blue)](LICENSE)
 ![Platform](https://img.shields.io/badge/platform-Windows%2010%20%2F%2011-0078d4)
-![Football Manager 2024 | 2027](https://img.shields.io/badge/Football%20Manager-2024%20%7C%202027-6f42c1)
+![Football Manager 2027](https://img.shields.io/badge/Football%20Manager-2027-6f42c1)
 
 **Playing FM27?** Just pick your save file: the analyzer reads the whole
 database directly (read-only, no export needed) and picks up the new data every
@@ -112,10 +112,7 @@ the top and everything is rebuilt from the players registered for it.
 
 Starting XI and B-team are an **assignment problem**: players on one side,
 positions on the other, and the gain of "player X in position Y" is his rating
-for that position's role (DWRS). Every player gets at most one position, every
-position at most one player. For FM24 the analyzer solves this exactly with the
-[Hungarian algorithm](https://en.wikipedia.org/wiki/Hungarian_algorithm)
-(Kuhn–Munkres). For the two FM27 line-ups it becomes a minimum-cost flow: every
+for that position's role (DWRS). The analyzer solves a minimum-cost flow: every
 player gets one place in possession and one out of possession, and his value is
 the weighted average of both roles.
 
@@ -244,10 +241,10 @@ portraits for FM, the analyzer can use it too (optional, off by default).
 - **Gap analysis** — in the signing advisor's tab, collapsed: flags slots that drop off against the team and players pulled away from their best position or onto the wrong side.
 - **Transfer targets** — the overview suggests the best player within your filters for every role of your tactic. Click the card to shortlist him, open his profile or compare him with your players in that role.
 - **Transfers and loans** — suggests promising talents to loan out and surplus players to sell.
-- **Your own tactics** — built-in editor, new tactics are available everywhere immediately. For FM24 you can add your own roles too; for FM27 every role of the game is already included.
+- **Your own tactics** — built-in editor, new tactics are available everywhere immediately. All FM27 roles are included.
 - **One profile per save** — club, tactics, colours and settings belong to the save. Switch careers and everything switches with it.
 - **Smart imports** — newgens keep their identity across exports, departures are detected, and new players get their roles assigned automatically.
-- **Small things that matter** — global player search that finds "Müller" when you type "muller", back/forward navigation, English and German interface.
+- **Small things that matter** — global player search that finds "Müller" when you type "muller", back/forward navigation, and an interface available in English, German and Spanish.
 
 ---
 
@@ -263,8 +260,7 @@ same page.
 
 **2 · Create a save**
 
-On first start you create a save in the analyzer and pick the FM version
-(*Football Manager 2027* is preselected).
+On first start, create a save in the analyzer for your FM27 career.
 
 **3 · Bring in your players**
 
@@ -280,9 +276,6 @@ On first start you create a save in the analyzer and pick the FM version
   my views (the installer can put them into your FM27 `views` folder) you press
   **F9** on a player list and import the CSV file. Fine for your squad or a
   shortlist; long lists take a while.
-- **FM24:** export the list as HTML (*right-click → Print/Export → Web page
-  (.html)*) with a view that contains the **UID** column, for example the
-  [FM24 views by PlayingSquirrel](https://www.mediafire.com/file/ymf6xhw0bk4enjj/FM24_files.zip/file).
 
 Roles and ratings are calculated automatically on import.
 
@@ -303,7 +296,7 @@ you who you should really be buying.
 > - With exports: re-import whenever you like, once a month in game time is a good rhythm. The app updates known players and builds their rating history.
 > - When you import your complete squad as an export, tick *"File is a complete squad export of my club"* and the app asks what happened to the players who are gone.
 > - The installer can copy the FM27 example tactics into your FM27 `tactics` folder; later this is under *Settings → Import*.
-> - Switch between English and German in the **Language** menu.
+> - Choose English, German or Spanish from the **Language** menu.
 
 ---
 
@@ -358,7 +351,7 @@ instead of 0.43).
 | Preferable | 0.25 | other preferred attributes of the role (e.g. Passing, Vision) |
 | Other | 0.2 | Bravery, One vs One, Rushing Out |
 
-This calculation is called **DWRS Classic** from 2.3.0 on and stays the FM24 default.
+This calculation is called **DWRS Classic** from 2.3.0 on and is available as an FM27 rating profile.
 
 </details>
 
@@ -420,17 +413,14 @@ the less your scouts know. Switch it off under *Settings → Import* and read th
 save again for exact values everywhere. (Before 2.3.0, masking left unscouted
 players out completely.)
 
-**Which Football Manager versions are supported?**
-Football Manager 2024 and Football Manager 2027 (since version 2.0.0, the save
-file since 2.1.0). The import layout is defined per game version, so other
-versions can be added.
+**Which Football Manager version is supported?**
+Football Manager 2027. You can still open FM24 databases with an earlier Analyzer release.
 
 **Mac or Linux?**
 Windows 10 / 11 (64-bit), plus a Linux AppImage on the releases page. No macOS.
 
 **I play in a league that is not listed in the registration rules.**
-Choose *Default (no restriction)*. For FM24 the Premier League is modelled; for
-FM27 eleven leagues are (Bundesliga, Premier League, LaLiga, Serie A, Ligue 1,
+Choose *Default (no restriction)*. The Analyzer models eleven FM27 leagues (Bundesliga, Premier League, LaLiga, Serie A, Ligue 1,
 Liga Portugal, Swiss Super League, Austrian Bundesliga, Russian Premier Liga,
 Ukrainian Premier League, Süper Lig, details in
 [docs/REGISTRIERUNG-FM27.md](docs/REGISTRIERUNG-FM27.md)). The UEFA list works
@@ -442,36 +432,9 @@ at the club; limits for foreign or non-EU players are not.
 with the league's name and country and a screenshot of its *Squad Selection
 Rules* screen in FM.
 
-**I used the older Streamlit version.**
-A one-time migration wizard (Settings → Database → *Import legacy database*)
-converts your old databases and settings.
+[Export columns for Football Manager 2027](docs/IMPORT-FM27.md)
 
 ---
-
-<details>
-<summary><b>📋 Export columns the app understands (Football Manager 2024)</b></summary>
-
-<br>
-
-Only **UID** and **Name** are required. Every other column improves the
-ratings; a missing attribute is simply treated as unknown.
-
-- **Identity & info:** `UID`, `Name`, `Age`, `Nat`, `2nd Nat`, `Club`,
-  `Position`, `Personality`, `Media Handling`, `Preferred Foot`, `Left Foot`,
-  `Right Foot`, `Height`, `Wage`, `Transfer Value`, `Av Rat`,
-  `Agreed Playing Time`
-- **Technical:** `Cor`, `Cro`, `Dri`, `Fin`, `Fir`, `Hea`, `Lon`, `Mar`,
-  `Pas`, `Tck`, `Tec`
-- **Mental:** `Agg`, `Ant`, `Bra`, `Cmp`, `Cnt`, `Dec`, `Det`, `Fla`, `Ldr`,
-  `OtB`, `Pos`, `Tea`, `Vis`, `Wor`
-- **Physical:** `Acc`, `Agi`, `Bal`, `Jum`, `Pac`, `Sta`, `Str`
-- **Goalkeeping:** `1v1`, `Aer`, `Cmd`, `Han`, `Kic`, `Ref`, `TRO`, `Thr`
-
-The mapping lives in
-[`desktop/src/core/Constants.cpp`](desktop/src/core/Constants.cpp)
-(`fm24AttributeMapping`).
-
-</details>
 
 <details>
 <summary><b>🛠️ For developers: repository layout and building from source</b></summary>

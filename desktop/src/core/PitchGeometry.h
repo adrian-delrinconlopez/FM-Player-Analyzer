@@ -90,7 +90,7 @@ inline QPointF combinedAnchor(const QPointF &ip, const QPointF &oop)
 // anchor as possible and inside [0, 1]. Same order as anchors.
 QList<QPointF> spreadMarkers(const QList<QPointF> &anchors, const QSizeF &size);
 
-// Default-version (FM24) wrappers of the three tables above.
+// Default geometry wrappers.
 const QHash<QString, SlotPosition> &masterPositionMap();
 const QHash<QString, QStringList> &tacticalSlotToGamePositions();
 const QHash<QString, int> &stratumOrder();

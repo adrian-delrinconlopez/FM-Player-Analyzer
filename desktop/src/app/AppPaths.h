@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QList>
 #include <QSettings>
 #include <QString>
 
@@ -34,8 +35,7 @@ public:
     QString colorTemplatesFile() const;
     // Own DWRS colour schemes (app-wide, like colour templates).
     QString dwrsColorSchemesFile() const;
-    // Roles/tactics of one FM version: <dataDir>/definitions.json for FM24,
-    // <dataDir>/definitions_<id>.json for later releases.
+    // Shared definitions from FM27 saves created before per-save profiles.
     QString definitionsFile(const QString &fmVersionId) const;
     QString databaseFile(const QString &dbName) const;
     // Shared rating profile library: <dataDir>/rating_profiles.json
@@ -51,8 +51,8 @@ public:
     QByteArray windowGeometry() const;
     void setWindowGeometry(const QByteArray &geometry);
 
-    // UI language, app-global (host-level). "en" (default) loads the bundled
-    // English translation; "de" uses the untranslated German source strings.
+    // UI language, app-global (host-level). English is the default.
+    static const QList<QPair<QString, QString>> &languages();
     QString language() const;
     void setLanguage(const QString &language);
 

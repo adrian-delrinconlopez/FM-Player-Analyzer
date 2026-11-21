@@ -2,9 +2,8 @@
 
 namespace fm {
 
-// FM24 importance tiers (legacy constants.py). A new release starts from these
-// as an assumption until its match engine has been tested.
-static const QHash<QString, QString> &fm24StatCategories()
+// Default outfield tiers for DWRS Classic.
+static const QHash<QString, QString> &fieldCategories()
 {
     static const QHash<QString, QString> categories = {
         {QStringLiteral("Pace"), QStringLiteral("Extremely Important")},
@@ -42,7 +41,7 @@ static const QHash<QString, QString> &fm24StatCategories()
 // scheme rated only six and predicted xGP/90 clearly worse (r 0.43 vs 0.58).
 // Role-listed attributes outside these tiers count as "Key"/"Preferable"
 // (see DwrsEngine::buildPlan).
-static const QHash<QString, QString> &fm24GkStatCategories()
+static const QHash<QString, QString> &goalkeeperCategories()
 {
     static const QHash<QString, QString> categories = {
         {QStringLiteral("Positioning"), QStringLiteral("Top Importance")},
@@ -62,7 +61,7 @@ static const QHash<QString, QString> &fm24GkStatCategories()
     return categories;
 }
 
-static const QHash<QString, double> &fm24WeightDefaults()
+static const QHash<QString, double> &fieldWeights()
 {
     static const QHash<QString, double> defaults = {
         {QStringLiteral("Extremely Important"), 8.0},
@@ -74,10 +73,10 @@ static const QHash<QString, double> &fm24WeightDefaults()
     return defaults;
 }
 
-// Goalkeeper tier weights (scheme 2, see fm24GkStatCategories). Key/Preferable
+// Goalkeeper tier weights (scheme 2, see goalkeeperCategories). Key/Preferable
 // stay small: outfield attributes on goalkeeper role lists (Decisions, Vision,
 // ...) are often unscouted and then read as 0.
-static const QHash<QString, double> &fm24GkWeightDefaults()
+static const QHash<QString, double> &goalkeeperWeights()
 {
     static const QHash<QString, double> defaults = {
         {QStringLiteral("Top Importance"), 3.0},
@@ -90,30 +89,28 @@ static const QHash<QString, double> &fm24GkWeightDefaults()
     return defaults;
 }
 
-// Dispatch on the FM version like attributeMapping(): new releases get another
-// branch; unknown or empty ids fall back to the default version.
 const QHash<QString, QString> &globalStatCategories(const QString &versionId)
 {
-    Q_UNUSED(versionId); // only FM24 exists today
-    return fm24StatCategories();
+    Q_UNUSED(versionId);
+    return fieldCategories();
 }
 
 const QHash<QString, QString> &gkStatCategories(const QString &versionId)
 {
     Q_UNUSED(versionId);
-    return fm24GkStatCategories();
+    return goalkeeperCategories();
 }
 
 const QHash<QString, double> &weightDefaults(const QString &versionId)
 {
     Q_UNUSED(versionId);
-    return fm24WeightDefaults();
+    return fieldWeights();
 }
 
 const QHash<QString, double> &gkWeightDefaults(const QString &versionId)
 {
     Q_UNUSED(versionId);
-    return fm24GkWeightDefaults();
+    return goalkeeperWeights();
 }
 
 } // namespace fm

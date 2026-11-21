@@ -135,10 +135,9 @@ private slots:
     void rulesPerFmVersion()
     {
         using L = Registration::LeagueRules;
-        QVERIFY(Registration::leagueRulesFor(QStringLiteral("fm24"))
-                == (QList<L>{L::Bundesliga, L::PremierLeague}));
-        QVERIFY(Registration::uefaRulesFor(QStringLiteral("fm24")));
-        // FM27: the 11 leagues from the game's squad-selection screens.
+        QVERIFY(Registration::leagueRulesFor(QStringLiteral("fm24")).isEmpty());
+        QVERIFY(!Registration::uefaRulesFor(QStringLiteral("fm24")));
+
         const auto fm27 = Registration::leagueRulesFor(QStringLiteral("fm27"));
         QCOMPARE(fm27.size(), 11);
         QVERIFY(fm27.contains(L::SerieA) && fm27.contains(L::SuperLig));

@@ -1,6 +1,5 @@
 #include "PlayerProfilePage.h"
 #include "core/DwrsDisplay.h"
-#include "../widgets/RatingProfileEditor.h"
 #include "widgets/RolePhaseSwitch.h"
 
 #include "../AppContext.h"
@@ -669,7 +668,7 @@ void PlayerProfilePage::showPlayer()
     const auto roleNames = m_context.definitions().roleDisplayMap();
     QStringList status;
     if (!player->agreedPlayingTime.isEmpty())
-        status << player->agreedPlayingTime.toHtmlEscaped();
+        status << playingTimeLabel(player->agreedPlayingTime).toHtmlEscaped();
     if (!player->primaryRole.isEmpty())
         status << tr("Primärrolle %1")
                       .arg(roleNames.value(player->primaryRole, player->primaryRole).toHtmlEscaped());
@@ -677,7 +676,7 @@ void PlayerProfilePage::showPlayer()
         const CellStyle style = personalityCellStyle(
             m_context.definitions().personalityCategory(player->personality));
         status << (style.isValid() ? dot(style.background.name()) : QString())
-                      + player->personality.toHtmlEscaped();
+                      + personalityLabel(player->personality).toHtmlEscaped();
     }
 
     // --- Data freshness (see Freshness) ---
@@ -755,7 +754,7 @@ void PlayerProfilePage::showPlayer()
         if (!missing.isEmpty()) {
             QStringList names;
             for (const int index : missing)
-                names << RatingProfileEditor::attributeLabel(index);
+                names << attributeLabel(index);
             const double coverage = snapshot->evaluate(*player, role).coverage;
             m_coverageNote->setText(
                 tr("Die Bewertung beruht auf den vorhandenen Attributen (%1 % des Rollengewichts). "
@@ -791,7 +790,7 @@ void PlayerProfilePage::showPlayer()
                 .arg(static_cast<int>(player->attrMean(idx(Attr::Determination))))
                 .arg(static_cast<int>(player->attrMean(idx(Attr::WorkRate))))
                 .arg(player->personality.isEmpty() ? QStringLiteral("—")
-                                                   : player->personality.toHtmlEscaped()));
+                                                   : personalityLabel(player->personality).toHtmlEscaped()));
     } else {
         m_talentBox->setVisible(false);
     }
@@ -833,7 +832,7 @@ void PlayerProfilePage::showPlayer()
                 continue;
             const int value = qRound(player->attrMean(attrIndex));
             if (value > 0)
-                chips += attrChip(attr, value);
+                chips += attrChip(attributeLabel(attrIndex), value);
         }
         chips += QStringLiteral("</p>");
     };
@@ -971,7 +970,7 @@ void PlayerProfilePage::fillHistory(const Player *player)
                 const double delta = mean(s, a) - mean(before, a);
                 if (std::abs(delta) >= 0.5)
                     moved << QStringLiteral("%1 %2%3")
-                                 .arg(attrNames()[a], delta > 0 ? QStringLiteral("+")
+                                 .arg(attributeLabel(a), delta > 0 ? QStringLiteral("+")
                                                                 : QStringLiteral("−"))
                                  .arg(QLocale().toString(std::abs(delta), 'g', 3));
             }
@@ -1049,7 +1048,7 @@ void PlayerProfilePage::fillRoleTiles()
     m_topRolesLayout->invalidate();
     m_tacticLegend->setVisible(anyMarked);
     m_tacticLegendLabel->setText(tr("Rahmen = Rolle in „%1“:").arg(tactic));
-    // Without phases (FM24) a single color says "in the tactic".
+    // Without phase information, a single color says "in the tactic".
     m_tacticLegend->findChild<QFrame *>(QStringLiteral("oopSwatch"))
         ->setVisible(definitions.hasRolePhases());
     for (QLabel *label : m_tacticLegend->findChildren<QLabel *>()) {
@@ -1130,6 +1129,9 @@ void PlayerProfilePage::showTrainingAdvice(const Player *player)
     const int limit = std::min<int>(5, static_cast<int>(advice.focus.size()));
     for (int i = 0; i < limit; ++i) {
         const TrainingAdvice::FocusRecommendation &f = advice.focus[i];
+        QStringList attributes;
+        for (const QString &key : f.attributes)
+            attributes << attributeLabel(key);
         QString note;
         if (f.allMental)
             note = tr("mental, lebenslang trainierbar");
@@ -1138,8 +1140,8 @@ void PlayerProfilePage::showTrainingAdvice(const Player *player)
         else
             note = tr("noch voll trainierbar");
         html += QStringLiteral("<li><b>%1</b> — %2 <span style='opacity:0.75;'>(%3)</span></li>")
-                    .arg(f.focus.toHtmlEscaped(),
-                         f.attributes.join(QStringLiteral(", ")).toHtmlEscaped(), note);
+                    .arg(TrainingAdvice::focusLabel(f.focus).toHtmlEscaped(),
+                         attributes.join(QStringLiteral(", ")).toHtmlEscaped(), note);
     }
     html += QStringLiteral("</ol>");
 

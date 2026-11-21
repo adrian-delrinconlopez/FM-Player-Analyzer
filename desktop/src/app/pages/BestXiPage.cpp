@@ -1,4 +1,5 @@
 #include "BestXiPage.h"
+#include "core/Constants.h"
 #include "core/DwrsDisplay.h"
 
 #include "../AppContext.h"
@@ -102,7 +103,7 @@ BestXiPage::BestXiPage(AppContext &context, ThemeManager &theme, QWidget *parent
     tacticRow->addStretch(1);
     // How the line-up is computed: one click away instead of always on screen.
     m_hintToggle = new QToolButton(content);
-    m_hintToggle->setText(tr("Beweisbar optimal"));
+    m_hintToggle->setText(tr("So wird aufgestellt"));
     m_hintToggle->setToolTip(tr("Erklärung des Rechenverfahrens ein- oder ausblenden"));
     m_hintToggle->setCheckable(true);
     m_hintToggle->setArrowType(Qt::RightArrow);
@@ -120,7 +121,7 @@ BestXiPage::BestXiPage(AppContext &context, ThemeManager &theme, QWidget *parent
     m_registrationNote->setWordWrap(true);
     layout->addWidget(m_registrationNote);
 
-    m_hint = new QLabel(algorithmHint(), content);
+    m_hint = new QLabel(phaseHint(), content);
     m_hint->setWordWrap(true);
     m_hint->setObjectName(QStringLiteral("kpiCaption"));
     m_hint->setVisible(false);
@@ -300,15 +301,6 @@ BestXiPage::BestXiPage(AppContext &context, ThemeManager &theme, QWidget *parent
             makePage(m_bTeamIpPitch, m_bTeamPitch, m_bIpTitle, m_bTitle, m_teamPages[1]));
         m_teamPages[0].combinedColumn->findChild<QLabel *>()->setText(tr("Startelf · Kombiniert"));
         m_teamPages[1].combinedColumn->findChild<QLabel *>()->setText(tr("B-Team · Kombiniert"));
-        // FM24 (one line-up): starting XI and B-team side by side, as in 1.6.2.
-        {
-            QLabel *xiTitle = nullptr;
-            QLabel *bTitle = nullptr;
-            m_teamStack->addWidget(
-                makePage(m_singleXiPitch, m_singleBPitch, xiTitle, bTitle, m_teamPages[2]));
-            xiTitle->setText(tr("Startelf"));
-            bTitle->setText(tr("B-Team"));
-        }
         tabLayout->addWidget(m_teamStack);
         auto *combinedPage = new QWidget;
         m_combinedLayout = new QHBoxLayout(combinedPage);
@@ -501,7 +493,7 @@ BestXiPage::BestXiPage(AppContext &context, ThemeManager &theme, QWidget *parent
 
     // Player boxes on the pitches are interactive (M13).
     for (TacticPitchWidget *pitch : {m_xiPitch, m_bTeamPitch, m_xiIpPitch, m_bTeamIpPitch,
-                                     m_singleXiPitch, m_singleBPitch, m_secondXiPitch,
+                                     m_secondXiPitch,
                                      m_youthXiPitch}) {
         connect(pitch, &TacticPitchWidget::playerDoubleClicked, this,
                 [this](const QString &uid) { PlayerActions::openProfile(m_context, uid); });
@@ -553,15 +545,12 @@ void BestXiPage::releaseStoreRows()
     clearPitchTeams();
 }
 
-QString BestXiPage::algorithmHint()
+QString BestXiPage::phaseHint()
 {
-    return tr("Startelf und B-Team werden gemeinsam als Zuordnungsproblem berechnet, mit der "
-              "Ungarischen Methode (englisch: Hungarian algorithm, Kuhn–Munkres): Spieler werden "
-              "Positionen eins zu eins so zugeordnet, dass die Summe der Bewertungen maximal ist. "
-              "Keine andere Aufstellung hat eine stärkere Startelf, und unter allen gleich starken "
-              "bekommst du das stärkste B-Team — vielseitige Spieler stehen dort, wo ihr Fehlen "
-              "am wenigsten kostet. Grundlage ist der DWRS je Rolle, gewichtet mit Spielzeit und "
-              "natürlicher Position; Hauptrollen werden eingehalten.");
+    return tr("Die Spielerauswahl berücksichtigt beide Phasen, Spielzeit und natürliche Positionen. "
+             "Innerhalb des eingestellten DWRS-Spielraums werden dieselben Spieler so zugeordnet, "
+             "dass zuerst manuelle Seitenwünsche und dann kurze Wege zwischen den Phasen zählen. "
+             "Fest gesetzte Positionen bleiben erhalten.");
 }
 
 void BestXiPage::refresh()
@@ -609,7 +598,7 @@ void BestXiPage::rebuild()
     const QString tactic = m_tacticCombo->currentText();
 
     clearPitchTeams();
-    if (userClub.isEmpty() || tactic.isEmpty()) {
+    if (userClub.isEmpty() || !m_context.definitions().isTwoPhaseTactic(tactic)) {
         m_twoPhase = false;
         m_viewControls->hide();
         m_phaseNote->hide();
@@ -619,8 +608,6 @@ void BestXiPage::rebuild()
         m_registrationNote->setVisible(false);
         m_xiPitch->clearData();
         m_bTeamPitch->clearData();
-        m_singleXiPitch->clearData();
-        m_singleBPitch->clearData();
         m_xiIpPitch->clearData();
         m_bTeamIpPitch->clearData();
         m_teamPages[0].combined->clearData();
@@ -827,154 +814,134 @@ void BestXiPage::rebuild()
         secondPlayers, full.depthPool, positions, slotOrder, ratings, full.depthPlayerUids);
 
     for (TacticPitchWidget *pitch : {m_xiPitch, m_bTeamPitch, m_xiIpPitch, m_bTeamIpPitch,
-                                     m_singleXiPitch, m_singleBPitch, m_secondXiPitch,
+                                     m_secondXiPitch,
                                      m_youthXiPitch, m_teamPages[0].combined,
                                      m_teamPages[1].combined})
         pitch->setFmVersionId(m_context.fmVersionId());
-    const bool twoPhase = m_context.definitions().isTwoPhaseTactic(tactic);
-    // Two line-ups (FM27): one team at a time, switched above the pitches.
-    // One line-up (FM24): starting XI and B-team next to each other.
-    m_teamSwitch->setVisible(twoPhase);
-    m_phaseSwitch->setVisible(twoPhase);
-    m_twoPhase = twoPhase;
-    m_hintToggle->setText(twoPhase ? tr("So wird aufgestellt") : tr("Beweisbar optimal"));
-    m_hint->setText(twoPhase
-        ? tr("Die Spielerauswahl berücksichtigt beide Phasen, Spielzeit und natürliche Positionen. "
-             "Innerhalb des eingestellten DWRS-Spielraums werden dieselben Spieler so zugeordnet, "
-             "dass zuerst manuelle Seitenwünsche und dann kurze Wege zwischen den Phasen zählen. "
-             "Fest gesetzte Positionen bleiben erhalten.")
-        : algorithmHint());
-    m_viewControls->setVisible(twoPhase && m_tabs->currentIndex() == 0);
+    m_twoPhase = true;
+    m_viewControls->setVisible(m_tabs->currentIndex() == 0);
     applyPhaseView();
-    m_phaseNote->setVisible(twoPhase);
+    m_phaseNote->show();
     m_bridge = BridgeState();
-    m_bridgeBar->setVisible(false);
-    if (twoPhase) {
-        // Two free line-ups: who plays and where in each is one optimisation
-        // (SquadBuilder::calculateTwoPhaseSquad); depth, injuries and the
-        // development squads below still use the out-of-possession line-up.
-        const auto &lineUps = m_context.definitions().twoPhaseTactics().value(tactic);
-        const int share = m_context.config().ipSharePercent();
-        // Manual bridges of players no longer in the pool (sold, injured,
-        // not registered) are left out.
-        Bridges bridges;
-        {
-            const Bridges stored = loadBridges(tactic);
-            for (const Player *player : firstPool) {
-                const auto it = stored.constFind(player->uid);
-                if (it != stored.cend())
-                    bridges.insert(player->uid, *it);
-            }
+    m_bridgeBar->hide();
+
+    // Two free line-ups: who plays and where in each is one optimisation
+    // (SquadBuilder::calculateTwoPhaseSquad); depth, injuries and the
+    // development squads below still use the out-of-possession line-up.
+    const auto &lineUps = m_context.definitions().twoPhaseTactics().value(tactic);
+    const int share = m_context.config().ipSharePercent();
+    // Manual bridges of players no longer in the pool (sold, injured,
+    // not registered) are left out.
+    Bridges bridges;
+    {
+        const Bridges stored = loadBridges(tactic);
+        for (const Player *player : firstPool) {
+            const auto it = stored.constFind(player->uid);
+            if (it != stored.cend())
+                bridges.insert(player->uid, *it);
         }
-        const TwoPhaseSquadResult squad = m_context.squadBuilder().calculateTwoPhaseSquad(
-            firstPool, tactic, ratings, share / 100.0, true, bridges, xiLimit);
-        m_bridge.tactic = tactic;
-        m_bridge.pool = firstPool;
-        m_bridge.share = share / 100.0;
-        m_bridge.bridges = bridges;
-        m_bridge.slotsOfUid = squad.slotsOfUid;
-        showNote(squad.startingOop); // the line-up actually shown
-        m_bridge.current = SquadBuilder::startingValue(squad);
-        m_bridge.optimum = bridges.isEmpty()
-            ? m_bridge.current
-            : SquadBuilder::startingValue(m_context.squadBuilder().calculateTwoPhaseSquad(
-                  firstPool, tactic, ratings, share / 100.0, true, {}, xiLimit));
-        if (!bridges.isEmpty()) {
-            const double loss = m_bridge.optimum - m_bridge.current;
-            m_bridgeNote->setText(
-                tr("Von Hand angepasst (%n Spieler). DWRS-Änderung gegenüber dem Vorschlag: %1.",
-                   nullptr, static_cast<int>(bridges.size()))
-                    .arg(QLocale().toString(std::abs(loss) < 1e-9 ? 0.0 : -loss, 'f', 3)));
-            m_bridgeBar->setVisible(true);
-        }
-        const auto &slotMap = masterPositionMap(m_context.fmVersionId());
-        const auto layoutOf = [&](const QHash<QString, QString> &lineUp) {
-            QHash<QString, QStringList> strata;
-            for (auto it = lineUp.cbegin(); it != lineUp.cend(); ++it) {
-                if (it.key() != QLatin1String("GK"))
-                    strata[slotMap.value(it.key()).stratum].append(it.key());
-            }
-            return strata;
-        };
-        // Under each name: his slot in the other line-up.
-        const auto partnerTexts = [&](const QHash<QString, XiCell> &team, bool ipSide) {
-            QHash<QString, QString> texts;
-            for (auto it = team.cbegin(); it != team.cend(); ++it) {
-                if (!it->isFilled())
-                    continue;
-                const auto pair = squad.slotsOfUid.value(it->playerUid);
-                texts.insert(it.key(), ipSide ? tr("ohne: %1").arg(pair.second)
-                                              : tr("mit: %1").arg(pair.first));
-            }
-            return texts;
-        };
-        m_xiPitch->setTeam(squad.startingOop, lineUps.oop, layoutOf(lineUps.oop), roleNames);
-        m_xiPitch->setSlotSubtexts(partnerTexts(squad.startingOop, false));
-        m_bTeamPitch->setTeam(squad.bTeamOop, lineUps.oop, layoutOf(lineUps.oop), roleNames);
-        m_bTeamPitch->setSlotSubtexts(partnerTexts(squad.bTeamOop, false));
-        m_xiIpPitch->setTeam(squad.startingIp, lineUps.ip, layoutOf(lineUps.ip), roleNames);
-        m_xiIpPitch->setSlotSubtexts(partnerTexts(squad.startingIp, true));
-        m_bTeamIpPitch->setTeam(squad.bTeamIp, lineUps.ip, layoutOf(lineUps.ip), roleNames);
-        m_bTeamIpPitch->setSlotSubtexts(partnerTexts(squad.bTeamIp, true));
-        // Combined view: one card per player of the team, paired by uid.
-        const auto combinedCards = [&](const QHash<QString, XiCell> &ipTeam,
-                                       const QHash<QString, XiCell> &oopTeam) {
-            QList<TacticPitchWidget::CombinedCard> cards;
-            for (const QString &ipSlot : lineUps.ipOrder) {
-                const XiCell ipCell = ipTeam.value(ipSlot);
-                if (!ipCell.isFilled())
-                    continue;
-                const QString oopSlot = squad.slotsOfUid.value(ipCell.playerUid).second;
-                const XiCell oopCell = oopTeam.value(oopSlot);
-                if (oopCell.playerUid != ipCell.playerUid)
-                    continue;
-                TacticPitchWidget::CombinedCard card;
-                card.uid = ipCell.playerUid;
-                card.name = ipCell.name;
-                card.ipSlot = ipSlot;
-                card.oopSlot = oopSlot;
-                card.ipRating = ipCell.rating;
-                card.oopRating = oopCell.rating;
-                card.value = squad.valueOfUid.value(card.uid);
-                cards.append(card);
-            }
-            return cards;
-        };
-        m_teamPages[0].combined->setCombinedTeam(combinedCards(squad.startingIp, squad.startingOop),
-                                                 lineUps.ip, layoutOf(lineUps.ip), lineUps.oop,
-                                                 layoutOf(lineUps.oop));
-        m_teamPages[1].combined->setCombinedTeam(combinedCards(squad.bTeamIp, squad.bTeamOop),
-                                                 lineUps.ip, layoutOf(lineUps.ip), lineUps.oop,
-                                                 layoutOf(lineUps.oop));
-        // For the bridge search by right-click.
-        m_pitchTeams.insert(m_xiIpPitch, {squad.startingIp, lineUps.ip, lineUps.ipOrder, m_xiPitch, true});
-        m_pitchTeams.insert(m_xiPitch, {squad.startingOop, lineUps.oop, lineUps.oopOrder, m_xiIpPitch, false});
-        m_pitchTeams.insert(m_bTeamIpPitch, {squad.bTeamIp, lineUps.ip, lineUps.ipOrder, m_bTeamPitch, true});
-        m_pitchTeams.insert(m_bTeamPitch, {squad.bTeamOop, lineUps.oop, lineUps.oopOrder, m_bTeamIpPitch, false});
-        m_valueOfUid = squad.valueOfUid;
-        m_phaseNote->setText(
-            tr("%1 % mit Ball · %2 % ohne Ball. Innerhalb des DWRS-Spielraums gelten zuerst "
-               "manuelle Seitenpräferenzen, dann kurze Wege. Rechtsklick zum Verschieben.\n"
-               "DWRS-Änderung durch die Zuordnung: Startelf %3 · B-Team %4. Spielraum je Mannschaft: %5.")
-                .arg(share).arg(100 - share)
-                .arg(QLocale().toString(std::abs(squad.startingBridgeLoss) < 1e-9 ? 0.0 : -squad.startingBridgeLoss, 'f', 3))
-                .arg(QLocale().toString(std::abs(squad.bTeamBridgeLoss) < 1e-9 ? 0.0 : -squad.bTeamBridgeLoss, 'f', 3))
-                .arg(QLocale().toString(m_context.config().bridgeTolerance(), 'f', 2)));
-    } else {
-        m_singleXiPitch->setTeam(first.startingXi, positions, layout, roleNames);
-        m_singleBPitch->setTeam(first.bTeam, positions, layout, roleNames);
-        m_pitchTeams.insert(m_singleXiPitch,
-                            {first.startingXi, positions, slotOrder, nullptr, false});
-        m_pitchTeams.insert(m_singleBPitch, {first.bTeam, positions, slotOrder, nullptr, false});
     }
+    const TwoPhaseSquadResult squad = m_context.squadBuilder().calculateTwoPhaseSquad(
+        firstPool, tactic, ratings, share / 100.0, true, bridges, xiLimit);
+    m_bridge.tactic = tactic;
+    m_bridge.pool = firstPool;
+    m_bridge.share = share / 100.0;
+    m_bridge.bridges = bridges;
+    m_bridge.slotsOfUid = squad.slotsOfUid;
+    showNote(squad.startingOop); // the line-up actually shown
+    m_bridge.current = SquadBuilder::startingValue(squad);
+    m_bridge.optimum = bridges.isEmpty()
+        ? m_bridge.current
+        : SquadBuilder::startingValue(m_context.squadBuilder().calculateTwoPhaseSquad(
+              firstPool, tactic, ratings, share / 100.0, true, {}, xiLimit));
+    if (!bridges.isEmpty()) {
+        const double loss = m_bridge.optimum - m_bridge.current;
+        m_bridgeNote->setText(
+            tr("Von Hand angepasst (%n Spieler). DWRS-Änderung gegenüber dem Vorschlag: %1.",
+               nullptr, static_cast<int>(bridges.size()))
+                .arg(QLocale().toString(std::abs(loss) < 1e-9 ? 0.0 : -loss, 'f', 3)));
+        m_bridgeBar->setVisible(true);
+    }
+    const auto &slotMap = masterPositionMap(m_context.fmVersionId());
+    const auto layoutOf = [&](const QHash<QString, QString> &lineUp) {
+        QHash<QString, QStringList> strata;
+        for (auto it = lineUp.cbegin(); it != lineUp.cend(); ++it) {
+            if (it.key() != QLatin1String("GK"))
+                strata[slotMap.value(it.key()).stratum].append(it.key());
+        }
+        return strata;
+    };
+    // Under each name: his slot in the other line-up.
+    const auto partnerTexts = [&](const QHash<QString, XiCell> &team, bool ipSide) {
+        QHash<QString, QString> texts;
+        for (auto it = team.cbegin(); it != team.cend(); ++it) {
+            if (!it->isFilled())
+                continue;
+            const auto pair = squad.slotsOfUid.value(it->playerUid);
+            texts.insert(it.key(), ipSide ? tr("ohne: %1").arg(pair.second)
+                                          : tr("mit: %1").arg(pair.first));
+        }
+        return texts;
+    };
+    m_xiPitch->setTeam(squad.startingOop, lineUps.oop, layoutOf(lineUps.oop), roleNames);
+    m_xiPitch->setSlotSubtexts(partnerTexts(squad.startingOop, false));
+    m_bTeamPitch->setTeam(squad.bTeamOop, lineUps.oop, layoutOf(lineUps.oop), roleNames);
+    m_bTeamPitch->setSlotSubtexts(partnerTexts(squad.bTeamOop, false));
+    m_xiIpPitch->setTeam(squad.startingIp, lineUps.ip, layoutOf(lineUps.ip), roleNames);
+    m_xiIpPitch->setSlotSubtexts(partnerTexts(squad.startingIp, true));
+    m_bTeamIpPitch->setTeam(squad.bTeamIp, lineUps.ip, layoutOf(lineUps.ip), roleNames);
+    m_bTeamIpPitch->setSlotSubtexts(partnerTexts(squad.bTeamIp, true));
+    // Combined view: one card per player of the team, paired by uid.
+    const auto combinedCards = [&](const QHash<QString, XiCell> &ipTeam,
+                                   const QHash<QString, XiCell> &oopTeam) {
+        QList<TacticPitchWidget::CombinedCard> cards;
+        for (const QString &ipSlot : lineUps.ipOrder) {
+            const XiCell ipCell = ipTeam.value(ipSlot);
+            if (!ipCell.isFilled())
+                continue;
+            const QString oopSlot = squad.slotsOfUid.value(ipCell.playerUid).second;
+            const XiCell oopCell = oopTeam.value(oopSlot);
+            if (oopCell.playerUid != ipCell.playerUid)
+                continue;
+            TacticPitchWidget::CombinedCard card;
+            card.uid = ipCell.playerUid;
+            card.name = ipCell.name;
+            card.ipSlot = ipSlot;
+            card.oopSlot = oopSlot;
+            card.ipRating = ipCell.rating;
+            card.oopRating = oopCell.rating;
+            card.value = squad.valueOfUid.value(card.uid);
+            cards.append(card);
+        }
+        return cards;
+    };
+    m_teamPages[0].combined->setCombinedTeam(combinedCards(squad.startingIp, squad.startingOop),
+                                             lineUps.ip, layoutOf(lineUps.ip), lineUps.oop,
+                                             layoutOf(lineUps.oop));
+    m_teamPages[1].combined->setCombinedTeam(combinedCards(squad.bTeamIp, squad.bTeamOop),
+                                             lineUps.ip, layoutOf(lineUps.ip), lineUps.oop,
+                                             layoutOf(lineUps.oop));
+    // For the bridge search by right-click.
+    m_pitchTeams.insert(m_xiIpPitch, {squad.startingIp, lineUps.ip, lineUps.ipOrder, m_xiPitch, true});
+    m_pitchTeams.insert(m_xiPitch, {squad.startingOop, lineUps.oop, lineUps.oopOrder, m_xiIpPitch, false});
+    m_pitchTeams.insert(m_bTeamIpPitch, {squad.bTeamIp, lineUps.ip, lineUps.ipOrder, m_bTeamPitch, true});
+    m_pitchTeams.insert(m_bTeamPitch, {squad.bTeamOop, lineUps.oop, lineUps.oopOrder, m_bTeamIpPitch, false});
+    m_valueOfUid = squad.valueOfUid;
+    m_phaseNote->setText(
+        tr("%1 % mit Ball · %2 % ohne Ball. Innerhalb des DWRS-Spielraums gelten zuerst "
+           "manuelle Seitenpräferenzen, dann kurze Wege. Rechtsklick zum Verschieben.\n"
+           "DWRS-Änderung durch die Zuordnung: Startelf %3 · B-Team %4. Spielraum je Mannschaft: %5.")
+            .arg(share).arg(100 - share)
+            .arg(QLocale().toString(std::abs(squad.startingBridgeLoss) < 1e-9 ? 0.0 : -squad.startingBridgeLoss, 'f', 3))
+            .arg(QLocale().toString(std::abs(squad.bTeamBridgeLoss) < 1e-9 ? 0.0 : -squad.bTeamBridgeLoss, 'f', 3))
+            .arg(QLocale().toString(m_context.config().bridgeTolerance(), 'f', 2)));
     m_pitchTactic = tactic;
 
     // Squad depth per missing starter: exactly one extra player, the others
     // may move (manual bridges stay).
     fillOutageTable(m_context.squadBuilder().replacementPlans(
                         firstPool, tactic, ratings, true,
-                        twoPhase ? m_bridge.bridges : Bridges(), xiLimit),
-                    twoPhase);
+                        m_bridge.bridges, xiLimit));
     m_secondXiTitle->setText(secondClub.isEmpty()
                                  ? tr("Zweitteam-XI (aus Überschuss des Hauptvereins)")
                                  : tr("Zweitteam-XI (%1)").arg(secondClub));
@@ -1030,9 +997,8 @@ void BestXiPage::applyPhaseView()
     m_bIpTitle->setText(tr("B-Team") + QStringLiteral(" · ") + tr("Mit Ball"));
     m_xiTitle->setText(tr("Startelf") + QStringLiteral(" · ") + tr("Ohne Ball"));
     m_bTitle->setText(tr("B-Team") + QStringLiteral(" · ") + tr("Ohne Ball"));
-    m_teamStack->setCurrentIndex(!m_twoPhase ? 2 : m_phaseView == BothPhases ? selected : 3);
+    m_teamStack->setCurrentIndex(m_phaseView == BothPhases ? selected : 2);
     m_combinedLayout->insertWidget(0, m_teamPages[selected].combinedColumn, 1);
-    // FM24 page (index 2) always shows both teams side by side.
     for (int t = 0; t < 2; ++t) {
         const TeamPage &page = m_teamPages[t];
         page.combinedColumn->setVisible(m_phaseView == Combined);
@@ -1055,7 +1021,6 @@ void BestXiPage::updatePitchLayout()
         return;
     const int height = m_scroll->viewport()->height() - 48;
     for (TacticPitchWidget *pitch : {m_xiIpPitch, m_xiPitch, m_bTeamIpPitch, m_bTeamPitch,
-                                     m_singleXiPitch, m_singleBPitch,
                                      m_teamPages[0].combined, m_teamPages[1].combined})
         pitch->fitToHeight(height);
     const int selected = m_xiButton->isChecked() ? 0 : 1;
@@ -1349,8 +1314,9 @@ void BestXiPage::fillSurplusTable(QTableWidget *table,
 
 void BestXiPage::fillDepthTable(const QHash<QString, QList<DepthOption>> &options)
 {
-    const auto roleNames = m_context.definitions().roleDisplayMap();
-    const bool twoPhase = m_context.definitions().hasRolePhases();
+    const auto &definitions = m_context.definitions();
+    const auto &roleNames = definitions.roleDisplayMap();
+    const bool twoPhase = definitions.hasRolePhases();
 
     if (options.isEmpty()) {
         m_depthEmpty->setText(
@@ -1390,10 +1356,9 @@ void BestXiPage::fillDepthTable(const QHash<QString, QList<DepthOption>> &option
         for (const QString &role : tableRoles) {
             // In the split view the phase is in the caption; drop the suffix.
             QString roleName = roleNames.value(role, role);
-            if (twoPhase) {
-                roleName.remove(QStringLiteral(" (IP)"));
-                roleName.remove(QStringLiteral(" (OOP)"));
-            }
+            const QString suffix = QStringLiteral(" (%1)").arg(definitions.rolePhaseTag(role));
+            if (twoPhase && roleName.endsWith(suffix))
+                roleName.chop(suffix.size());
             for (const DepthOption &option : options.value(role)) {
                 int column = 0;
                 table->setItem(row, column++, new QTableWidgetItem(roleName));
@@ -1417,7 +1382,7 @@ void BestXiPage::fillDepthTable(const QHash<QString, QList<DepthOption>> &option
 
                 table->setItem(row, column++,
                                new QTableWidgetItem(option.apt.isEmpty() ? QStringLiteral("–")
-                                                                         : option.apt));
+                                                                         : playingTimeLabel(option.apt)));
                 ++row;
             }
         }

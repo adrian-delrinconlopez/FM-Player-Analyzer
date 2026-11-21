@@ -8,7 +8,6 @@
 #include "core/ImportHistory.h"
 
 #include "../AppContext.h"
-#include "../MigrationWizard.h"
 #include "../NewSaveWizard.h"
 #include "../theming/ThemeManager.h"
 #include "../theming/ThemePresets.h"
@@ -552,27 +551,8 @@ QWidget *SettingsPage::buildImportPage()
                              &cards);
 
     QVBoxLayout *body = nullptr;
-    cards->addWidget(makeCard(tr("Football-Manager-Version"), QString(), &body));
-    QFormLayout *form = makeForm(body);
-    m_fmVersionCombo = sized(new QComboBox, kFieldWidth);
-    for (const FmDataVersion &version : fmDataVersions()) {
-        m_fmVersionCombo->addItem(version.supported
-                                      ? version.displayName
-                                      : tr("%1 (noch nicht unterstützt)")
-                                            .arg(version.displayName),
-                                  version.id);
-        if (!version.supported)
-            m_fmVersionCombo->setItemData(m_fmVersionCombo->count() - 1, false,
-                                          Qt::UserRole - 1); // disable row
-    }
-    addRow(form, tr("Version dieses Spielstands"), m_fmVersionCombo);
-    addHint(form, tr("Bestimmt, wie die Spielerattribute aus dem Export gelesen werden, welche "
-                     "Rollen und Taktiken gelten und wie die Attribute gewichtet werden. Die "
-                     "Version wird beim Anlegen eines Spielstands gewählt und steht fest, sobald "
-                     "er Spieler enthält. Unterstützt werden Football Manager 2024 und 2027."));
-
     cards->addWidget(makeCard(tr("HTML-/CSV-Export"), QString(), &body));
-    form = makeForm(body);
+    QFormLayout *form = makeForm(body);
     m_importDirEdit = sized(new QLineEdit, kPathWidth);
     auto *importDirBrowse = new QPushButton(tr("Durchsuchen …"));
     auto *importDirOpen = new QPushButton(tr("Öffnen"));
@@ -964,7 +944,7 @@ QWidget *SettingsPage::buildWeightsPage()
     for (int i = 0; i < allApt.size(); ++i) {
         auto *spin = makeSpin(5.0);
         m_aptSpins.insert(allApt.at(i), spin);
-        auto *label = new QLabel(allApt.at(i));
+        auto *label = new QLabel(playingTimeLabel(allApt.at(i)));
         const int column = (i / rows) * 2;
         aptGrid->addWidget(label, i % rows, column);
         aptGrid->addWidget(spin, i % rows, column + 1);
@@ -997,9 +977,8 @@ QWidget *SettingsPage::buildPersonalityPage()
     QVBoxLayout *body = nullptr;
     cards->addWidget(makeCard(tr("Persönlichkeiten"), QString(), &body));
     m_personalityTable = new QTableWidget;
-    m_personalityTable->setColumnCount(3);
-    m_personalityTable->setHorizontalHeaderLabels({tr("Persönlichkeit"), QStringLiteral("FM24"),
-                                                   QStringLiteral("FM27")});
+    m_personalityTable->setColumnCount(2);
+    m_personalityTable->setHorizontalHeaderLabels({tr("Persönlichkeit"), tr("Einstufung")});
     m_personalityTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
     m_personalityTable->verticalHeader()->hide();
     m_personalityTable->setMinimumHeight(480);
@@ -1009,13 +988,9 @@ QWidget *SettingsPage::buildPersonalityPage()
     connect(reset, &QPushButton::clicked, this, [this] {
         for (int row = 0; row < m_personalityTable->rowCount(); ++row) {
             const QString category = personalityDefaults().value(
-                m_personalityTable->item(row, 0)->text(), QStringLiteral("neutral"));
-            for (int col = 1; col <= 2; ++col) {
-                if (m_personalityTable->isColumnHidden(col))
-                    continue; // only the save's own FM version
-                auto *combo = qobject_cast<QComboBox *>(m_personalityTable->cellWidget(row, col));
-                combo->setCurrentIndex(combo->findData(category));
-            }
+                m_personalityTable->item(row, 0)->data(Qt::UserRole).toString(), QStringLiteral("neutral"));
+            auto *combo = qobject_cast<QComboBox *>(m_personalityTable->cellWidget(row, 1));
+            combo->setCurrentIndex(combo->findData(category));
         }
     });
     cards->addStretch();
@@ -1024,36 +999,13 @@ QWidget *SettingsPage::buildPersonalityPage()
 
 void SettingsPage::refreshPersonalities()
 {
-    m_personalityRoots.clear();
+    m_personalityRoot = m_context.definitions().root();
     QSet<QString> names;
     for (auto it = personalityDefaults().cbegin(); it != personalityDefaults().cend(); ++it)
         names.insert(it.key());
-    ProfileStore store(m_context.database());
-    for (const QString &version : {QStringLiteral("fm24"), QStringLiteral("fm27")}) {
-        QByteArray json;
-        if (!store.readDocument(ProfileStore::definitionsDocument(version), json)) {
-            if (!store.errorString().isEmpty()) {
-                m_personalityTable->setEnabled(false);
-                return; // Never replace an unreadable document with defaults.
-            }
-            QString path = QStringLiteral(":/defaults/") + fmDataVersion(version).definitionsFileName;
-            if (m_context.config().profileSeed() == QLatin1String("config.ini")
-                && QFile::exists(m_context.paths().definitionsFile(version)))
-                path = m_context.paths().definitionsFile(version);
-            QFile file(path);
-            if (file.open(QIODevice::ReadOnly))
-                json = file.readAll();
-        }
-        QJsonParseError error;
-        const QJsonDocument doc = QJsonDocument::fromJson(json, &error);
-        if (error.error != QJsonParseError::NoError || !doc.isObject()) {
-            m_personalityTable->setEnabled(false);
-            return;
-        }
-        m_personalityRoots.insert(version, doc.object());
-        for (const QString &name : doc.object().value(QStringLiteral("personalities")).toObject().keys())
-            names.insert(name);
-    }
+    const auto categories = m_personalityRoot.value(QStringLiteral("personalities")).toObject();
+    for (const QString &name : categories.keys())
+        names.insert(name);
     for (const Player &player : m_context.store().players())
         if (!player.personality.trimmed().isEmpty())
             names.insert(player.personality.trimmed());
@@ -1062,32 +1014,20 @@ void SettingsPage::refreshPersonalities()
     m_personalityTable->setEnabled(true);
     m_personalityTable->setRowCount(sorted.size());
     for (int row = 0; row < sorted.size(); ++row) {
-        auto *name = new QTableWidgetItem(sorted[row]);
+        auto *name = new QTableWidgetItem(personalityLabel(sorted[row]));
+        name->setData(Qt::UserRole, sorted[row]);
         name->setFlags(name->flags() & ~Qt::ItemIsEditable);
         m_personalityTable->setItem(row, 0, name);
-        for (int col = 1; col <= 2; ++col) {
-            const QString version = col == 1 ? QStringLiteral("fm24") : QStringLiteral("fm27");
-            const auto categories = m_personalityRoots.value(version)
-                .value(QStringLiteral("personalities")).toObject();
-            const QString category = categories.value(sorted[row]).toString(
-                personalityDefaults().value(sorted[row], QStringLiteral("neutral")));
-            auto *combo = new QComboBox;
-            combo->addItem(tr("Gut"), QStringLiteral("good"));
-            combo->addItem(tr("Neutral"), QStringLiteral("neutral"));
-            combo->addItem(tr("Schlecht"), QStringLiteral("bad"));
-            combo->setCurrentIndex(combo->findData(category));
-            combo->setProperty("originalCategory", category);
-            m_personalityTable->setCellWidget(row, col, combo);
-        }
+        const QString category = categories.value(sorted[row]).toString(
+            personalityDefaults().value(sorted[row], QStringLiteral("neutral")));
+        auto *combo = new QComboBox;
+        combo->addItem(tr("Gut"), QStringLiteral("good"));
+        combo->addItem(tr("Neutral"), QStringLiteral("neutral"));
+        combo->addItem(tr("Schlecht"), QStringLiteral("bad"));
+        combo->setCurrentIndex(combo->findData(category));
+        combo->setProperty("originalCategory", category);
+        m_personalityTable->setCellWidget(row, 1, combo);
     }
-    // A save belongs to one FM version: show and edit only its column (the
-    // other version's stored values stay as they are).
-    const QString version = m_context.fmVersionId();
-    const bool fm24 = version == QLatin1String("fm24"), fm27 = version == QLatin1String("fm27");
-    m_personalityTable->setColumnHidden(1, fm27);
-    m_personalityTable->setColumnHidden(2, fm24);
-    m_personalityTable->horizontalHeaderItem(1)->setText(fm24 ? tr("Einstufung") : QStringLiteral("FM24"));
-    m_personalityTable->horizontalHeaderItem(2)->setText(fm27 ? tr("Einstufung") : QStringLiteral("FM27"));
 }
 
 QWidget *SettingsPage::buildSquadPage()
@@ -1771,30 +1711,13 @@ QWidget *SettingsPage::buildDatabasePage()
     });
 
     auto *createButton = new QPushButton(tr("Neuer Spielstand …"));
-    auto *migrateButton = new QPushButton(tr("Legacy-Datenbank importieren …"));
-    body->addLayout(hbox({createButton, migrateButton}));
+    body->addWidget(createButton, 0, Qt::AlignLeft);
 
     connect(createButton, &QPushButton::clicked, this, [this] {
         NewSaveWizard wizard(m_context, this);
         wizard.exec();
         refresh();
     });
-    connect(migrateButton, &QPushButton::clicked, this, [this] {
-        MigrationWizard wizard(m_context, this);
-        wizard.exec();
-        refresh();
-        if (!wizard.migratedDbName().isEmpty()
-            && QMessageBox::question(this, tr("Import"),
-                                     tr("Importierte Datenbank '%1' jetzt aktivieren?")
-                                         .arg(wizard.migratedDbName()))
-                   == QMessageBox::Yes) {
-            QString error;
-            if (!m_context.openDatabase(wizard.migratedDbName(), &error))
-                QMessageBox::critical(this, tr("Datenbank"), error);
-            refresh();
-        }
-    });
-
     cards->addWidget(makeCard(tr("Programmstart"), QString(), &body));
     auto *autoOpen =
         new QCheckBox(tr("Beim Start immer den zuletzt verwendeten Spielstand öffnen"));
@@ -1844,15 +1767,6 @@ void SettingsPage::refresh()
     AppConfig &config = m_context.config();
 
     // --- Club tab ---
-    const int versionIndex = m_fmVersionCombo->findData(m_context.fmVersionId());
-    m_fmVersionCombo->setCurrentIndex(versionIndex >= 0 ? versionIndex : 0);
-    // Roles, ratings and history refer to the version's roles once players exist.
-    const bool versionLocked = m_context.store().size() > 0;
-    m_fmVersionCombo->setEnabled(!versionLocked);
-    m_fmVersionCombo->setToolTip(
-        versionLocked ? tr("Der Spielstand enthält Spieler. Für eine andere Version bitte "
-                           "einen neuen Spielstand anlegen.")
-                      : QString());
     m_importDirEdit->setText(QDir::toNativeSeparators(config.htmlExportDir()));
     m_importDirEdit->setPlaceholderText(
         QDir::toNativeSeparators(AppConfig::defaultHtmlExportDir(m_context.fmVersionId())));
@@ -2050,8 +1964,6 @@ void SettingsPage::saveAll()
 {
     AppConfig &config = m_context.config();
 
-    // The weight spins show the version the page was refreshed for; a version
-    // switch below must not redirect them to the new one.
     const auto analysisSettings = [&config] {
         auto values = config.profileValues();
         for (auto it = values.begin(); it != values.end(); ) {
@@ -2064,10 +1976,6 @@ void SettingsPage::saveAll()
     };
     const auto beforeAnalysis = analysisSettings();
     const QString weightsVersion = m_context.fmVersionId();
-    QString versionError;
-    if (!m_context.setFmVersion(m_fmVersionCombo->currentData().toString(), &versionError))
-        QMessageBox::warning(this, tr("Football-Manager-Version"), versionError);
-
     // Everything below belongs to the open save's profile and is written as
     // one transaction: either all of it reaches the save, or nothing does.
     AppConfig::Transaction transaction(config);
@@ -2210,29 +2118,26 @@ void SettingsPage::saveAll()
 
     bool personalitiesChanged = false;
     ProfileStore personalityStore(db);
-    if (m_personalityTable->isEnabled() && m_personalityRoots.size() == 2) {
-        for (int col = 1; col <= 2; ++col) {
-            const QString version = col == 1 ? QStringLiteral("fm24") : QStringLiteral("fm27");
-            QJsonObject root = m_personalityRoots.value(version);
-            QJsonObject categories = root.value(QStringLiteral("personalities")).toObject();
-            // Preserve every old category, including unlisted/custom names.
-            if (!root.contains(QStringLiteral("personalities")))
-                for (auto it = personalityDefaults().cbegin(); it != personalityDefaults().cend(); ++it)
-                    categories.insert(it.key(), it.value());
-            bool changed = false;
-            for (int row = 0; row < m_personalityTable->rowCount(); ++row) {
-                auto *combo = qobject_cast<QComboBox *>(m_personalityTable->cellWidget(row, col));
-                if (combo->currentData() == combo->property("originalCategory"))
-                    continue;
-                changed = true;
-                categories.insert(m_personalityTable->item(row, 0)->text(), combo->currentData().toString());
-            }
-            if (changed) {
-                root.insert(QStringLiteral("personalities"), categories);
-                clubSettingsOk = clubSettingsOk && personalityStore.saveDefinitions(
-                    version, QJsonDocument(root).toJson());
-                personalitiesChanged = true;
-            }
+    if (m_personalityTable->isEnabled() && !m_personalityRoot.isEmpty()) {
+        QJsonObject root = m_personalityRoot;
+        QJsonObject categories = root.value(QStringLiteral("personalities")).toObject();
+        // Preserve every old category, including unlisted/custom names.
+        if (!root.contains(QStringLiteral("personalities")))
+            for (auto it = personalityDefaults().cbegin(); it != personalityDefaults().cend(); ++it)
+                categories.insert(it.key(), it.value());
+        bool changed = false;
+        for (int row = 0; row < m_personalityTable->rowCount(); ++row) {
+            auto *combo = qobject_cast<QComboBox *>(m_personalityTable->cellWidget(row, 1));
+            if (combo->currentData() == combo->property("originalCategory"))
+                continue;
+            changed = true;
+            categories.insert(m_personalityTable->item(row, 0)->data(Qt::UserRole).toString(), combo->currentData().toString());
+        }
+        if (changed) {
+            root.insert(QStringLiteral("personalities"), categories);
+            clubSettingsOk = clubSettingsOk && personalityStore.saveDefinitions(
+                m_context.fmVersionId(), QJsonDocument(root).toJson());
+            personalitiesChanged = true;
         }
     }
 
@@ -2248,8 +2153,7 @@ void SettingsPage::saveAll()
         return;
     }
 
-    const bool analysisChanged = personalitiesChanged || clubChanged || beforeAnalysis != analysisSettings()
-                                 || weightsVersion != m_context.fmVersionId();
+    const bool analysisChanged = personalitiesChanged || clubChanged || beforeAnalysis != analysisSettings();
     if (personalitiesChanged)
         m_context.reloadConfigAndDefinitions();
     if (analysisChanged && !personalitiesChanged) {

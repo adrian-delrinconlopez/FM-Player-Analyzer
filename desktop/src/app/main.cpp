@@ -2,6 +2,7 @@
 #include <QFont>
 #include <QGuiApplication>
 #include <QIcon>
+#include <QLocale>
 #include <QMessageBox>
 #include <QTimer>
 #include <QTranslator>
@@ -34,16 +35,27 @@ int main(int argc, char *argv[])
 
     // Language must be installed before any widgets are built (including the
     // first-run dialog and the statically initialized navigation labels).
-    // Default English via the bundled .qm; "de" keeps the German source text.
-    QTranslator appTranslator;
-    if (context.paths().language() != QLatin1String("de")
-        && appTranslator.load(QStringLiteral(":/i18n/fmplayeranalyzer_en.qm"))) {
-        QApplication::installTranslator(&appTranslator);
+    const QString language = context.paths().language();
+    const bool spanish = language == QLatin1String("es");
+    const QLocale uiLocale(spanish ? QStringLiteral("es_ES") : language);
+    QTranslator englishTranslator;
+    QTranslator qtTranslator;
+    QTranslator spanishTranslator;
+    QTranslator footballTranslator;
+    if (language != QLatin1String("de")
+        && englishTranslator.load(QStringLiteral(":/i18n/fmplayeranalyzer_en.qm"))) {
+        QApplication::installTranslator(&englishTranslator);
     }
-
-    // DWRS decimals use the separator of the UI language (restart on change).
-    fm::setDwrsLocale(QLocale(context.paths().language() == QLatin1String("de") ? QLocale::German
-                                                                                 : QLocale::English));
+    if (spanish) {
+        QLocale::setDefault(uiLocale);
+        if (qtTranslator.load(QStringLiteral(":/i18n/qtbase_es.qm")))
+            QApplication::installTranslator(&qtTranslator);
+        if (spanishTranslator.load(QStringLiteral(":/i18n/fmplayeranalyzer_es.qm")))
+            QApplication::installTranslator(&spanishTranslator);
+        if (footballTranslator.load(QStringLiteral(":/i18n/football_terms_es.qm")))
+            QApplication::installTranslator(&footballTranslator);
+    }
+    fm::setDwrsLocale(uiLocale);
 
     if (context.paths().isFirstRun()) {
         fm::FirstRunDialog dialog(fm::AppPaths::defaultDataDir());

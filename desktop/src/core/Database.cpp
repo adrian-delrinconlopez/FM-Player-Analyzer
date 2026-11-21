@@ -124,6 +124,24 @@ bool Database::open(const QString &filePath)
     return initSchema() && reconcileRegistrationStash();
 }
 
+bool Database::isFm27Save(const QString &filePath)
+{
+    const QString connection = uniqueConnectionName(QStringLiteral("save_version"));
+    bool matches = false;
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QSQLITE"), connection);
+        db.setDatabaseName(filePath);
+        db.setConnectOptions(QStringLiteral("QSQLITE_OPEN_READONLY;QSQLITE_BUSY_TIMEOUT=500"));
+        if (db.open()) {
+            QSqlQuery version(db);
+            matches = version.exec(QStringLiteral("SELECT value FROM settings WHERE key='fm_version'"))
+                      && version.next() && version.value(0).toString() == defaultFmVersionId();
+        }
+    }
+    QSqlDatabase::removeDatabase(connection);
+    return matches;
+}
+
 void Database::close()
 {
     if (m_db.isOpen())

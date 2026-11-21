@@ -4,6 +4,10 @@
 <context>
     <name>DepartureDialog</name>
     <message>
+        <source>Karriereende</source>
+        <translation>Retired</translation>
+    </message>
+    <message>
         <location filename="../src/app/pages/DashboardPage.cpp" line="119"/>
         <source>Spieler-Abgänge klären</source>
         <translation>Resolve player departures</translation>
@@ -308,11 +312,6 @@ Details: %1</translation>
         <location filename="../src/app/Navigation.cpp" line="25"/>
         <source>Rollen zuweisen</source>
         <translation>Assign Roles</translation>
-    </message>
-    <message>
-        <location filename="../src/app/Navigation.cpp" line="28"/>
-        <source>Neue Rolle</source>
-        <translation>New Role</translation>
     </message>
     <message>
         <location filename="../src/app/Navigation.cpp" line="36"/>
@@ -715,6 +714,10 @@ Details: %1</translation>
 <context>
     <name>SaveLibrary</name>
     <message>
+        <source>Nur Spielstände für Football Manager 27 werden unterstützt.</source>
+        <translation>Only Football Manager 27 saves are supported.</translation>
+    </message>
+    <message>
         <location filename="../src/app/SaveLibrary.cpp" line="255"/>
         <source>Bitte einen Namen eingeben.</source>
         <translation>Please enter a name.</translation>
@@ -883,6 +886,10 @@ Details: %1</translation>
 <context>
     <name>fm::AppContext</name>
     <message>
+        <source>Nur Spielstände für Football Manager 27 werden unterstützt.</source>
+        <translation>Only Football Manager 27 saves are supported.</translation>
+    </message>
+    <message>
         <location filename="../src/app/AppContext.cpp" line="78"/>
         <source>Datenordner %1 konnte nicht angelegt werden.</source>
         <translation>Data folder %1 could not be created.</translation>
@@ -916,11 +923,6 @@ Details: %1</translation>
         <location filename="../src/app/AppContext.cpp" line="605"/>
         <source>Das Profil konnte nicht aktiviert werden.</source>
         <translation>The profile could not be activated.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/AppContext.cpp" line="654"/>
-        <source>Die Football-Manager-Version ist an den Spielstand gebunden, sobald er Spieler enthält. Für eine andere Version bitte einen neuen Spielstand anlegen.</source>
-        <translation>The Football Manager version is tied to the save once it contains players. Please create a new save for a different version.</translation>
     </message>
     <message>
         <location filename="../src/app/AppContext.cpp" line="390"/>
@@ -1176,12 +1178,6 @@ Details: %1</translation>
         <translation>Competition:</translation>
     </message>
     <message>
-        <location filename="../src/app/pages/BestXiPage.cpp" line="105"/>
-        <location filename="../src/app/pages/BestXiPage.cpp" line="840"/>
-        <source>Beweisbar optimal</source>
-        <translation>Provably optimal</translation>
-    </message>
-    <message>
         <location filename="../src/app/pages/BestXiPage.cpp" line="106"/>
         <source>Erklärung des Rechenverfahrens ein- oder ausblenden</source>
         <translation>Show or hide how the line-up is computed</translation>
@@ -1324,11 +1320,6 @@ Details: %1</translation>
         <location filename="../src/app/pages/BestXiPage.cpp" line="546"/>
         <source>Kaufberatung</source>
         <translation>Signing Advisor</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/BestXiPage.cpp" line="558"/>
-        <source>Startelf und B-Team werden gemeinsam als Zuordnungsproblem berechnet, mit der Ungarischen Methode (englisch: Hungarian algorithm, Kuhn–Munkres): Spieler werden Positionen eins zu eins so zugeordnet, dass die Summe der Bewertungen maximal ist. Keine andere Aufstellung hat eine stärkere Startelf, und unter allen gleich starken bekommst du das stärkste B-Team — vielseitige Spieler stehen dort, wo ihr Fehlen am wenigsten kostet. Grundlage ist der DWRS je Rolle, gewichtet mit Spielzeit und natürlicher Position; Hauptrollen werden eingehalten.</source>
-        <translation>Starting XI and B-team are computed together as an assignment problem with the Hungarian algorithm (Kuhn–Munkres): players are assigned to positions one to one so that the sum of the ratings is maximal. No other line-up has a stronger starting XI, and of all equally strong ones you get the strongest B-team — versatile players play where their absence costs least. Based on the DWRS per role, weighted by playing time and natural position; primary roles are respected.</translation>
     </message>
     <message>
         <location filename="../src/app/pages/BestXiPage.cpp" line="586"/>
@@ -1591,21 +1582,6 @@ Details: %1</translation>
         <translation>The bundled tactics are only examples. Create your own in the tactic editor; updates leave them untouched.</translation>
     </message>
     <message>
-        <location filename="../src/app/pages/BestXiDepth.cpp" line="56"/>
-        <source>Aus Best XI: Ersatz für %1 (%2).</source>
-        <translation>From Best XI: replacement for %1 (%2).</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/BestXiDepth.cpp" line="61"/>
-        <source>Aus Best XI: freier Platz %1.</source>
-        <translation>From Best XI: free place %1.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/BestXiDepth.cpp" line="63"/>
-        <source>🔍 Im Scouting suchen (%1)</source>
-        <translation>🔍 Search in scouting (%1)</translation>
-    </message>
-    <message>
         <location filename="../src/app/pages/BestXiDepth.cpp" line="91"/>
         <source>Aus Best XI: Bridge von %1 (mit Ball %2, ohne Ball %3).</source>
         <translation>From Best XI: bridge of %1 (in possession %2, out of possession %3).</translation>
@@ -1660,11 +1636,6 @@ Details: %1</translation>
         <location filename="../src/app/pages/BestXiDepth.cpp" line="159"/>
         <source>Fällt ein Spieler der Startelf aus, zeigt die Tabelle den besten geprüften Ersatzplan: Genau ein Spieler kommt dazu, die übrigen dürfen dafür ihre Plätze mit und ohne Ball tauschen. „Wer übernimmt“ nennt, wer die frei gewordenen Plätze besetzt, auch wenn das ein Mitspieler ist, der dafür umrückt. „Volle Bridge“ heißt: Der Neue übernimmt beide Plätze. Von Hand gesetzte Plätze und eine Startelf-Grenze gelten weiter. Weitere Lösungen zeigt der Tooltip.</source>
         <translation>If a starter is unavailable, the table shows the best evaluated cover plan: exactly one player comes on, and the others may swap their places in and out of possession for it. “Who covers” names who fills the vacated places, even when that is a teammate who moves across. “Full bridge” means the incoming player takes both places. Manually set places and a starting XI limit still apply. The tooltip shows further options.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/BestXiDepth.cpp" line="166"/>
-        <source>Fällt ein Spieler der Startelf aus, zeigt die Tabelle den besten geprüften Ersatzplan: Genau ein Spieler kommt dazu, die übrigen dürfen dafür ihre Plätze tauschen. „Wer übernimmt“ nennt, wer den frei gewordenen Platz besetzt. Eine Startelf-Grenze gilt weiter. Weitere Lösungen zeigt der Tooltip.</source>
-        <translation>If a starter is unavailable, the table shows the best evaluated cover plan: exactly one player comes on, and the others may swap places for it. “Who covers” names who fills the vacated place. A starting XI limit still applies. The tooltip shows further options.</translation>
     </message>
     <message>
         <location filename="../src/app/pages/BestXiDepth.cpp" line="206"/>
@@ -3390,121 +3361,6 @@ You can change the folder later in the settings.</translation>
     </message>
 </context>
 <context>
-    <name>fm::MigrationWizard</name>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="29"/>
-        <source>Legacy-Datenbank importieren</source>
-        <translation>Import Legacy Database</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="35"/>
-        <source>Importiert eine Datenbank der alten Streamlit-Version in das neue Format.
-Die Originaldatei wird dabei nicht verändert.</source>
-        <translation>Imports a database from the old Streamlit version into the new format.
-The original file is not modified.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="44"/>
-        <source>Pfad zur alten .db-Datei…</source>
-        <translation>Path to the old .db file…</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="45"/>
-        <source>Durchsuchen…</source>
-        <translation>Browse…</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="48"/>
-        <source>Legacy-Datenbank:</source>
-        <translation>Legacy Database:</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="51"/>
-        <source>Name der neuen Datenbank (ohne .db)</source>
-        <translation>Name of the new database (without .db)</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="52"/>
-        <source>Ziel-Name:</source>
-        <translation>Target Name:</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="55"/>
-        <source>config.ini, definitions.json, Logo und Flagge aus dem Legacy-Ordner übernehmen</source>
-        <translation>Import config.ini, definitions.json, logo and flag from the legacy folder</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="71"/>
-        <source>Import starten</source>
-        <translation>Start Import</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="73"/>
-        <source>Schließen</source>
-        <translation>Close</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="89"/>
-        <source>Legacy-Datenbank wählen</source>
-        <translation>Choose legacy database</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="90"/>
-        <source>SQLite-Datenbanken (*.db);;Alle Dateien (*)</source>
-        <translation>SQLite databases (*.db);;All files (*)</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="103"/>
-        <source>Bitte eine vorhandene .db-Datei wählen.</source>
-        <translation>Please choose an existing .db file.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="107"/>
-        <source>Bitte einen Ziel-Namen angeben.</source>
-        <translation>Please provide a target name.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="113"/>
-        <source>Die Datenbank &apos;%1&apos; existiert bereits. Überschreiben?</source>
-        <translation>The database &apos;%1&apos; already exists. Overwrite?</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="121"/>
-        <source>Importiere %1 …</source>
-        <translation>Importing %1 …</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="160"/>
-        <source>FEHLER: %1</source>
-        <translation>ERROR: %1</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="166"/>
-        <source>Fertig: %1 Spieler, %2 Bewertungs-Einträge übernommen (%3 verwaiste übersprungen).</source>
-        <translation>Done: %1 players, %2 rating entries imported (%3 orphaned skipped).</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="172"/>
-        <source>Nationalkader: %1, Shortlist: %2 Spieler.</source>
-        <translation>National squad: %1, shortlist: %2 players.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="192"/>
-        <source>Übernommen: %1</source>
-        <translation>Imported: %1</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="210"/>
-        <source>WARNUNG: Die Definitionen konnten nach dem Import nicht geladen werden (%1). Die bisherigen Definitionen bleiben aktiv.</source>
-        <translation>WARNING: The definitions could not be loaded after the import (%1). The previous definitions remain active.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/MigrationWizard.cpp" line="216"/>
-        <source>Import abgeschlossen. Die Datenbank &apos;%1&apos; kann jetzt ausgewählt werden.</source>
-        <translation>Import complete. The database &apos;%1&apos; can now be selected.</translation>
-    </message>
-</context>
-<context>
     <name>fm::NationalBestXiPage</name>
     <message>
         <location filename="../src/app/pages/NationalBestXiPage.cpp" line="43"/>
@@ -4197,129 +4053,6 @@ The original file is not modified.</translation>
     </message>
 </context>
 <context>
-    <name>fm::NewRolePage</name>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="85"/>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="178"/>
-        <source>Neue Rolle erstellen</source>
-        <translation>Create New Role</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="88"/>
-        <source>Definiere eine neue Feldspieler-Rolle. Das Kürzel wird beim Tippen automatisch erzeugt. Nach dem Erstellen ist die Rolle überall in der App verfügbar.</source>
-        <translation>Define a new outfield role. The abbreviation is generated automatically as you type. Once created, the role is available everywhere in the app.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="96"/>
-        <source>1. Grunddaten</source>
-        <translation>1. Basic data</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="98"/>
-        <source>Voller Rollenname:</source>
-        <translation>Full role name:</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="100"/>
-        <source>z. B. &apos;Advanced Playmaker&apos;</source>
-        <translation>e.g. &apos;Advanced Playmaker&apos;</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="103"/>
-        <source>Kategorie:</source>
-        <translation>Category:</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="106"/>
-        <source>Verteidigung</source>
-        <translation>Defence</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="107"/>
-        <source>Mittelfeld</source>
-        <translation>Midfield</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="108"/>
-        <source>Angriff</source>
-        <translation>Attack</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="110"/>
-        <source>Aufgabe:</source>
-        <translation>Duty:</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="125"/>
-        <source>2. Positions-Zuordnung</source>
-        <translation>2. Position assignment</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="128"/>
-        <source>Positionen ankreuzen, auf denen diese Rolle eingesetzt werden kann.</source>
-        <translation>Check the positions where this role can be used.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="141"/>
-        <source>3. Schlüssel- und bevorzugte Attribute</source>
-        <translation>3. Key and preferred attributes</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="144"/>
-        <source>&apos;Schlüssel&apos; (S) erhält den höchsten Multiplikator, &apos;Bevorzugt&apos; (B) einen mittleren. Sind beide angekreuzt, gewinnt &apos;Schlüssel&apos;.</source>
-        <translation>&apos;Key&apos; (K) gets the highest multiplier, &apos;Preferred&apos; (P) a medium one. If both are checked, &apos;Key&apos; wins.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="170"/>
-        <source>Technisch</source>
-        <translation>Technical</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="171"/>
-        <source>Mental</source>
-        <translation>Mental</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="172"/>
-        <source>Physisch</source>
-        <translation>Physical</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="229"/>
-        <source>&lt;b&gt;Erzeugtes Kürzel:&lt;/b&gt; &lt;code&gt;%1&lt;/code&gt; (dient als eindeutige ID)</source>
-        <translation>&lt;b&gt;Generated abbreviation:&lt;/b&gt; &lt;code&gt;%1&lt;/code&gt; (serves as a unique ID)</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="244"/>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="251"/>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="307"/>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="313"/>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="321"/>
-        <source>Neue Rolle</source>
-        <translation>New Role</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="245"/>
-        <source>Bitte gib einen Rollennamen an und wähle mindestens eine Position.</source>
-        <translation>Please enter a role name and select at least one position.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="252"/>
-        <source>Das Kürzel &apos;%1&apos; existiert bereits. Bitte wähle einen anderen Rollennamen oder eine andere Aufgabe.</source>
-        <translation>The abbreviation &apos;%1&apos; already exists. Please choose a different role name or duty.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="314"/>
-        <source>Die Rolle wurde gespeichert, aber die Definitionen konnten nicht neu geladen werden: %1</source>
-        <translation>The role was saved, but the definitions could not be reloaded: %1</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewRolePage.cpp" line="322"/>
-        <source>Rolle &apos;%1&apos; wurde erstellt und ist jetzt überall verfügbar. Weise sie unter Rollen &amp; Taktiken → Rollen zuweisen Spielern zu.</source>
-        <translation>Role &apos;%1&apos; was created and is now available everywhere. Assign it to players under Roles &amp; Tactics → Assign Roles.</translation>
-    </message>
-</context>
-<context>
     <name>fm::NewSaveWizard</name>
     <message>
         <location filename="../src/app/NewSaveWizard.cpp" line="75"/>
@@ -4362,26 +4095,6 @@ The original file is not modified.</translation>
         <location filename="../src/app/NewSaveWizard.cpp" line="156"/>
         <source>Nur für dich zum Wiedererkennen, z. B. Verein und Startjahr.</source>
         <translation>Just for you to recognise it, e.g. club and starting year.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/NewSaveWizard.cpp" line="162"/>
-        <source>Football-Manager-Version</source>
-        <translation>Football Manager Version</translation>
-    </message>
-    <message>
-        <location filename="../src/app/NewSaveWizard.cpp" line="185"/>
-        <source>Import: %1</source>
-        <translation>Import: %1</translation>
-    </message>
-    <message>
-        <location filename="../src/app/NewSaveWizard.cpp" line="205"/>
-        <source>Warum lässt sich die Version später nicht ändern?</source>
-        <translation>Why can’t the version be changed later?</translation>
-    </message>
-    <message>
-        <location filename="../src/app/NewSaveWizard.cpp" line="206"/>
-        <source>Rollen, Bewertungen und Verlauf eines Spielstands beziehen sich auf die Rollen seiner FM-Version. Für einen anderen Football Manager legst du deshalb einen eigenen Spielstand an. Deine bisherigen Spielstände bleiben unverändert.</source>
-        <translation>A save’s roles, ratings and history refer to the roles of its FM version. For another Football Manager you therefore create a separate save. Your existing saves stay unchanged.</translation>
     </message>
     <message>
         <location filename="../src/app/NewSaveWizard.cpp" line="222"/>
@@ -4427,11 +4140,6 @@ The original file is not modified.</translation>
         <location filename="../src/app/NewSaveWizard.cpp" line="321"/>
         <source>Optional. Exporte aus dem FM View Exporter (CSV oder HTML) kannst du ebenfalls hier einlesen.</source>
         <translation>Optional: exports from FM View Exporter (CSV or HTML) can be read here too.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/NewSaveWizard.cpp" line="324"/>
-        <source>Ziehe einen Spieler-Export aus dem Football Manager hierher, zum Beispiel deinen Kader oder eine Scouting-Liste. Weitere Exporte kannst du jederzeit später importieren.</source>
-        <translation>Drop a player export from Football Manager here, for example your squad or a scouting list. You can import more exports at any time later.</translation>
     </message>
     <message>
         <location filename="../src/app/NewSaveWizard.cpp" line="256"/>
@@ -4535,11 +4243,6 @@ The original file is not modified.</translation>
         <translation>2b. Line-up out of possession</translation>
     </message>
     <message>
-        <location filename="../src/app/pages/NewTacticPage.cpp" line="414"/>
-        <source>2. Formation gestalten</source>
-        <translation>2. Design formation</translation>
-    </message>
-    <message>
         <location filename="../src/app/pages/NewTacticPage.cpp" line="304"/>
         <source>— Unbesetzt —</source>
         <translation>— Unfilled —</translation>
@@ -4602,16 +4305,6 @@ The original file is not modified.</translation>
         <translation>A tactic named &apos;%1&apos; already exists. Please choose a different name.</translation>
     </message>
     <message>
-        <location filename="../src/app/pages/NewTacticPage.cpp" line="474"/>
-        <source>Du musst genau 10 Feldspieler auswählen (aktuell: %1).</source>
-        <translation>You must select exactly 10 outfield players (currently: %1).</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewTacticPage.cpp" line="482"/>
-        <source>Bitte wähle eine Torhüter-Rolle.</source>
-        <translation>Please select a goalkeeper role.</translation>
-    </message>
-    <message>
         <location filename="../src/app/pages/NewTacticPage.cpp" line="544"/>
         <source>Taktik &apos;%1&apos; wurde erstellt und ist jetzt überall verfügbar.</source>
         <translation>Tactic &apos;%1&apos; has been created and is now available everywhere.</translation>
@@ -4630,11 +4323,6 @@ The original file is not modified.</translation>
         <location filename="../src/app/pages/NewTacticPage.cpp" line="405"/>
         <source>Eine Taktik hat zwei Aufstellungen: eine mit Ball und eine ohne Ball, jede mit einem Torhüter und zehn Feldspielern. Die Plätze müssen nicht zusammenpassen; der Analyzer verteilt die Spieler später selbst. Klicke auf ein „+“, um dort eine Rolle aufzustellen, oder auf eine Rolle, um sie zu ändern. Mit einer Vorlage aus dem Spiel bist du schneller.</source>
         <translation>A tactic has two line-ups: one in possession and one out of possession, each with a goalkeeper and ten outfield players. The places do not have to match; the analyzer distributes the players later by itself. Click a “+” to place a role there, or click a role to change it. A template from the game makes it quicker.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/NewTacticPage.cpp" line="410"/>
-        <source>Baue deine Formation auf dem Feld unten: Klicke auf ein „+“, um dort eine Rolle aufzustellen, oder auf eine Rolle, um sie zu ändern — genau ein Torhüter und zehn Feldspieler.</source>
-        <translation>Build your formation on the pitch below: click a “+” to place a role there, or click a role to change it — exactly one goalkeeper and ten outfield players.</translation>
     </message>
     <message>
         <location filename="../src/app/pages/NewTacticPage.cpp" line="74"/>
@@ -7085,17 +6773,6 @@ On the test save the FM27 profile with 33 % predicts the average rating better t
         <translation>Database</translation>
     </message>
     <message>
-        <location filename="../src/app/pages/SettingsPage.cpp" line="555"/>
-        <location filename="../src/app/pages/SettingsPage.cpp" line="2069"/>
-        <source>Football-Manager-Version</source>
-        <translation>Football Manager Version</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/SettingsPage.cpp" line="561"/>
-        <source>%1 (noch nicht unterstützt)</source>
-        <translation>%1 (not yet supported)</translation>
-    </message>
-    <message>
         <location filename="../src/app/pages/SettingsPage.cpp" line="439"/>
         <location filename="../src/app/pages/SettingsPage.cpp" line="496"/>
         <source>Entfernen</source>
@@ -7455,11 +7132,6 @@ On the test save the FM27 profile with 33 % predicts the average rating better t
         <location filename="../src/app/pages/SettingsPage.cpp" line="551"/>
         <source>Woher die Spielerdaten kommen und wie sie gelesen werden.</source>
         <translation>Where player data comes from and how it is read.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/SettingsPage.cpp" line="568"/>
-        <source>Version dieses Spielstands</source>
-        <translation>Version of this save</translation>
     </message>
     <message>
         <location filename="../src/app/pages/SettingsPage.cpp" line="577"/>
@@ -8123,11 +7795,6 @@ Sample tactics: copies the two bundled sample tactics (Control Press · 4-2-3-1 
         <translation>Import</translation>
     </message>
     <message>
-        <location filename="../src/app/pages/SettingsPage.cpp" line="1788"/>
-        <source>Importierte Datenbank &apos;%1&apos; jetzt aktivieren?</source>
-        <translation>Activate imported database &apos;%1&apos; now?</translation>
-    </message>
-    <message>
         <location filename="../src/app/pages/SettingsPage.cpp" line="1798"/>
         <source>Programmstart</source>
         <translation>Startup</translation>
@@ -8141,11 +7808,6 @@ Sample tactics: copies the two bundled sample tactics (Control Press · 4-2-3-1 
         <location filename="../src/app/pages/SettingsPage.cpp" line="1806"/>
         <source>Ohne Haken erscheint beim Start der Startbildschirm mit deinen Spielständen. Mit Haken lässt er sich durch Gedrückthalten der Umschalttaste beim Start trotzdem aufrufen.</source>
         <translation>Unticked, the start screen with your saves appears at startup. Ticked, you can still bring it up by holding Shift while the app starts.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/SettingsPage.cpp" line="1853"/>
-        <source>Der Spielstand enthält Spieler. Für eine andere Version bitte einen neuen Spielstand anlegen.</source>
-        <translation>The save contains players. Please create a new save for a different version.</translation>
     </message>
     <message>
         <location filename="../src/app/pages/SettingsPage.cpp" line="1923"/>
@@ -8173,11 +7835,6 @@ Sample tactics: copies the two bundled sample tactics (Control Press · 4-2-3-1 
         <location filename="../src/app/pages/SettingsPage.cpp" line="2266"/>
         <source>Einstellungen gespeichert.</source>
         <translation>Settings saved.</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/SettingsPage.cpp" line="569"/>
-        <source>Bestimmt, wie die Spielerattribute aus dem Export gelesen werden, welche Rollen und Taktiken gelten und wie die Attribute gewichtet werden. Die Version wird beim Anlegen eines Spielstands gewählt und steht fest, sobald er Spieler enthält. Unterstützt werden Football Manager 2024 und 2027.</source>
-        <translation>Determines how the player attributes are read from the export, which roles and tactics apply and how the attributes are weighted. The version is chosen when a save is created and is fixed as soon as it contains players. Football Manager 2024 and 2027 are supported.</translation>
     </message>
     <message>
         <location filename="../src/app/pages/SettingsPage.cpp" line="661"/>
@@ -8252,11 +7909,6 @@ Sample tactics: copies the two bundled sample tactics (Control Press · 4-2-3-1 
         <location filename="../src/app/pages/SettingsPage.cpp" line="1759"/>
         <source>Aktiver Spielstand</source>
         <translation>Active save</translation>
-    </message>
-    <message>
-        <location filename="../src/app/pages/SettingsPage.cpp" line="1774"/>
-        <source>Legacy-Datenbank importieren …</source>
-        <translation>Import legacy database …</translation>
     </message>
     <message>
         <location filename="../src/app/pages/SettingsPage.cpp" line="1811"/>
@@ -8686,6 +8338,10 @@ Sample tactics: copies the two bundled sample tactics (Control Press · 4-2-3-1 
 <context>
     <name>fm::SquadMatrixPage</name>
     <message>
+        <source>%1 Mio. €</source>
+        <translation>%1 M €</translation>
+    </message>
+    <message>
         <location filename="../src/app/pages/SquadMatrixPage.cpp" line="118"/>
         <source>Squad Matrix</source>
         <translation>Squad Matrix</translation>
@@ -9092,6 +8748,10 @@ Sample tactics: copies the two bundled sample tactics (Control Press · 4-2-3-1 
 <context>
     <name>fm::StartScreen</name>
     <message>
+        <source>Erster Import</source>
+        <translation>First import</translation>
+    </message>
+    <message>
         <location filename="../src/app/StartScreen.cpp" line="49"/>
         <source>heute, %1</source>
         <translation>today, %1</translation>
@@ -9319,25 +8979,10 @@ A backup is created automatically in the “backups” folder first. You can bri
         <translation>Version %1 · %2</translation>
     </message>
     <message>
-        <location filename="../src/app/StartScreen.cpp" line="121"/>
-        <source> und </source>
-        <translation> and </translation>
-    </message>
-    <message>
         <location filename="../src/app/StartScreen.cpp" line="160"/>
         <location filename="../src/app/StartScreen.cpp" line="375"/>
         <source>Neuer Spielstand</source>
         <translation>New save</translation>
-    </message>
-    <message>
-        <location filename="../src/app/StartScreen.cpp" line="166"/>
-        <source>FM24-Daten übernehmen …</source>
-        <translation>Take over FM24 data …</translation>
-    </message>
-    <message>
-        <location filename="../src/app/StartScreen.cpp" line="167"/>
-        <source>Alte Streamlit-Version (Migration)</source>
-        <translation>Old Streamlit version (migration)</translation>
     </message>
     <message>
         <location filename="../src/app/StartScreen.cpp" line="206"/>
@@ -9413,11 +9058,6 @@ A backup is created automatically in the “backups” folder first. You can bri
         <location filename="../src/app/StartScreen.cpp" line="359"/>
         <source>Export oder FM27-Spielstand (.fm) einlesen</source>
         <translation>Read in an export or an FM27 save game (.fm)</translation>
-    </message>
-    <message>
-        <location filename="../src/app/StartScreen.cpp" line="161"/>
-        <source>FM-Version und erster Import</source>
-        <translation>FM version and first import</translation>
     </message>
     <message>
         <location filename="../src/app/StartScreen.cpp" line="360"/>

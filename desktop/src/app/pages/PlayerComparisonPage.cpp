@@ -442,12 +442,12 @@ void PlayerComparisonPage::rebuildComparison()
         {tr("Alter"), [](const Player &p) { return QString::number(p.age); }},
         {tr("Verein"), [](const Player &p) { return p.club; }},
         {tr("Position"), [](const Player &p) { return p.positionRaw; }},
-        {tr("Persönlichkeit"), [](const Player &p) { return p.personality; }},
+        {tr("Persönlichkeit"), [](const Player &p) { return personalityLabel(p.personality); }},
         {tr("Größe"), [](const Player &p) { return p.heightRaw; }},
         {tr("Bevorzugter Fuß"), [](const Player &p) { return p.preferredFoot; }},
         {tr("Gehalt"), [](const Player &p) { return p.wageRaw; }},
         {tr("Marktwert"), [](const Player &p) { return p.transferValueRaw; }},
-        {tr("Spielzeit"), [](const Player &p) { return p.agreedPlayingTime; }},
+        {tr("Spielzeit"), [](const Player &p) { return playingTimeLabel(p.agreedPlayingTime); }},
         {tr("Beste Rollen (DWRS)"),
          [rolesByRating](const Player &p) {
              const QStringList labels = rolesByRating(p);
@@ -485,7 +485,7 @@ void PlayerComparisonPage::rebuildComparison()
         ++row;
     }
     for (int attrIndex = 0; attrIndex < kAttrCount; ++attrIndex) {
-        rowLabels << attrNames()[attrIndex];
+        rowLabels << attributeLabel(attrIndex);
         int column = 0;
         for (const Player *player : players) {
             const int value = qRound(player->attrMean(attrIndex));

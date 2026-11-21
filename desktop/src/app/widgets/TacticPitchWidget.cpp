@@ -435,7 +435,7 @@ void TacticPitchWidget::paintEvent(QPaintEvent *)
             roleAbbr.chop(3);
         else if (roleAbbr.endsWith(QLatin1String("-OOP")))
             roleAbbr.chop(4);
-        const QString apt = aptAbbreviations().value(cell.apt, cell.apt);
+        const QString apt = playingTimeLabel(aptAbbreviations().value(cell.apt, cell.apt));
         const QString subtext = m_slotSubtexts.value(slot);
 
         // Optional portrait (graphics folder): a small round badge on the

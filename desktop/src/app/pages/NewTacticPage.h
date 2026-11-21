@@ -34,7 +34,7 @@ public:
     void refresh() override;
 
 private:
-    // One line-up editor. Index 0 = without ball (the only one for FM24),
+    // One line-up editor. Index 0 = without possession,
     // index 1 = with ball.
     struct PhaseEditor {
         QString phase; // "oop" or "ip"
@@ -55,7 +55,6 @@ private:
     void applyTemplate(PhaseEditor &editor);
     bool collectPhase(const PhaseEditor &editor, QJsonObject &roles,
                       QHash<QString, QString> &outfield);
-    bool twoPhase() const;
     void updateFullName();
     QString fullName() const;
     void createTactic();

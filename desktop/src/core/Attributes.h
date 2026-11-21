@@ -70,6 +70,10 @@ inline constexpr int kAttrCount = static_cast<int>(Attr::Count);
 // Full display/DB name for each attribute, indexed by Attr.
 const std::array<QString, kAttrCount> &attrNames();
 
+// Localized display labels. Attribute keys and indices are stable across languages.
+QString attributeLabel(int index);
+QString attributeLabel(const QString &key);
+
 // Full name ("Acceleration") -> Attr index; -1 if not a rated attribute.
 int attrIndexByName(const QString &fullName);
 

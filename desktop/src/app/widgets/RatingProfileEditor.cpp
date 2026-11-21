@@ -184,8 +184,10 @@ bool RatingProfileEditor::discardDraft()
 void RatingProfileEditor::fillProfiles(const QString &selected)
 {
     m_loading = true; m_profiles->clear();
-    for (const auto &p : m_library.profiles())
-        m_profiles->addItem(p.name + (m_library.customized(p.id) ? tr(" · Angepasst") : QString()), p.id);
+    for (const auto &p : m_library.profiles()) {
+        if (p.compatibleGames.contains(m_game))
+            m_profiles->addItem(p.name + (m_library.customized(p.id) ? tr(" · Angepasst") : QString()), p.id);
+    }
     if (!selected.isEmpty()) m_profiles->setCurrentIndex(m_profiles->findData(selected));
     m_loading = false; selectProfile(m_profiles->currentData().toString());
 }
@@ -200,58 +202,6 @@ void RatingProfileEditor::selectProfile(const QString &id)
     fillAttributes();
     if (m_storageValid) m_status->setText(tr("Profile bearbeiten und austauschen. Speichern ändert den Spielstand nicht; "
                                              "„Für diesen Spielstand verwenden“ rechnet mit dem gespeicherten Profil neu."));
-}
-QString RatingProfileEditor::attributeLabel(int index)
-{
-    static const QStringList labels = {
-        tr("Eins gegen Eins"),
-        tr("Antritt"),
-        tr("Reichweite"),
-        tr("Aggressivität"),
-        tr("Beweglichkeit"),
-        tr("Antizipation"),
-        tr("Balance"),
-        tr("Mut"),
-        tr("Strafraumbeherrschung"),
-        tr("Konzentration"),
-        tr("Nervenstärke"),
-        tr("Ecken"),
-        tr("Flanken"),
-        tr("Entscheidungen"),
-        tr("Zielstrebigkeit"),
-        tr("Dribbling"),
-        tr("Abschluss"),
-        tr("Ballannahme"),
-        tr("Flair"),
-        tr("Fangsicherheit"),
-        tr("Kopfballtechnik"),
-        tr("Sprunghöhe"),
-        tr("Abschläge"),
-        tr("Führungsqualitäten"),
-        tr("Weitschüsse"),
-        tr("Deckung"),
-        tr("Ohne Ball"),
-        tr("Schnelligkeit"),
-        tr("Passen"),
-        tr("Stellungsspiel"),
-        tr("Reflexe"),
-        tr("Herauslaufen (Tendenz)"),
-        tr("Ausdauer"),
-        tr("Kraft"),
-        tr("Tackling"),
-        tr("Teamwork"),
-        tr("Technik"),
-        tr("Abwürfe"),
-        tr("Übersicht"),
-        tr("Einsatzfreude"),
-        tr("Kommunikation"),
-        tr("Exzentrik"),
-        tr("Grundfitness"),
-        tr("Freistöße"),
-        tr("Weite Einwürfe"),
-        tr("Elfmeter"),
-        tr("Fausten")};
-    return index >= 0 && index < labels.size() ? labels[index] : QString();
 }
 void RatingProfileEditor::updateFactors()
 {
@@ -405,6 +355,11 @@ void RatingProfileEditor::importProfile()
     QString error;
     auto profile = parse.error == QJsonParseError::NoError && json.isObject() ? RatingProfile::fromJson(json.object(), &error) : std::nullopt;
     if (!profile) { reportError(error); return; }
+    if (!profile->compatibleGames.contains(m_game)) {
+        QMessageBox::warning(this, tr("Profil importieren"),
+                             tr("Dieses Profil passt nicht zur Football-Manager-Version des Spielstands."));
+        return;
+    }
     auto candidate = m_library; error = candidate.insert(*profile);
     if (error == QStringLiteral("id-conflict") || error == QStringLiteral("name-conflict")) {
         bool ok = false;

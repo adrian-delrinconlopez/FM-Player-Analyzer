@@ -10,11 +10,9 @@ class TestBuiltinRatingProfiles : public QObject {
     Q_OBJECT
 private slots:
     void definitionsAndResearch() {
-        QList<Definitions> definitions;
-        for (const auto &game : {QStringLiteral("fm24"), QStringLiteral("fm27")}) {
-            Definitions d; QVERIFY(d.load(QStringLiteral(DEFINITIONS_DIR) + (game == "fm24" ? "/definitions.json" : "/definitions_fm27.json"), game));
-            definitions.append(d);
-        }
+        Definitions fm27;
+        QVERIFY(fm27.load(QStringLiteral(DEFINITIONS_DIR "/definitions_fm27.json"), QStringLiteral("fm27")));
+        const QList<Definitions> definitions = {fm27};
         QTemporaryDir temp; AppConfig config(temp.filePath("defaults.ini"));
         const auto classic = classicRatingProfile(definitions, config, nullptr); QVERIFY(classic);
         QFile file(QStringLiteral(HARVEST_DATA)); QVERIFY(file.open(QIODevice::ReadOnly));
@@ -41,11 +39,6 @@ private slots:
         QCOMPARE(restored->revision(), harvest->revision());
         for (const auto &d : definitions) {
             const auto old = RatingSnapshot::compile(*classic, d, &error); QVERIFY2(old, qPrintable(error));
-            if (d.fmVersionId() != QStringLiteral("fm27")) {
-                QVERIFY(!RatingSnapshot::compile(*harvest, d, &error));
-                QCOMPARE(error, QStringLiteral("incompatible-game"));
-                continue;
-            }
             const auto current = RatingSnapshot::compile(*harvest, d, &error); QVERIFY2(current, qPrintable(error));
             // Goalkeepers use the own FM27 weights with a 20 % role share for
             // the role differences. Acceptance values from the proposal

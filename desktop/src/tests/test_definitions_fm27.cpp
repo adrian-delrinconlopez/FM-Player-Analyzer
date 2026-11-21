@@ -10,6 +10,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QSet>
+#include <QTranslator>
 #include <QtTest>
 
 using namespace fm;
@@ -74,6 +75,31 @@ private slots:
         }
         QCOMPARE(ip, 40);
         QCOMPARE(m_defs.gkRoles().size(), 6);
+    }
+
+    void spanishNamesUseGameVersionAndPreserveRoleIds()
+    {
+        QTranslator translator;
+        QVERIFY(translator.load(QStringLiteral(FOOTBALL_TERMS_QM)));
+        QVERIFY(QCoreApplication::installTranslator(&translator));
+        const char *context = "FM27Roles";
+        Definitions defs;
+        QVERIFY(defs.load(QStringLiteral(DEFINITIONS_FM27), kVersion));
+        const auto roleCategories = defs.root().value(QStringLiteral("player_roles")).toObject();
+        for (const auto &category : roleCategories) {
+            const auto roles = category.toObject();
+            for (auto it = roles.begin(); it != roles.end(); ++it) {
+                const QByteArray source = it->toString().toUtf8();
+                const QString name = translator.translate(context, source.constData());
+                QVERIFY2(!name.isEmpty(), source.constData());
+                const QString tag = defs.rolePhase(it.key()) == QLatin1String("ip")
+                                        ? QStringLiteral("CP") : QStringLiteral("SP");
+                const QString suffix = QStringLiteral(" (%1)").arg(tag);
+                QCOMPARE(defs.roleLabel(it.key()),
+                         Definitions::baseRoleAbbr(it.key()) + QLatin1Char('-') + tag);
+                QCOMPARE(defs.roleDisplayMap().value(it.key()), name + suffix);
+            }
+        }
     }
 
     void everyRoleHasKnownKeyAttributes()

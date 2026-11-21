@@ -287,7 +287,7 @@ private slots:
         const QString path = dir.filePath(QStringLiteral("export.csv"));
         QFile file(path);
         QVERIFY(file.open(QIODevice::WriteOnly));
-        file.write("UID;Name;Age;Club;Position;Personality;Transfer Value;Height;Acc;Pac;Fin;Avg Rat\n"
+        file.write("Unique ID;Player;Age;Club;Position;Personality;Transfer Value;Height;Acceleration;Pace;Finishing;Average Rating\n"
                    "1001;Alpha;24;FC Test;D (C);Balanced;\xE2\x82\xAC" "1.2M;181 cm;14;15;12;7.10\n"
                    "1002;Beta;25;Other FC;ST (C);Balanced;\xE2\x82\xAC" "2M;175 cm;9;11;16;6.90\n");
         file.close();

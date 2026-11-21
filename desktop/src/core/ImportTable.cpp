@@ -30,7 +30,8 @@ bool readImportTable(const QString &filePath, const QString &fmVersionId, Import
     };
 
     const QString format = importFormatForFile(filePath);
-    if (!fmDataVersion(fmVersionId).importFormats.contains(format))
+    if ((!fmVersionId.isEmpty() && fmVersionId != defaultFmVersionId())
+        || !fmDataVersion(fmVersionId).importFormats.contains(format))
         return fail(ImportErrorCode::UnsupportedFormat, format,
                     QStringLiteral("This FM version cannot import %1 files.").arg(format));
 

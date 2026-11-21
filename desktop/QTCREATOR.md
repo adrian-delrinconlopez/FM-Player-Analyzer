@@ -22,8 +22,8 @@ gibt es bei CMake-Projekten nicht.
 - **Starten:** Strg+R — als Run-Target **`fmplayeranalyzer`** auswählen
   (links unten über das Monitor-Symbol). Qt Creator setzt den Qt-`PATH`
   beim Start automatisch, `windeployqt` ist nicht nötig.
-- Weitere Targets: `fmmigrate` (Legacy-DB-Migration per Kommandozeile),
-  `fmgolden` (Golden-Master-Vergleich gegen die Python-Referenz).
+- Weitere Targets: `fm27savedump` (FM27-Spielstände prüfen),
+  `fmbench` (Laden und Import messen).
 
 ## Tests ausführen
 

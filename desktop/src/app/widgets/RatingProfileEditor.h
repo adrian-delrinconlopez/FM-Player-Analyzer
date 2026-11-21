@@ -26,7 +26,6 @@ public:
     void setActiveProfile(const QString &id);
     // Text for a profile's source line: version, provisional note, sources.
     // Translated name of an attribute by its index (Attributes.h order).
-    static QString attributeLabel(int index);
 signals:
     void activateRequested(const QString &id);
     void librarySaved();

@@ -7,7 +7,7 @@
 using namespace fm;
 
 namespace {
-const QString kFm24 = QStringLiteral("fm24");
+const QString kFm27 = QStringLiteral("fm27");
 }
 
 class TestAppConfig : public QObject
@@ -21,10 +21,10 @@ private slots:
         AppConfig config(dir.filePath(QStringLiteral("config.ini")));
 
         QCOMPARE(config.dbName(), QStringLiteral("default"));
-        QCOMPARE(config.weight(kFm24, QStringLiteral("Extremely Important")), 8.0);
-        QCOMPARE(config.weight(kFm24, QStringLiteral("Almost Irrelevant")), 0.2);
-        QCOMPARE(config.gkWeight(kFm24, QStringLiteral("Top Importance")), 3.0);
-        QCOMPARE(config.gkWeight(kFm24, QStringLiteral("Preferable")), 0.25);
+        QCOMPARE(config.weight(kFm27, QStringLiteral("Extremely Important")), 8.0);
+        QCOMPARE(config.weight(kFm27, QStringLiteral("Almost Irrelevant")), 0.2);
+        QCOMPARE(config.gkWeight(kFm27, QStringLiteral("Top Importance")), 3.0);
+        QCOMPARE(config.gkWeight(kFm27, QStringLiteral("Preferable")), 0.25);
         QCOMPARE(config.roleMultiplier(QStringLiteral("key")), 1.5);
         QCOMPARE(config.roleMultiplier(QStringLiteral("preferable")), 1.2);
         QCOMPARE(config.aptWeight(QStringLiteral("Star Player")), 1.0);
@@ -115,14 +115,14 @@ private slots:
         {
             AppConfig config(path);
             config.setDbName(QStringLiteral("bayern2026"));
-            config.setWeight(kFm24, QStringLiteral("Extremely Important"), 10.0);
+            config.setWeight(kFm27, QStringLiteral("Extremely Important"), 10.0);
             config.setRoleMultiplier(QStringLiteral("key"), 8.0);
             config.setAptWeight(QStringLiteral("Star Player"), 1.3);
             config.setGapAnalysisSetting(QStringLiteral("dropoff_threshold"), 6.5);
         }
         AppConfig reloaded(path);
         QCOMPARE(reloaded.dbName(), QStringLiteral("bayern2026"));
-        QCOMPARE(reloaded.weight(kFm24, QStringLiteral("Extremely Important")), 10.0);
+        QCOMPARE(reloaded.weight(kFm27, QStringLiteral("Extremely Important")), 10.0);
         QCOMPARE(reloaded.roleMultiplier(QStringLiteral("key")), 8.0);
         QCOMPARE(reloaded.aptWeight(QStringLiteral("Star Player")), 1.3);
         QCOMPARE(reloaded.gapAnalysisSetting(QStringLiteral("dropoff_threshold")), 6.5);
@@ -135,16 +135,16 @@ private slots:
 
         // Unset -> automatic default (Documents-based, never empty).
         QCOMPARE(config.htmlExportDir(), QString());
-        QCOMPARE(config.effectiveHtmlExportDir(kFm24), AppConfig::defaultHtmlExportDir(kFm24));
-        QVERIFY(!config.effectiveHtmlExportDir(kFm24).isEmpty());
+        QCOMPARE(config.effectiveHtmlExportDir(kFm27), AppConfig::defaultHtmlExportDir(kFm27));
+        QVERIFY(!config.effectiveHtmlExportDir(kFm27).isEmpty());
 
         // Existing configured folder wins.
         config.setHtmlExportDir(dir.path());
-        QCOMPARE(config.effectiveHtmlExportDir(kFm24), dir.path());
+        QCOMPARE(config.effectiveHtmlExportDir(kFm27), dir.path());
 
         // A configured folder that does not exist falls back to the default.
         config.setHtmlExportDir(dir.filePath(QStringLiteral("does-not-exist")));
-        QCOMPARE(config.effectiveHtmlExportDir(kFm24), AppConfig::defaultHtmlExportDir(kFm24));
+        QCOMPARE(config.effectiveHtmlExportDir(kFm27), AppConfig::defaultHtmlExportDir(kFm27));
 
         // Clearing removes the key again.
         config.setHtmlExportDir(QString());
@@ -162,7 +162,7 @@ private slots:
             f.write("[Database]\n"
                     "db_name = bayern2026-2-0\n"
                     "\n"
-                    "[Weights]\n"
+                    "[Weights_fm27]\n"
                     "extremely_important = 10.0\n"
                     "important = 4.0\n"
                     "\n"
@@ -171,60 +171,37 @@ private slots:
         }
         AppConfig config(path);
         QCOMPARE(config.dbName(), QStringLiteral("bayern2026-2-0"));
-        QCOMPARE(config.weight(kFm24, QStringLiteral("Extremely Important")), 10.0);
+        QCOMPARE(config.weight(kFm27, QStringLiteral("Extremely Important")), 10.0);
         QCOMPARE(config.roleMultiplier(QStringLiteral("key")), 8.0);
         // Sections missing from the file get seeded with defaults.
         QCOMPARE(config.ageThreshold(QStringLiteral("goalkeeper")), 25);
     }
 
-    void resetsOldGoalkeeperWeightsOnce()
+    void keepsFm27WeightsAndIgnoresOldWeightSections()
     {
-        // Goalkeeper weights tuned for the old six-attribute formula are
-        // replaced once by the scheme-2 defaults; the outfield weights stay.
         QTemporaryDir dir;
         const QString path = dir.filePath(QStringLiteral("config.ini"));
         {
-            QFile f(path);
-            QVERIFY(f.open(QIODevice::WriteOnly));
-            f.write("[Weights]\n"
-                    "extremely_important = 10.0\n"
-                    "\n"
-                    "[GKWeights]\n"
-                    "top_importance = 4.0\n"
-                    "key = 8.0\n"
-                    "other = 0.4\n");
+            QSettings seed(path, QSettings::IniFormat);
+            seed.setValue(QStringLiteral("Weights/extremely_important"), 10.0);
+            seed.setValue(QStringLiteral("GKWeights/top_importance"), 4.0);
+            seed.setValue(QStringLiteral("GKWeights_fm27/top_importance"), 5.0);
         }
-        {
-            AppConfig config(path);
-            QCOMPARE(config.gkWeight(kFm24, QStringLiteral("Top Importance")), 3.0);
-            QCOMPARE(config.gkWeight(kFm24, QStringLiteral("Key")), 0.5);
-            QCOMPARE(config.gkWeight(kFm24, QStringLiteral("Other")), 0.2);
-            QCOMPARE(config.weight(kFm24, QStringLiteral("Extremely Important")), 10.0);
-            // Tuning after the reset must survive later starts.
-            config.setGkWeight(kFm24, QStringLiteral("Top Importance"), 5.0);
-        }
-        AppConfig reloaded(path);
-        QCOMPARE(reloaded.gkWeight(kFm24, QStringLiteral("Top Importance")), 5.0);
+        AppConfig config(path);
+        QCOMPARE(config.weight(kFm27, QStringLiteral("Extremely Important")), 8.0);
+        QCOMPARE(config.gkWeight(kFm27, QStringLiteral("Top Importance")), 5.0);
     }
 
     void weightSectionsPerFmVersion()
     {
-        // FM24 keeps the legacy sections so existing config.ini files stay
-        // valid; later releases get their own, so tuning never leaks across.
-        QCOMPARE(AppConfig::weightsSection(QStringLiteral("fm24"), false),
-                 QStringLiteral("Weights"));
-        QCOMPARE(AppConfig::weightsSection(QStringLiteral("fm24"), true),
-                 QStringLiteral("GKWeights"));
-        // Unknown ids fall back to the default version instead of inventing
-        // sections.
-        QCOMPARE(AppConfig::weightsSection(QStringLiteral("fm99"), false),
-                 QStringLiteral("Weights"));
-        QCOMPARE(AppConfig::weightsSection(QString(), true), QStringLiteral("GKWeights"));
+        QCOMPARE(AppConfig::weightsSection(QStringLiteral("fm27"), false), QStringLiteral("Weights_fm27"));
+        QCOMPARE(AppConfig::weightsSection(QStringLiteral("fm27"), true), QStringLiteral("GKWeights_fm27"));
+        QCOMPARE(AppConfig::weightsSection(QString(), true), QStringLiteral("GKWeights_fm27"));
     }
 
     void fmVersionRegistry()
     {
-        QCOMPARE(defaultFmVersionId(), QStringLiteral("fm24"));
+        QCOMPARE(defaultFmVersionId(), QStringLiteral("fm27"));
         // Every registry entry is complete, and the newest supported version
         // is one of them.
         bool newestListed = false;
@@ -242,9 +219,9 @@ private slots:
             QVERIFY(!gkWeightDefaults(version.id).isEmpty());
         }
         QVERIFY(newestListed);
-        // FM24 keeps the file name its users already have.
-        QCOMPARE(fmDataVersion(QStringLiteral("fm24")).definitionsFileName,
-                 QStringLiteral("definitions.json"));
+        QCOMPARE(fmDataVersions().size(), 1);
+        QCOMPARE(fmDataVersion(QStringLiteral("fm27")).definitionsFileName,
+                 QStringLiteral("definitions_fm27.json"));
         // Unknown ids resolve to the default version.
         QCOMPARE(fmDataVersion(QStringLiteral("fm99")).id, defaultFmVersionId());
     }

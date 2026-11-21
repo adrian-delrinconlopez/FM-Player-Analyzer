@@ -154,9 +154,24 @@ void AppPaths::setWindowGeometry(const QByteArray &geometry)
     m_settings->sync();
 }
 
+const QList<QPair<QString, QString>> &AppPaths::languages()
+{
+    static const QList<QPair<QString, QString>> options = {
+        {QStringLiteral("en"), QStringLiteral("English")},
+        {QStringLiteral("de"), QStringLiteral("Deutsch")},
+        {QStringLiteral("es"), QStringLiteral("Español")},
+    };
+    return options;
+}
+
 QString AppPaths::language() const
 {
-    return m_settings->value(QStringLiteral("language"), QStringLiteral("en")).toString();
+    const QString stored = m_settings->value(QStringLiteral("language")).toString();
+    for (const auto &option : languages()) {
+        if (option.first == stored)
+            return stored;
+    }
+    return languages().first().first;
 }
 
 void AppPaths::setLanguage(const QString &language)

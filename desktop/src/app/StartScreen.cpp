@@ -2,7 +2,6 @@
 
 #include "AboutDialog.h"
 #include "AppContext.h"
-#include "MigrationWizard.h"
 #include "NewSaveWizard.h"
 #include "theming/ThemeManager.h"
 #include "widgets/LineIcons.h"
@@ -112,13 +111,8 @@ QWidget *StartScreen::buildHero()
     title->setObjectName(QStringLiteral("startTitle"));
     title->setWordWrap(true);
     layout->addWidget(title);
-    QStringList versions;
-    for (const FmDataVersion &version : fmDataVersions()) {
-        if (version.supported)
-            versions.prepend(SaveLibrary::shortVersionLabel(version.id));
-    }
     auto *version = new QLabel(tr("Version %1 · %2")
-                                   .arg(appVersion(), versions.join(tr(" und "))),
+                                   .arg(appVersion(), SaveLibrary::shortVersionLabel(defaultFmVersionId())),
                                hero);
     version->setObjectName(QStringLiteral("kpiCaption"));
     layout->addWidget(version);
@@ -158,15 +152,11 @@ QWidget *StartScreen::buildHero()
         return button;
     };
     connect(addAction(QStringLiteral("plus"), tr("Neuer Spielstand"),
-                      tr("FM-Version und erster Import"), true),
+                      tr("Erster Import"), true),
             &QPushButton::clicked, this, &StartScreen::newSave);
     connect(addAction(QStringLiteral("folder"), tr("Spielstand-Datei öffnen …"),
                       tr("Aus anderem Ordner oder Backup"), false),
             &QPushButton::clicked, this, &StartScreen::openExternalFile);
-    connect(addAction(QStringLiteral("migrate"), tr("FM24-Daten übernehmen …"),
-                      tr("Alte Streamlit-Version (Migration)"), false),
-            &QPushButton::clicked, this, &StartScreen::migrateLegacy);
-
     layout->addStretch(1);
 
     auto *foot = new QHBoxLayout;
@@ -186,13 +176,10 @@ QWidget *StartScreen::buildHero()
     auto *languageMenu = new QMenu(language);
     auto *group = new QActionGroup(languageMenu);
     const QString current = m_context.paths().language();
-    for (const auto &[code, label] :
-         {std::pair{QStringLiteral("en"), QStringLiteral("English")},
-          std::pair{QStringLiteral("de"), QStringLiteral("Deutsch")}}) {
+    for (const auto &[code, label] : AppPaths::languages()) {
         auto *action = languageMenu->addAction(label);
         action->setCheckable(true);
-        const bool active =
-            code == current || (code == QLatin1String("en") && current.isEmpty());
+        const bool active = code == current;
         action->setChecked(active);
         if (active)
             language->setText(label);
@@ -607,18 +594,6 @@ void StartScreen::openExternalFile()
     }
     reload();
     openSave(name);
-}
-
-void StartScreen::migrateLegacy()
-{
-    MigrationWizard wizard(m_context, this);
-    wizard.exec();
-    reload();
-    const QString migrated = wizard.migratedDbName();
-    for (int i = 0; i < m_list->count(); ++i) {
-        if (m_list->item(i)->data(Qt::UserRole).toString() == migrated)
-            m_list->setCurrentRow(i);
-    }
 }
 
 void StartScreen::renameSave(const QString &name)

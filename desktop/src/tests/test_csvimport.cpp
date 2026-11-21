@@ -15,10 +15,10 @@ using namespace fm;
 namespace {
 
 const QStringList kHeaders = {
-    QStringLiteral("UID"),         QStringLiteral("Name"),           QStringLiteral("Age"),
+    QStringLiteral("Unique ID"),         QStringLiteral("Player"),      QStringLiteral("Age"),
     QStringLiteral("Club"),        QStringLiteral("Position"),       QStringLiteral("Personality"),
-    QStringLiteral("Transfer Value"), QStringLiteral("Height"),      QStringLiteral("Acc"),
-    QStringLiteral("Pac"),         QStringLiteral("Fin"),
+    QStringLiteral("Transfer Value"), QStringLiteral("Height"),      QStringLiteral("Acceleration"),
+    QStringLiteral("Pace"),         QStringLiteral("Finishing"),
 };
 
 // The same players for both export formats.
@@ -304,13 +304,23 @@ private slots:
                 QCOMPARE(p.averageRating, 7.05);
         }
 
-        // FM27 files need the FM27 profile: the FM24 one misses "UID".
-        Database fm24Db(QStringLiteral("csv_test_fm27_as_fm24"));
-        QVERIFY(fm24Db.open(dir.filePath(QStringLiteral("fm24.db"))));
-        const ImportResult asFm24 = HtmlImporter::importFile(path, fm24Db, {});
-        QVERIFY(!asFm24.success);
-        QCOMPARE(asFm24.errorCode, ImportErrorCode::RequiredColumnMissing);
-        QCOMPARE(asFm24.errorArg, QStringLiteral("UID"));
+        const ImportResult unsupported = HtmlImporter::importFile(path, db, {}, {}, QStringLiteral("fm24"));
+        QVERIFY(!unsupported.success);
+        QCOMPARE(unsupported.errorCode, ImportErrorCode::UnsupportedFormat);
+    }
+
+    void rejectsFm24Headers()
+    {
+        QTemporaryDir dir;
+        Database db(QStringLiteral("reject_fm24_csv"));
+        QVERIFY(db.open(dir.filePath(QStringLiteral("players.db"))));
+        QByteArray legacy = csvExport(QLatin1Char(','));
+        legacy.replace("Unique ID,Player,", "UID,Name,");
+        const ImportResult result = HtmlImporter::importFile(
+            writeFile(dir, QStringLiteral("legacy.csv"), legacy), db, {});
+        QCOMPARE(result.errorCode, ImportErrorCode::RequiredColumnMissing);
+        QCOMPARE(result.errorArg, QStringLiteral("Unique ID"));
+        QVERIFY(db.loadPlayers().empty());
     }
 
     void fm27PlayerDatabaseCsv()
@@ -344,9 +354,6 @@ private slots:
                                QStringLiteral("Name")};
         applyHeaderAliases(&headers, QStringLiteral("fm27"));
         QCOMPARE(headers.at(2), QStringLiteral("Name")); // "Player" already there
-        QStringList fm24 = {QStringLiteral("UID"), QStringLiteral("Name")};
-        applyHeaderAliases(&fm24, QStringLiteral("fm24"));
-        QCOMPARE(fm24.at(1), QStringLiteral("Name"));
     }
 
     void nationCodes()
@@ -389,12 +396,12 @@ private slots:
         QVERIFY(db.open(dir.filePath(QStringLiteral("t.db"))));
 
         QByteArray noUid = csvExport(QLatin1Char(','));
-        noUid.replace("UID,", "Nr,");
+        noUid.replace("Unique ID,", "Nr,");
         const ImportResult missing = HtmlImporter::importFile(
             writeFile(dir, QStringLiteral("nouid.csv"), noUid), db, {});
         QVERIFY(!missing.success);
         QCOMPARE(missing.errorCode, ImportErrorCode::RequiredColumnMissing);
-        QCOMPARE(missing.errorArg, QStringLiteral("UID"));
+        QCOMPARE(missing.errorArg, QStringLiteral("Unique ID"));
         QVERIFY(!missing.error.isEmpty());
 
         const ImportResult noFile =
@@ -416,7 +423,7 @@ private slots:
                     writeFile(dir, QStringLiteral("all.csv"), csvExport(QLatin1Char(';'))), db, {})
                     .success);
 
-        QByteArray one = "UID;Name;Age;Club;Position;Personality;Transfer Value;Height;Acc;Pac;Fin\n"
+        QByteArray one = "Unique ID;Player;Age;Club;Position;Personality;Transfer Value;Height;Acceleration;Pace;Finishing\n"
                          "999;Alpha Renamed;30;FC Neu;ST (C);Resolute;€3M;181 cm;18;15;12\n";
         ImportTable table;
         ImportError error;

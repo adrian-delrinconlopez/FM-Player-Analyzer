@@ -65,7 +65,7 @@ private:
     QWidget *buildPersonalityPage();
     void refreshPersonalities();
     QTableWidget *m_personalityTable = nullptr;
-    QHash<QString, QJsonObject> m_personalityRoots;
+    QJsonObject m_personalityRoot;
     QWidget *buildThemePage();
     QWidget *buildDatabasePage();
     void addSection(const QString &groupTitle, const QString &title, const char *germanTitle,
@@ -144,7 +144,6 @@ private:
     QComboBox *m_dbCombo = nullptr;
 
     // Club tab (settings table keys, same as legacy).
-    QComboBox *m_fmVersionCombo = nullptr;
     QLabel *m_weightsVersionLabel = nullptr;
     QLineEdit *m_importDirEdit = nullptr; // app-wide (config.ini), not per save
     QComboBox *m_userClubCombo = nullptr;

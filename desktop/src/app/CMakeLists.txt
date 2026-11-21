@@ -21,8 +21,6 @@ add_executable(fmplayeranalyzer
     SaveLibrary.cpp
     StartScreen.h
     StartScreen.cpp
-    MigrationWizard.h
-    MigrationWizard.cpp
     Navigation.h
     Navigation.cpp
     ImportRunner.h
@@ -58,8 +56,6 @@ add_executable(fmplayeranalyzer
     pages/NationalSquadMatrixPage.cpp
     pages/NationalSquadSelectionPage.h
     pages/NationalSquadSelectionPage.cpp
-    pages/NewRolePage.h
-    pages/NewRolePage.cpp
     pages/NewTacticPage.h
     pages/NewTacticPage.cpp
     pages/PageBase.h
@@ -145,24 +141,32 @@ target_link_libraries(fmplayeranalyzer PRIVATE
 )
 
 # --- Translations -----------------------------------------------------------
-# The source strings are German; English is shipped as a compiled .qm loaded by
-# default (German = source fallback, no translator). lrelease compiles the
-# hand-maintained .ts at build time and the result is embedded under
-# :/i18n/fmplayeranalyzer_en.qm. Regenerate the .ts after adding tr() strings:
-#   lupdate src -ts translations/fmplayeranalyzer_en.ts -no-obsolete
-set(FM_TS_FILE ${CMAKE_SOURCE_DIR}/translations/fmplayeranalyzer_en.ts)
-set(FM_QM_FILE ${CMAKE_CURRENT_BINARY_DIR}/fmplayeranalyzer_en.qm)
-add_custom_command(
-    OUTPUT ${FM_QM_FILE}
-    COMMAND Qt6::lrelease ${FM_TS_FILE} -qm ${FM_QM_FILE}
-    DEPENDS ${FM_TS_FILE}
-    VERBATIM
-    COMMENT "Compiling translations (lrelease)"
-)
-set_source_files_properties(${FM_QM_FILE} PROPERTIES QT_RESOURCE_ALIAS fmplayeranalyzer_en.qm)
+# German uses source text. Compile the other catalogs into application resources.
+set(FM_QM_FILES)
+foreach(catalog IN ITEMS fmplayeranalyzer_en fmplayeranalyzer_es football_terms_es)
+    set(ts_file "${PROJECT_SOURCE_DIR}/translations/${catalog}.ts")
+    set(qm_name "${catalog}.qm")
+    set(qm_file "${CMAKE_CURRENT_BINARY_DIR}/${qm_name}")
+    add_custom_command(
+        OUTPUT "${qm_file}"
+        COMMAND Qt6::lrelease -nounfinished "${ts_file}" -qm "${qm_file}"
+        DEPENDS "${ts_file}"
+        VERBATIM
+        COMMENT "Compiling ${catalog} translations (lrelease)"
+    )
+    set_source_files_properties("${qm_file}" PROPERTIES QT_RESOURCE_ALIAS "${qm_name}")
+    list(APPEND FM_QM_FILES "${qm_file}")
+endforeach()
+add_custom_target(fm_translation_catalogs DEPENDS ${FM_QM_FILES})
+add_dependencies(fmplayeranalyzer fm_translation_catalogs)
+set(qtbase_es "${QT6_INSTALL_PREFIX}/${QT6_INSTALL_TRANSLATIONS}/qtbase_es.qm")
+if(EXISTS "${qtbase_es}")
+    set_source_files_properties("${qtbase_es}" PROPERTIES QT_RESOURCE_ALIAS qtbase_es.qm)
+    list(APPEND FM_QM_FILES "${qtbase_es}")
+endif()
 qt_add_resources(fmplayeranalyzer "translations"
     PREFIX "/i18n"
-    FILES ${FM_QM_FILE}
+    FILES ${FM_QM_FILES}
 )
 target_sources(fmplayeranalyzer PRIVATE widgets/RatingCurveEditor.h widgets/RatingCurveEditor.cpp)
 target_sources(fmplayeranalyzer PRIVATE widgets/RatingProfileEditor.h widgets/RatingProfileEditor.cpp)

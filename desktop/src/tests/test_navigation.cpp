@@ -20,7 +20,7 @@ const QSet<QString> &creatablePages()
         QStringLiteral("national_squad_selection"), QStringLiteral("national_callup"),
         QStringLiteral("training_plan"),     QStringLiteral("registration"),
         QStringLiteral("national_squad_matrix"), QStringLiteral("national_best_xi"),
-        QStringLiteral("new_role"),          QStringLiteral("new_tactic"),
+        QStringLiteral("new_tactic"),
         QStringLiteral("settings"),
     };
     return pages;
@@ -81,7 +81,7 @@ private slots:
         for (const char *id : {"dashboard", "best_xi", "best_xi_youth", "tactic_explorer",
                                "squad_matrix", "role_analysis", "dwrs_development",
                                "training_plan", "signing_advisor", "transfers", "registration",
-                               "scouting_matrix", "scouting_roles", "new_role", "new_tactic"})
+                               "scouting_matrix", "scouting_roles", "new_tactic"})
             QVERIFY2(ids.contains(QLatin1String(id)), id);
     }
 

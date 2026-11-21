@@ -159,7 +159,6 @@ private:
     bool m_welcomeOpen = false;
     QTimer m_welcomeTimer;
     QStringList m_welcomeLater; // saves whose assistant was closed for this session
-    bool m_sidebarCustomRoles = true;
 };
 
 } // namespace fm

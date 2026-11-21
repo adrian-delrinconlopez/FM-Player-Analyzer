@@ -34,35 +34,11 @@ Abgedeckte Kernmodule (Auszug):
 | Scouting mit mehreren Anforderungen (UND, Bridge mit/ohne Ball) | `test_scoutsearch` |
 | Profile über AppContext: Wechsel A → B → A, Neustart, Kopie, Logo | `test_profileswitch` |
 
-Die Tests nutzen `legacy/config/definitions.json` als feste Datengrundlage
-(FM24). Neue Versionsprofile (FM27) bekommen eigene Testfälle, sobald ihre
-Rollen und Formationen feststehen.
+Die FM27-Rollen und -Formationen werden in eigenen Tests geprüft.
+Historische Definitionsdaten dienen einzelnen Algorithmentests als feste Testdaten.
 
-## 2 · Golden-Master-Vergleich (von Hand, vor jedem Merge auf `main`)
+## 2 · Optionale Tests mit einer FM27-Spielstanddatei
 
-Vergleicht die C++-Ergebnisse Wert für Wert mit der alten Python-Version.
-Braucht einen echten Legacy-Spielstand und läuft deshalb nicht in CI.
-**Nur auf einer Kopie arbeiten**, echte Spielstände nie schreibend anfassen
-(zum Testen eignet sich `brighton.db`).
-
-1. Referenz aus der Python-Version erzeugen (im Ordner `legacy/`):
-   ```
-   python tools/export_golden.py <db_name> <out>
-   python tools/export_golden_squad.py <db_name> <out>
-   ```
-2. Spielstand in das neue Format überführen:
-   ```
-   fmmigrate legacy/databases/<db_name>.db <out>/migrated.db
-   ```
-3. Vergleichen:
-   ```
-   fmgolden <out>/migrated.db legacy/config/config.ini legacy/config/definitions.json \
-            <out>/dwrs_<db_name>.csv <out>/talent_<db_name>.csv
-   fmsquad  <out>/migrated.db legacy/config/config.ini legacy/config/definitions.json \
-            <out>/squad_<db_name>.json
-   ```
-   Beide Werkzeuge geben die Zahl der Abweichungen aus.
-
-Bewusste Abweichungen von der Legacy-Version (Leih-Logik, additive
-Rollenzuweisung) können hier als Unterschied auftauchen. Sie sind gewollt und
-werden nicht „repariert“.
+Für die Tests mit einem echten FM27-Spielstand die Umgebungsvariable
+FM27_TEST_SAVE auf eine Kopie der Datei setzen. Dann test_fm27save und
+test_ratingactivation ausführen. Ohne die Kopie werden diese Fälle übersprungen.

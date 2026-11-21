@@ -19,23 +19,24 @@ class TestClassicReference : public QObject {
 private slots:
     void snapshotIsolationAndValidation() {
         Definitions definitions;
-        QVERIFY(definitions.load(QStringLiteral(DEFINITIONS_DIR) + QStringLiteral("/definitions.json")));
+        QVERIFY(definitions.load(QStringLiteral(DEFINITIONS_DIR "/definitions_fm27.json"), QStringLiteral("fm27")));
         QTemporaryDir temporary; AppConfig config(temporary.filePath("settings.ini"));
         DwrsEngine engine(definitions, config);
         const auto frozen = ClassicRatingSnapshot::capture(engine); QVERIFY(frozen);
         Player player;
         for (int a = 0; a < kAttrCount; ++a) player.attrLo[a] = player.attrHi[a] = 1 + a % 20;
-        const auto before = frozen->evaluate(player, "AF-A"); QVERIFY(before.normalized);
+        const QString role = QStringLiteral("CFD-IP");
+        const auto before = frozen->evaluate(player, role); QVERIFY(before.normalized);
         QVERIFY(config.setRoleMultiplier("key", 3.0)); engine.reloadConfig();
         const auto changed = ClassicRatingSnapshot::capture(engine); QVERIFY(changed);
         QVERIFY(changed->revision() != frozen->revision());
-        QCOMPARE(frozen->evaluate(player, "AF-A").normalized, before.normalized);
-        QCOMPARE(frozen->evaluate(player, "AF-A").absolute, before.absolute);
+        QCOMPARE(frozen->evaluate(player, role).normalized, before.normalized);
+        QCOMPARE(frozen->evaluate(player, role).absolute, before.absolute);
         auto json = frozen->toJson(); json.insert("version", 1.5);
         QVERIFY(!ClassicRatingSnapshot::fromJson(json, nullptr));
         json = frozen->toJson(); auto roles = json.value("roles").toObject();
-        auto plan = roles.value("AF-A").toObject(); auto counts = plan.value("counts").toArray();
-        counts[0] = counts[0].toInt() + 1; plan.insert("counts", counts); roles.insert("AF-A", plan); json.insert("roles", roles);
+        auto plan = roles.value(role).toObject(); auto counts = plan.value("counts").toArray();
+        counts[0] = counts[0].toInt() + 1; plan.insert("counts", counts); roles.insert(role, plan); json.insert("roles", roles);
         QVERIFY(!ClassicRatingSnapshot::fromJson(json, nullptr));
         json = frozen->toJson(); roles = json.value("roles").toObject();
         for (auto it = roles.begin(); it != roles.end(); ++it) {
@@ -45,10 +46,10 @@ private slots:
         }
         json.insert("roles", roles);
         const auto empty = ClassicRatingSnapshot::fromJson(json, nullptr); QVERIFY(empty);
-        QCOMPARE(empty->evaluate(player, "AF-A").status, CurveScore::Status::NoVariation);
-        QVERIFY(!empty->evaluate(player, "AF-A").normalized);
+        QCOMPARE(empty->evaluate(player, role).status, CurveScore::Status::NoVariation);
+        QVERIFY(!empty->evaluate(player, role).normalized);
     }
-    void everyRoleBothGames()
+    void everyFm27Role()
     {
         const QString fixturePath = QStringLiteral(CLASSIC_FIXTURE);
         const bool capture = qEnvironmentVariableIsSet("FM_CAPTURE_CLASSIC_223");
@@ -64,65 +65,66 @@ private slots:
         }
         QJsonArray results;
         int referenceIndex = 0;
-        const auto expectedRows = expected.value(QStringLiteral("ratings")).toArray();
-        for (const auto &version : {QStringLiteral("fm24"), QStringLiteral("fm27")}) {
-            Definitions definitions;
-            QVERIFY(definitions.load(QStringLiteral(DEFINITIONS_DIR)
-                                      + (version == QStringLiteral("fm24") ? QStringLiteral("/definitions.json")
-                                                                             : QStringLiteral("/definitions_fm27.json")), version));
-            for (bool custom : {false, true}) {
-                QTemporaryDir temporary;
-                AppConfig config(temporary.filePath(QStringLiteral("settings.ini")));
-                if (custom) {
-                    QVERIFY(config.setRoleMultiplier(QStringLiteral("key"), 1.7));
-                    QVERIFY(config.setRoleMultiplier(QStringLiteral("preferable"), 1.1));
-                    for (auto it = weightDefaults(version).begin(); it != weightDefaults(version).end(); ++it)
-                        QVERIFY(config.setWeight(version, it.key(), it.value() * 0.7 + 0.3));
-                    for (auto it = gkWeightDefaults(version).begin(); it != gkWeightDefaults(version).end(); ++it)
-                        QVERIFY(config.setGkWeight(version, it.key(), it.value() * 0.8 + 0.2));
+        const QString version = QStringLiteral("fm27");
+        QJsonArray expectedRows;
+        for (const auto &row : expected.value(QStringLiteral("ratings")).toArray()) {
+            if (row.toObject().value(QStringLiteral("game")).toString() == version)
+                expectedRows.append(row);
+        }
+        Definitions definitions;
+        QVERIFY(definitions.load(QStringLiteral(DEFINITIONS_DIR "/definitions_fm27.json"), version));
+        for (bool custom : {false, true}) {
+            QTemporaryDir temporary;
+            AppConfig config(temporary.filePath(QStringLiteral("settings.ini")));
+            if (custom) {
+                QVERIFY(config.setRoleMultiplier(QStringLiteral("key"), 1.7));
+                QVERIFY(config.setRoleMultiplier(QStringLiteral("preferable"), 1.1));
+                for (auto it = weightDefaults(version).begin(); it != weightDefaults(version).end(); ++it)
+                    QVERIFY(config.setWeight(version, it.key(), it.value() * 0.7 + 0.3));
+                for (auto it = gkWeightDefaults(version).begin(); it != gkWeightDefaults(version).end(); ++it)
+                    QVERIFY(config.setGkWeight(version, it.key(), it.value() * 0.8 + 0.2));
+            }
+            DwrsEngine engine(definitions, config);
+            const auto snapshot = ClassicRatingSnapshot::capture(engine); QVERIFY(snapshot);
+            const auto classicProfile = classicRatingProfile({definitions}, config, nullptr); QVERIFY(classicProfile);
+            const auto curves = RatingSnapshot::compile(*classicProfile, definitions, nullptr); QVERIFY(curves);
+            const auto restored = ClassicRatingSnapshot::fromJson(snapshot->toJson(), nullptr); QVERIFY(restored);
+            QCOMPARE(restored->revision(), snapshot->revision());
+            for (int sample = 0; sample < 16; ++sample) {
+                Player player;
+                constexpr int levels[] = {1, 6, 12, 18, 19, 20};
+                for (int a = 0; a < kAttrCount; ++a) {
+                    int low = sample < 6 ? levels[sample] : 1 + (a * 7 + sample * 3) % 20;
+                    int high = low;
+                    if (sample >= 8) high = std::min(20, low + (a + sample) % 6);
+                    if (sample >= 12 && a % 4 == 0) low = high = 0;
+                    if (sample == 15) low = high = 0;
+                    player.attrLo[a] = static_cast<uint8_t>(low);
+                    player.attrHi[a] = static_cast<uint8_t>(high);
                 }
-                DwrsEngine engine(definitions, config);
-                const auto snapshot = ClassicRatingSnapshot::capture(engine); QVERIFY(snapshot);
-                const auto classicProfile = classicRatingProfile({definitions}, config, nullptr); QVERIFY(classicProfile);
-                const auto curves = RatingSnapshot::compile(*classicProfile, definitions, nullptr); QVERIFY(curves);
-                const auto restored = ClassicRatingSnapshot::fromJson(snapshot->toJson(), nullptr); QVERIFY(restored);
-                QCOMPARE(restored->revision(), snapshot->revision());
-                for (int sample = 0; sample < 16; ++sample) {
-                    Player player;
-                    constexpr int levels[] = {1, 6, 12, 18, 19, 20};
-                    for (int a = 0; a < kAttrCount; ++a) {
-                        int low = sample < 6 ? levels[sample] : 1 + (a * 7 + sample * 3) % 20;
-                        int high = low;
-                        if (sample >= 8) high = std::min(20, low + (a + sample) % 6);
-                        if (sample >= 12 && a % 4 == 0) low = high = 0;
-                        if (sample == 15) low = high = 0;
-                        player.attrLo[a] = static_cast<uint8_t>(low);
-                        player.attrHi[a] = static_cast<uint8_t>(high);
+                for (const auto &role : definitions.validRoles()) {
+                    const auto rating = engine.calculate(player, role);
+                    const auto curveRating = curves->evaluate(player, role); QVERIFY(curveRating.normalized);
+                    QVERIFY(std::abs(curveRating.absolute - rating.first) <= 1e-12 * std::max(1.0, std::abs(rating.first)));
+                    QCOMPARE(*curveRating.normalized, rating.second);
+                    const auto frozen = restored->evaluate(player, role); QVERIFY(frozen.normalized);
+                    QCOMPARE(frozen.absolute, rating.first); QCOMPARE(*frozen.normalized, rating.second);
+                    QJsonObject row{{QStringLiteral("game"), version}, {QStringLiteral("custom"), custom},
+                                    {QStringLiteral("sample"), sample}, {QStringLiteral("role"), role},
+                                    {QStringLiteral("absolute"), rating.first}, {QStringLiteral("normalized"), rating.second}};
+                    if (!capture) {
+                        QVERIFY(referenceIndex < expectedRows.size());
+                        const auto reference = expectedRows[referenceIndex].toObject();
+                        QCOMPARE(row.value(QStringLiteral("game")), reference.value(QStringLiteral("game")));
+                        QCOMPARE(row.value(QStringLiteral("custom")), reference.value(QStringLiteral("custom")));
+                        QCOMPARE(row.value(QStringLiteral("sample")), reference.value(QStringLiteral("sample")));
+                        QCOMPARE(row.value(QStringLiteral("role")), reference.value(QStringLiteral("role")));
+                        const double wanted = reference.value(QStringLiteral("absolute")).toDouble();
+                        QVERIFY(std::abs(rating.first - wanted) <= 1e-12 * std::max(1.0, std::abs(wanted)));
+                        QCOMPARE(rating.second, reference.value(QStringLiteral("normalized")).toDouble());
                     }
-                    for (const auto &role : definitions.validRoles()) {
-                        const auto rating = engine.calculate(player, role);
-                        const auto curveRating = curves->evaluate(player, role); QVERIFY(curveRating.normalized);
-                        QVERIFY(std::abs(curveRating.absolute - rating.first) <= 1e-12 * std::max(1.0, std::abs(rating.first)));
-                        QCOMPARE(*curveRating.normalized, rating.second);
-                        const auto frozen = restored->evaluate(player, role); QVERIFY(frozen.normalized);
-                        QCOMPARE(frozen.absolute, rating.first); QCOMPARE(*frozen.normalized, rating.second);
-                        QJsonObject row{{QStringLiteral("game"), version}, {QStringLiteral("custom"), custom},
-                                        {QStringLiteral("sample"), sample}, {QStringLiteral("role"), role},
-                                        {QStringLiteral("absolute"), rating.first}, {QStringLiteral("normalized"), rating.second}};
-                        if (!capture) {
-                            QVERIFY(referenceIndex < expectedRows.size());
-                            const auto reference = expectedRows[referenceIndex].toObject();
-                            QCOMPARE(row.value(QStringLiteral("game")), reference.value(QStringLiteral("game")));
-                            QCOMPARE(row.value(QStringLiteral("custom")), reference.value(QStringLiteral("custom")));
-                            QCOMPARE(row.value(QStringLiteral("sample")), reference.value(QStringLiteral("sample")));
-                            QCOMPARE(row.value(QStringLiteral("role")), reference.value(QStringLiteral("role")));
-                            const double wanted = reference.value(QStringLiteral("absolute")).toDouble();
-                            QVERIFY(std::abs(rating.first - wanted) <= 1e-12 * std::max(1.0, std::abs(wanted)));
-                            QCOMPARE(rating.second, reference.value(QStringLiteral("normalized")).toDouble());
-                        }
-                        results.append(row);
-                        ++referenceIndex;
-                    }
+                    results.append(row);
+                    ++referenceIndex;
                 }
             }
         }

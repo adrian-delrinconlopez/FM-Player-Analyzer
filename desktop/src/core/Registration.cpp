@@ -152,8 +152,6 @@ QList<LeagueRules> leagueRulesFor(const QString &fmVersionId)
 {
     if (!modelsRegistrationRules(fmVersionId))
         return {};
-    if (fmVersionId == QLatin1String("fm24"))
-        return {LeagueRules::Bundesliga, LeagueRules::PremierLeague};
     QList<LeagueRules> all;
     for (const LeagueInfo &info : kLeagues)
         all.append(info.rules);

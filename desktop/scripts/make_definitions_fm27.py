@@ -11,7 +11,7 @@ Usage (from desktop/):  python3 scripts/make_definitions_fm27.py
 FM27 has no duties: every role belongs to one phase, "ip" (in possession) or
 "oop" (out of possession). Role ids are the in-game abbreviation; when the same
 abbreviation exists in both phases the id gets "-IP" / "-OOP". "role_phases"
-records the phase of every role. Weights stay provisional (FM24 tiers) until the
+records the phase of every role. Classic weights stay provisional until the
 weights step of the FM27 update.
 """
 
@@ -24,7 +24,6 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 DESKTOP = os.path.dirname(HERE)
 DATA = os.path.join(DESKTOP, "data", "fm27")
 OUT = os.path.join(DESKTOP, "src", "app", "resources", "definitions_fm27.json")
-FM24 = os.path.join(DESKTOP, "src", "app", "resources", "definitions.json")
 
 PHASES = {"mit Ball": "ip", "ohne Ball": "oop"}
 
@@ -199,8 +198,6 @@ def main():
         for position in profile["positions"]:
             role_shifts.setdefault(role, {})[position] = value
 
-    with open(FM24, encoding="utf-8") as f:
-        personalities = json.load(f)["personalities"]
 
     out = {
         "fm_version": "fm27",
@@ -217,7 +214,6 @@ def main():
         "tactic_roles": tactic_roles,
         "tactic_layouts": tactic_layouts,
         "role_shifts": role_shifts,
-        "personalities": personalities,
     }
     with open(OUT, "w", encoding="utf-8", newline="\n") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)

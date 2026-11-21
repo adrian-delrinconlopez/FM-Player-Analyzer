@@ -63,7 +63,7 @@ constexpr int kDefaultThreshold = 14;
 
 QString millions(double value)
 {
-    return QStringLiteral("%1 Mio. €").arg(QLocale().toString(value / 1'000'000.0, 'f', 1));
+    return SquadMatrixPage::tr("%1 Mio. €").arg(QLocale().toString(value / 1'000'000.0, 'f', 1));
 }
 
 // Layout for the contents of an optional (checkable) filter box. The contents
@@ -574,7 +574,7 @@ QList<PlayerColumn> SquadMatrixPage::buildColumns(bool clubTable) const
     columns.append(
         {tr("Position"), [](const Player &p) { return p.positionRaw; }, nullptr, nullptr, {}});
     if (m_personalityKnown) {
-        columns.append({tr("Persönlichkeit"), [](const Player &p) { return p.personality; },
+        columns.append({tr("Persönlichkeit"), [](const Player &p) { return personalityLabel(p.personality); },
                         nullptr,
                         [definitions](const Player &p) {
                             return personalityCellStyle(
@@ -654,7 +654,7 @@ QList<PlayerColumn> SquadMatrixPage::buildColumns(bool clubTable) const
                         },
                         Qt::AlignCenter});
         for (const auto &[attrIndex, minimum] : thresholds) {
-            const QString shortName = m_attrShortNames.value(attrIndex, attrNames()[attrIndex]);
+            const QString shortName = m_attrShortNames.value(attrIndex, attributeLabel(attrIndex));
             thresholdColumns.append({QStringLiteral("%1 ≥%2").arg(shortName).arg(minimum),
                             [attrIndex](const Player &p) -> QVariant {
                                 const double value = p.attrMean(attrIndex);
@@ -1212,10 +1212,10 @@ void SquadMatrixPage::addAttributeRow(int attrIndex, int minimum)
     QList<int> order(kAttrCount);
     std::iota(order.begin(), order.end(), 0);
     std::sort(order.begin(), order.end(), [](int a, int b) {
-        return attrNames()[a].localeAwareCompare(attrNames()[b]) < 0;
+        return attributeLabel(a).localeAwareCompare(attributeLabel(b)) < 0;
     });
     for (int index : order)
-        row.attribute->addItem(attrNames()[index], index);
+        row.attribute->addItem(attributeLabel(index), index);
     row.attribute->setCurrentIndex(std::max(0, row.attribute->findData(attrIndex)));
     row.minimum = new QSpinBox(rowWidget);
     row.minimum->setRange(1, 20);
@@ -1269,7 +1269,7 @@ void SquadMatrixPage::attributeThresholdsChanged()
     QStringList entries;
     for (const AttributeRow &row : m_attrRows) {
         entries << QStringLiteral("%1:%2")
-                       .arg(attrNames()[row.attribute->currentData().toInt()])
+                       .arg(attributeLabel(row.attribute->currentData().toInt()))
                        .arg(row.minimum->value());
     }
     Database &db = m_context.database();

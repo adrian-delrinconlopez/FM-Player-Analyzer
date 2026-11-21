@@ -2,7 +2,6 @@
 
 #include <QDialog>
 
-class QButtonGroup;
 class QCheckBox;
 class QComboBox;
 class QLabel;
@@ -47,7 +46,6 @@ private:
     QStackedWidget *m_pages;
     QLineEdit *m_nameEdit;
     QLabel *m_nameError;
-    QButtonGroup *m_versionGroup;
     QComboBox *m_profileSourceCombo;
     DropZone *m_dropZone;
     QCheckBox *m_autoAssignCheck;

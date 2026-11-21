@@ -99,6 +99,7 @@ QString RatingProfile::validate() const
         return QStringLiteral("unsupported-calculation-version");
     if (compatibleGames.isEmpty()) return QStringLiteral("compatibility-required");
     for (const auto &game : compatibleGames)
+        // Older FM27 profiles and revision snapshots can also list FM24.
         if (game != QStringLiteral("fm24") && game != QStringLiteral("fm27"))
             return QStringLiteral("unsupported-game");
     if (!nonnegative(keyFactor) || !nonnegative(preferableFactor))

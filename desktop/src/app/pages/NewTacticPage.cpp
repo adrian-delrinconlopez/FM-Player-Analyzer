@@ -269,11 +269,6 @@ void NewTacticPage::syncPitch(PhaseEditor &editor)
     editor.pitch->setEditorSlots(roles, m_context.definitions().roleDisplayMap(), outfield < 10);
 }
 
-bool NewTacticPage::twoPhase() const
-{
-    return m_context.definitions().hasRolePhases();
-}
-
 void NewTacticPage::fillSlotCombo(QComboBox *combo, const QStringList &gamePositions,
                                   const QString &phase)
 {
@@ -281,20 +276,17 @@ void NewTacticPage::fillSlotCombo(QComboBox *combo, const QStringList &gamePosit
     const auto &definitions = m_context.definitions();
     const auto posMap = definitions.positionToRoleMapping();
     const auto roleNames = definitions.roleDisplayMap();
-    const bool phased = twoPhase();
 
     QStringList roles;
     for (const QString &position : gamePositions)
         roles << posMap.value(position);
     roles.removeDuplicates();
-    if (phased) {
-        roles.erase(std::remove_if(roles.begin(), roles.end(),
-                                   [&](const QString &role) {
-                                       const QString rolePhase = definitions.rolePhase(role);
-                                       return rolePhase != phase && rolePhase != QLatin1String("both");
-                                   }),
-                    roles.end());
-    }
+    roles.erase(std::remove_if(roles.begin(), roles.end(),
+                               [&](const QString &role) {
+                                   const QString rolePhase = definitions.rolePhase(role);
+                                   return rolePhase != phase && rolePhase != QLatin1String("both");
+                               }),
+                roles.end());
     std::sort(roles.begin(), roles.end(), [&roleNames](const QString &a, const QString &b) {
         return roleNames.value(a, a) < roleNames.value(b, b);
     });
@@ -327,15 +319,13 @@ void NewTacticPage::refreshPhase(PhaseEditor &editor)
     const QString previous = gkCombo->currentData().toString();
     const auto roleNames = definitions.roleDisplayMap();
     QStringList gkRoles = definitions.gkRoles();
-    if (twoPhase()) {
-        gkRoles.erase(std::remove_if(gkRoles.begin(), gkRoles.end(),
-                                     [&](const QString &role) {
-                                         const QString rolePhase = definitions.rolePhase(role);
-                                         return rolePhase != editor.phase
-                                                && rolePhase != QLatin1String("both");
-                                     }),
-                      gkRoles.end());
-    }
+    gkRoles.erase(std::remove_if(gkRoles.begin(), gkRoles.end(),
+                                 [&](const QString &role) {
+                                     const QString rolePhase = definitions.rolePhase(role);
+                                     return rolePhase != editor.phase
+                                            && rolePhase != QLatin1String("both");
+                                 }),
+                  gkRoles.end());
     std::sort(gkRoles.begin(), gkRoles.end(), [&roleNames](const QString &a, const QString &b) {
         return roleNames.value(a, a) < roleNames.value(b, b);
     });
@@ -363,7 +353,7 @@ void NewTacticPage::refreshPhase(PhaseEditor &editor)
     const int templateIndex = editor.templateCombo->findText(previousTemplate);
     if (templateIndex >= 0)
         editor.templateCombo->setCurrentIndex(templateIndex);
-    editor.templateRow->setVisible(twoPhase() && !templates.isEmpty());
+    editor.templateRow->setVisible(!templates.isEmpty());
 }
 
 void NewTacticPage::applyTemplate(PhaseEditor &editor)
@@ -400,23 +390,16 @@ void NewTacticPage::applyTemplate(PhaseEditor &editor)
 
 void NewTacticPage::refresh()
 {
-    const bool phased = twoPhase();
     m_info->setText(
-        phased ? tr("Eine Taktik hat zwei Aufstellungen: eine mit Ball und eine ohne Ball, "
-                    "jede mit einem Torhüter und zehn Feldspielern. Die Plätze müssen nicht "
-                    "zusammenpassen; der Analyzer verteilt die Spieler später selbst. Klicke "
-                    "auf ein „+“, um dort eine Rolle aufzustellen, oder auf eine Rolle, um sie "
-                    "zu ändern. Mit einer Vorlage aus dem Spiel bist du schneller.")
-               : tr("Baue deine Formation auf dem Feld unten: Klicke auf ein „+“, um dort "
-                    "eine Rolle aufzustellen, oder auf eine Rolle, um sie zu ändern — genau "
-                    "ein Torhüter und zehn Feldspieler."));
-    m_phases[0].box->setTitle(phased ? tr("2b. Aufstellung ohne Ball")
-                                     : tr("2. Formation gestalten"));
+        tr("Eine Taktik hat zwei Aufstellungen: eine mit Ball und eine ohne Ball, "
+           "jede mit einem Torhüter und zehn Feldspielern. Die Plätze müssen nicht "
+           "zusammenpassen; der Analyzer verteilt die Spieler später selbst. Klicke "
+           "auf ein „+“, um dort eine Rolle aufzustellen, oder auf eine Rolle, um sie "
+           "zu ändern. Mit einer Vorlage aus dem Spiel bist du schneller."));
+    m_phases[0].box->setTitle(tr("2b. Aufstellung ohne Ball"));
     m_phases[1].box->setTitle(tr("2a. Aufstellung mit Ball"));
-    m_phases[1].box->setVisible(phased);
     refreshPhase(m_phases[0]);
-    if (phased)
-        refreshPhase(m_phases[1]);
+    refreshPhase(m_phases[1]);
     // The edited tactic may be gone (other save opened, deleted elsewhere).
     if (!m_editingName.isEmpty() && !m_context.definitions().tacticNames().contains(m_editingName))
         m_editingName.clear();
@@ -456,7 +439,6 @@ void NewTacticPage::updateFullName()
 bool NewTacticPage::collectPhase(const PhaseEditor &editor, QJsonObject &roles,
                                  QHash<QString, QString> &outfield)
 {
-    const bool phased = twoPhase();
     const QString lineUp = editor.phase == QLatin1String("ip") ? tr("mit Ball") : tr("ohne Ball");
     for (auto it = editor.slotCombos.constBegin(); it != editor.slotCombos.constEnd(); ++it) {
         if (it.key() == QLatin1String("GK"))
@@ -468,18 +450,14 @@ bool NewTacticPage::collectPhase(const PhaseEditor &editor, QJsonObject &roles,
     if (outfield.size() != 10) {
         QMessageBox::warning(
             this, tr("Neue Taktik"),
-            phased ? tr("Die Aufstellung %1 braucht genau 10 Feldspieler (aktuell: %2).")
-                         .arg(lineUp)
-                         .arg(outfield.size())
-                   : tr("Du musst genau 10 Feldspieler auswählen (aktuell: %1).")
-                         .arg(outfield.size()));
+            tr("Die Aufstellung %1 braucht genau 10 Feldspieler (aktuell: %2).")
+                .arg(lineUp).arg(outfield.size()));
         return false;
     }
     const QString gkRole = editor.slotCombos.value(QStringLiteral("GK"))->currentData().toString();
     if (gkRole.isEmpty()) {
         QMessageBox::warning(this, tr("Neue Taktik"),
-                             phased ? tr("Bitte wähle eine Torhüter-Rolle %1.").arg(lineUp)
-                                    : tr("Bitte wähle eine Torhüter-Rolle."));
+                             tr("Bitte wähle eine Torhüter-Rolle %1.").arg(lineUp));
         return false;
     }
     // slot -> role, GK first like legacy.
@@ -514,17 +492,12 @@ void NewTacticPage::createTactic()
     QHash<QString, QString> outfield;
     if (!collectPhase(m_phases[0], oopRoles, outfield))
         return;
-    QJsonObject tacticRoles = oopRoles;
-    QStringList ipSlots = oopRoles.keys();
-    if (twoPhase()) {
-        QJsonObject ipRoles;
-        QHash<QString, QString> ipOutfield;
-        if (!collectPhase(m_phases[1], ipRoles, ipOutfield))
-            return;
-        ipSlots = ipRoles.keys();
-        tacticRoles = QJsonObject{{QStringLiteral("ip"), ipRoles},
+    QJsonObject ipRoles;
+    QHash<QString, QString> ipOutfield;
+    if (!collectPhase(m_phases[1], ipRoles, ipOutfield))
+        return;
+    const QJsonObject tacticRoles{{QStringLiteral("ip"), ipRoles},
                                   {QStringLiteral("oop"), oopRoles}};
-    }
 
     QJsonObject root = m_context.definitions().root();
     const bool renamed = editing && name != m_editingName;
@@ -537,7 +510,7 @@ void NewTacticPage::createTactic()
     if (renamed)
         TacticLibrary::renameTacticReferences(db, m_editingName, name);
     if (editing)
-        TacticLibrary::pruneBridges(db, name, ipSlots, oopRoles.keys());
+        TacticLibrary::pruneBridges(db, name, ipRoles.keys(), oopRoles.keys());
 
     QMessageBox::information(this, title,
                              editing ? tr("Taktik '%1' wurde gespeichert.").arg(name)
@@ -631,13 +604,9 @@ void NewTacticPage::loadTactic(const QString &name)
         for (QComboBox *combo : std::as_const(editor.slotCombos))
             combo->blockSignals(true);
     }
-    if (definitions.isTwoPhaseTactic(name)) {
-        const auto &lineUps = definitions.twoPhaseTactics().value(name);
-        fill(m_phases[0], lineUps.oop);
-        fill(m_phases[1], lineUps.ip);
-    } else {
-        fill(m_phases[0], definitions.tacticRoles().value(name));
-    }
+    const auto lineUps = definitions.twoPhaseTactics().value(name);
+    fill(m_phases[0], lineUps.oop);
+    fill(m_phases[1], lineUps.ip);
     for (PhaseEditor &editor : m_phases) {
         for (QComboBox *combo : std::as_const(editor.slotCombos))
             combo->blockSignals(false);
@@ -810,7 +779,7 @@ void NewTacticPage::importTactic()
             tr("Die Taktik '%1' gehört zu %2, dieser Spielstand nutzt %3. Rollen und Plätze "
                "der FM-Versionen passen nicht zueinander; importiere sie in einen Spielstand "
                "derselben Version.")
-                .arg(check.name, fmDataVersion(check.fileFmVersion).displayName,
+                .arg(check.name, check.fileFmVersion.toUpper(),
                      fmDataVersion(definitions.fmVersionId()).displayName));
         return;
     case TacticLibrary::ImportCheck::MissingRoles:

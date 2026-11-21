@@ -1,7 +1,7 @@
 # FM Player Analyzer
 
-The Analyzer is a C++ desktop application using Qt 6 for FM24 and FM27.
-Desktop code lives in `desktop/`; `legacy/` is a reference and migration source.
+The Analyzer is a C++ desktop application using Qt 6 for FM27.
+Desktop code lives in `desktop/`; `legacy/` is a historical reference.
 
 ## Working practices
 
@@ -29,7 +29,7 @@ Paths below are relative to `desktop/src/`; tests live in `tests/`.
 - Save-specific data belongs to the active save profile. Copy settings only for reusable options such as weights, colours, roles and tactics. Club name, club assignment, crest, flag and live source stay with the original save.
 - For database changes, examine migrations, older data and import state together. Persisted and displayed values must agree after player merges. Copies and backups must include committed SQLite WAL changes.
 - Check FM27 visibility, scouting selection and attribute masking changes against the requested scope. Handle unknowns and ranges consistently across import, rating and export.
-- Check FM24 and FM27 separately when roles or lineups change. FM24 displays A/B teams side by side; FM27 distinguishes possession phases.
+- Check both possession phases when roles or lineups change.
 - English is the default language. Maintain complete English and German UI translations using the existing translation system and language preference. Personal names are not translated. Write new documentation, technical comments and release notes in English, and update affected German user documentation.
 - For UI design work, use `.claude/skills/unslop/SKILL.md` when available. Club gradients and crests belong to club presentation. This optional local skill is not required to build the repository.
 

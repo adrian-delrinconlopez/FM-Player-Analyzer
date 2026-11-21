@@ -28,7 +28,6 @@
 #include "pages/NationalSquadMatrixPage.h"
 #include "pages/NationalSquadSelectionPage.h"
 #include "pages/TrainingPlanPage.h"
-#include "pages/NewRolePage.h"
 #include "pages/NewTacticPage.h"
 #include "pages/PlaceholderPage.h"
 #include "pages/PlayerComparisonPage.h"
@@ -286,16 +285,8 @@ MainWindow::MainWindow(AppContext &context, ThemeManager &theme, QWidget *parent
         updateHeader();
         m_searchModelDirty = true;
         m_noticeBar->hide(); // hints belong to the previous save
-        // Another FM version may offer other pages ("Neue Rolle" only where
-        // roles can be added). Rebuilding the menu navigates to its first
-        // page, which refreshes that page already.
-        const int navigationsBefore = m_navigationCount;
-        if (fmDataVersion(m_context.fmVersionId()).customRoles != m_sidebarCustomRoles)
-            rebuildMenu();
-        if (m_navigationCount == navigationsBefore) {
-            if (auto *visible = qobject_cast<PageBase *>(m_stack->currentWidget()))
-                visible->refresh();
-        }
+        if (auto *visible = qobject_cast<PageBase *>(m_stack->currentWidget()))
+            visible->refresh();
         // Another database: earlier steps (e.g. a player's profile) may not
         // exist here, so the history starts over.
         resetHistory();
@@ -545,8 +536,7 @@ void MainWindow::rebuildMenu(bool selectFirst)
         font.setPointSizeF(font.pointSizeF() * 0.88);
         item->setFont(font);
     };
-    m_sidebarCustomRoles = fmDataVersion(m_context.fmVersionId()).customRoles;
-    m_sidebar = Navigation::sidebar(national, m_sidebarCustomRoles);
+    m_sidebar = Navigation::sidebar(national);
     for (const Navigation::Section &section : std::as_const(m_sidebar)) {
         addSection(section.heading);
         for (const Navigation::Group &group : section.groups) {
@@ -564,7 +554,7 @@ void MainWindow::rebuildMenu(bool selectFirst)
 
 void MainWindow::buildMenuBar()
 {
-    // Language selection ("optional im Menü auf Deutsch") and Help → About.
+    // Language selection and Help → About.
     // Switching is restart-based: the whole UI (including statically initialized
     // navigation labels) is built once with the translator already installed.
     auto *fileMenu = menuBar()->addMenu(tr("&Datei"));
@@ -587,20 +577,12 @@ void MainWindow::buildMenuBar()
     group->setExclusive(true);
 
     const QString current = m_context.paths().language();
-    struct LangOption {
-        QString code;
-        QString label; // endonym — shown the same regardless of UI language
-    };
-    for (const LangOption &option :
-         {LangOption{QStringLiteral("en"), QStringLiteral("English")},
-          LangOption{QStringLiteral("de"), QStringLiteral("Deutsch")}}) {
-        auto *action = languageMenu->addAction(option.label);
+    for (const auto &[code, label] : AppPaths::languages()) {
+        auto *action = languageMenu->addAction(label);
         action->setCheckable(true);
-        action->setChecked(option.code == current
-                           || (option.code == QLatin1String("en") && current.isEmpty()));
+        action->setChecked(code == current);
         group->addAction(action);
-        connect(action, &QAction::triggered, this,
-                [this, code = option.code] { changeLanguage(code); });
+        connect(action, &QAction::triggered, this, [this, code] { changeLanguage(code); });
     }
 
     auto *helpMenu = menuBar()->addMenu(tr("&Hilfe"));
@@ -671,8 +653,6 @@ PageBase *MainWindow::createPage(const QString &pageId)
         return new NationalSquadMatrixPage(m_context, this);
     if (pageId == QLatin1String("national_best_xi"))
         return new NationalBestXiPage(m_context, m_theme, this);
-    if (pageId == QLatin1String("new_role"))
-        return new NewRolePage(m_context, this);
     if (pageId == QLatin1String("new_tactic"))
         return new NewTacticPage(m_context, m_theme, this);
     if (pageId == QLatin1String("settings")) {
@@ -1055,8 +1035,7 @@ void MainWindow::openPalette()
     // Pages of both modes; switching mode where needed.
     QSet<QString> seen;
     for (const bool national : {m_context.nationalUiMode(), !m_context.nationalUiMode()}) {
-        for (const Navigation::Section &section : Navigation::sidebar(
-                 national, fmDataVersion(m_context.fmVersionId()).customRoles)) {
+        for (const Navigation::Section &section : Navigation::sidebar(national)) {
             for (const Navigation::Group &group : section.groups) {
                 for (const Navigation::Tab &tab : group.tabs) {
                     if (seen.contains(tab.pageId))

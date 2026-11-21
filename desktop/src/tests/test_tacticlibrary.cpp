@@ -51,7 +51,6 @@ class TestTacticLibrary : public QObject
 
 private:
     QJsonObject m_shipped;
-    QJsonObject m_shipped24;
 
     Definitions definitionsOf(const QJsonObject &root, const QString &version = QStringLiteral("fm27"))
     {
@@ -66,8 +65,6 @@ private slots:
         m_shipped = readJson(QStringLiteral(DEFINITIONS_FM27));
         QVERIFY(tactics(m_shipped).contains(kControlPress));
         QVERIFY(tactics(m_shipped).contains(kCounterSurge));
-        m_shipped24 = readJson(QStringLiteral(DEFINITIONS_FM24));
-        QVERIFY(!tactics(m_shipped24).isEmpty());
     }
 
     void editRenameDelete()
@@ -279,17 +276,17 @@ private slots:
     void importRejectsBadFiles()
     {
         const Definitions fm27 = definitionsOf(m_shipped);
-        const Definitions fm24 = definitionsOf(m_shipped24, QStringLiteral("fm24"));
         const QByteArray file = TacticLibrary::exportTactic(fm27, kControlPress);
 
         QCOMPARE(TacticLibrary::checkImport("kein json", fm27).status,
                  TacticLibrary::ImportCheck::InvalidFile);
         QCOMPARE(TacticLibrary::checkImport("{\"format\": \"etwas\"}", fm27).status,
                  TacticLibrary::ImportCheck::InvalidFile);
-        // FM27 tactic into an FM24 profile.
-        const TacticLibrary::ImportCheck wrong = TacticLibrary::checkImport(file, fm24);
+        QJsonObject unsupported = QJsonDocument::fromJson(file).object();
+        unsupported.insert(QStringLiteral("fm_version"), QStringLiteral("fm24"));
+        const auto wrong = TacticLibrary::checkImport(QJsonDocument(unsupported).toJson(), fm27);
         QCOMPARE(wrong.status, TacticLibrary::ImportCheck::WrongFmVersion);
-        QCOMPARE(wrong.fileFmVersion, QStringLiteral("fm27"));
+        QCOMPARE(wrong.fileFmVersion, QStringLiteral("fm24"));
         // Newer format.
         QJsonObject obj = QJsonDocument::fromJson(file).object();
         obj.insert(QStringLiteral("format_version"), TacticLibrary::kExchangeFormatVersion + 1);
@@ -311,22 +308,6 @@ private slots:
         obj.insert(QStringLiteral("tactic"), tactic);
         QCOMPARE(TacticLibrary::checkImport(QJsonDocument(obj).toJson(), fm27).status,
                  TacticLibrary::ImportCheck::InvalidFile);
-    }
-
-    void fm24RoundTrip()
-    {
-        const Definitions fm24 = definitionsOf(m_shipped24, QStringLiteral("fm24"));
-        const QString name = fm24.tacticNames().first();
-        const QByteArray file = TacticLibrary::exportTactic(fm24, name);
-        const auto check = TacticLibrary::checkImport(file, fm24);
-        QCOMPARE(check.status, TacticLibrary::ImportCheck::Ok);
-        QVERIFY(check.nameTaken);
-        QVERIFY(check.rolesToAdd.isEmpty());
-        QJsonObject root = m_shipped24;
-        TacticLibrary::applyImport(root, QStringLiteral("fm24"), check, QStringLiteral("Kopie"));
-        const Definitions after = definitionsOf(root, QStringLiteral("fm24"));
-        QCOMPARE(after.tacticRoles().value(QStringLiteral("Kopie")),
-                 fm24.tacticRoles().value(name));
     }
 
     void favoritesAndBridgesFollow()

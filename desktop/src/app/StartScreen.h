@@ -55,7 +55,6 @@ private:
     void showSaveMenu(const QString &name, const QPoint &globalPos);
     void newSave();
     void openExternalFile();
-    void migrateLegacy();
     void renameSave(const QString &name);
     void duplicateSave(const QString &name);
     void deleteSave(const QString &name);

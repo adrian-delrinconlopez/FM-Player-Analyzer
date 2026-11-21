@@ -56,6 +56,7 @@ public:
 
     // Opens (and creates/migrates if needed) the database file.
     bool open(const QString &filePath);
+    static bool isFm27Save(const QString &filePath);
     void close();
     bool isOpen() const;
     QString errorString() const { return m_error; }

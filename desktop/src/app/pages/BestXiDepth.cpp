@@ -47,24 +47,6 @@ void BestXiPage::addScoutActions(QMenu &menu, TacticPitchWidget *pitch, const QS
     const XiCell cell = team.cells.value(slot);
     const QString role = team.lineUp.value(slot);
 
-    // One line-up (FM24): position and role of the place.
-    if (!team.partner) {
-        ScoutSearchRequest request;
-        request.tactic = tactic;
-        request.criteria = {ScoutSearch::criterion(ScoutSearch::slotPlace(version, slot, role))};
-        if (cell.isFilled()) {
-            request.source = tr("Aus Best XI: Ersatz für %1 (%2).")
-                                 .arg(cell.name, placeText(slot, role));
-            request.referenceName = getLastName(cell.name);
-            request.referenceValue = m_valueOfUid.value(cell.playerUid, cell.rating);
-        } else {
-            request.source = tr("Aus Best XI: freier Platz %1.").arg(placeText(slot, role));
-        }
-        menu.addAction(tr("🔍 Im Scouting suchen (%1)").arg(placeText(slot, role)), this,
-                       [launch, request] { launch(request); });
-        return;
-    }
-
     const PitchTeam other = m_pitchTeams.value(team.partner);
     // (ip slot, oop slot) from this place and one of the other line-up.
     const auto bridgeRequest = [&](const QString &otherSlot) {
@@ -148,7 +130,7 @@ void BestXiPage::showEmptySlotMenu(TacticPitchWidget *pitch, const QString &slot
         menu.exec(globalPos);
 }
 
-void BestXiPage::fillOutageTable(const QList<OutageCover> &covers, bool twoPhase)
+void BestXiPage::fillOutageTable(const QList<OutageCover> &covers)
 {
     m_outageBox->setVisible(!covers.isEmpty());
     if (covers.isEmpty()) {
@@ -156,32 +138,26 @@ void BestXiPage::fillOutageTable(const QList<OutageCover> &covers, bool twoPhase
         return;
     }
     m_outageNote->setText(
-        twoPhase ? tr("Fällt ein Spieler der Startelf aus, zeigt die Tabelle den besten geprüften "
-                      "Ersatzplan: Genau ein Spieler kommt dazu, die übrigen dürfen dafür ihre "
-                      "Plätze mit und ohne Ball tauschen. „Wer übernimmt“ nennt, wer die frei "
-                      "gewordenen Plätze besetzt, auch wenn das ein Mitspieler ist, der dafür "
-                      "umrückt. „Volle Bridge“ heißt: Der Neue übernimmt beide Plätze. Von Hand "
-                      "gesetzte Plätze und eine Startelf-Grenze gelten weiter. Weitere Lösungen "
-                      "zeigt der Tooltip.")
-                 : tr("Fällt ein Spieler der Startelf aus, zeigt die Tabelle den besten geprüften "
-                      "Ersatzplan: Genau ein Spieler kommt dazu, die übrigen dürfen dafür ihre "
-                      "Plätze tauschen. „Wer übernimmt“ nennt, wer den frei gewordenen Platz "
-                      "besetzt. Eine Startelf-Grenze gilt weiter. Weitere Lösungen zeigt der "
-                      "Tooltip."));
+        tr("Fällt ein Spieler der Startelf aus, zeigt die Tabelle den besten geprüften "
+           "Ersatzplan: Genau ein Spieler kommt dazu, die übrigen dürfen dafür ihre "
+           "Plätze mit und ohne Ball tauschen. „Wer übernimmt“ nennt, wer die frei "
+           "gewordenen Plätze besetzt, auch wenn das ein Mitspieler ist, der dafür "
+           "umrückt. „Volle Bridge“ heißt: Der Neue übernimmt beide Plätze. Von Hand "
+           "gesetzte Plätze und eine Startelf-Grenze gelten weiter. Weitere Lösungen "
+           "zeigt der Tooltip."));
 
     const auto nameOf = [this](const QString &uid) {
         const Player *p = m_context.store().findByUid(uid);
         return p ? p->name : uid;
     };
-    const auto places = [twoPhase](const QPair<QString, QString> &pair) {
-        return twoPhase ? tr("mit %1 · ohne %2").arg(pair.first, pair.second) : pair.first;
+    const auto places = [](const QPair<QString, QString> &pair) {
+        return tr("mit %1 · ohne %2").arg(pair.first, pair.second);
     };
-    const auto moveText = [twoPhase](const PlaceMove &move) {
+    const auto moveText = [](const PlaceMove &move) {
         QStringList changes;
         if (move.from.first != move.to.first)
-            changes << (twoPhase ? tr("mit %1 → %2").arg(move.from.first, move.to.first)
-                                 : QStringLiteral("%1 → %2").arg(move.from.first, move.to.first));
-        if (twoPhase && move.from.second != move.to.second)
+            changes << tr("mit %1 → %2").arg(move.from.first, move.to.first);
+        if (move.from.second != move.to.second)
             changes << tr("ohne %1 → %2").arg(move.from.second, move.to.second);
         return changes.join(QStringLiteral(", "));
     };
@@ -208,7 +184,7 @@ void BestXiPage::fillOutageTable(const QList<OutageCover> &covers, bool twoPhase
         return getLastName(nameOf(uid));
     };
     const auto coverText = [&](const OutageCover &cover, const ReplacementPlan &plan) {
-        if (!twoPhase || plan.coverIp == plan.coverOop)
+        if (plan.coverIp == plan.coverOop)
             return coverName(plan, plan.coverIp);
         return tr("mit %1: %2 · ohne %3: %4")
             .arg(cover.outSlots.first, coverName(plan, plan.coverIp), cover.outSlots.second,
@@ -252,7 +228,7 @@ void BestXiPage::fillOutageTable(const QList<OutageCover> &covers, bool twoPhase
         QString plays;
         if (plan.inUid.isEmpty())
             plays = QStringLiteral("–");
-        else if (twoPhase && plan.inSlots == cover.outSlots)
+        else if (plan.inSlots == cover.outSlots)
             plays = tr("%1 (volle Bridge)").arg(places(plan.inSlots));
         else
             plays = places(plan.inSlots);

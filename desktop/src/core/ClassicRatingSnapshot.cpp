@@ -116,7 +116,7 @@ std::shared_ptr<const ClassicRatingSnapshot> ClassicRatingSnapshot::fromJson(con
         || !json.value("roles").isObject()) return fail();
     auto snapshot = std::shared_ptr<ClassicRatingSnapshot>(new ClassicRatingSnapshot);
     snapshot->m_game = json.value("game").toString();
-    if (snapshot->m_game != "fm24" && snapshot->m_game != "fm27") return fail();
+    if (snapshot->m_game != "fm27") return fail();
     const auto roles = json.value("roles").toObject();
     for (auto it = roles.begin(); it != roles.end(); ++it) {
         if (it.key().trimmed().isEmpty() || !it->isObject()) return fail();

@@ -19,9 +19,6 @@ namespace fm {
 
 namespace {
 
-// Version of the goalkeeper weight scheme the [GKWeights] values belong to.
-constexpr int kGkWeightsScheme = 2;
-
 const QHash<QString, double> &gapAnalysisDefaults()
 {
     static const QHash<QString, double> defaults = {
@@ -237,20 +234,6 @@ void AppConfig::ensureDefaults()
     };
 
     ensure(QStringLiteral("Database/db_name"), QStringLiteral("default"));
-
-    // Goalkeeper scheme 2 (v1.4.13): FM24 goalkeeper weights tuned for the old
-    // formula — six attributes, Key/Preferable/Other without effect — do not
-    // fit the new tiers, so they are reset once to the new defaults. (Runs
-    // before seeding, so a missing section gets the new values right away.)
-    if (s.value(QStringLiteral("Migrations/gk_weights_scheme"), 1).toInt() < kGkWeightsScheme) {
-        const QString fm24 = defaultFmVersionId();
-        const QString gkSection = weightsSection(fm24, true) + QLatin1Char('/');
-        const auto &gkWeights = gkWeightDefaults(fm24);
-        for (auto it = gkWeights.constBegin(); it != gkWeights.constEnd(); ++it)
-            s.setValue(gkSection + iniKey(it.key()), QString::number(it.value()));
-        s.setValue(QStringLiteral("Migrations/gk_weights_scheme"), kGkWeightsScheme);
-        modified = true;
-    }
 
     const QHash<QString, QString> defaults = profileDefaults();
     for (auto it = defaults.constBegin(); it != defaults.constEnd(); ++it)
@@ -700,7 +683,7 @@ QString AppConfig::weightsSection(const QString &fmVersionId, bool goalkeeper)
 {
     const QString base = goalkeeper ? QStringLiteral("GKWeights") : QStringLiteral("Weights");
     const QString id = fmDataVersion(fmVersionId).id;
-    return id == defaultFmVersionId() ? base : base + QLatin1Char('_') + id;
+    return base + QLatin1Char('_') + id;
 }
 
 double AppConfig::weight(const QString &fmVersionId, const QString &category) const

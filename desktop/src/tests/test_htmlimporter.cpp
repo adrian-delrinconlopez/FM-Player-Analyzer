@@ -25,9 +25,9 @@ QString htmlExport(const QStringList &extraRows)
 {
     QString html = QStringLiteral(
         "<html><body><table border=\"1\">\n"
-        "<tr><th>UID</th><th>Name</th><th>Age</th><th>Club</th><th>Position</th>"
-        "<th>Personality</th><th>Transfer Value</th><th>Height</th><th>Acc</th>"
-        "<th>Pac</th><th>Fin</th></tr>\n");
+        "<tr><th>Unique ID</th><th>Player</th><th>Age</th><th>Club</th><th>Position</th>"
+        "<th>Personality</th><th>Transfer Value</th><th>Height</th><th>Acceleration</th>"
+        "<th>Pace</th><th>Finishing</th></tr>\n");
     for (const QString &row : extraRows)
         html += row + QLatin1Char('\n');
     html += QStringLiteral("</table></body></html>");
@@ -159,7 +159,7 @@ private slots:
         QString html;
         html.reserve(rows * cols * 8);
         html += QStringLiteral("<html><body><table border=\"1\">\n<tr>");
-        html += QStringLiteral("<th>UID</th>");
+        html += QStringLiteral("<th>Unique ID</th>");
         for (int c = 1; c < cols; ++c)
             html += QStringLiteral("<th>C%1</th>").arg(c);
         html += QStringLiteral("</tr>\n");
@@ -290,15 +290,15 @@ private slots:
         QVERIFY(db.open(dir.filePath(QStringLiteral("t.db"))));
 
         const QString html = QStringLiteral(
-            "<table><tr><th>UID</th><th>Name</th><th>Age</th><th>Club</th>"
+            "<table><tr><th>Unique ID</th><th>Player</th><th>Age</th><th>Club</th>"
             "<th>Position</th><th>Personality</th><th>Transfer Value</th>"
-            "<th>Height</th><th>Acc</th><th>Mystery</th><th>CON</th></tr>"
+            "<th>Height</th><th>Acceleration</th><th>Mystery</th><th>Ability</th></tr>"
             "<tr><td>1</td><td>X</td><td>20</td><td>C</td><td>ST (C)</td>"
             "<td>Balanced</td><td>€1M</td><td>180 cm</td><td>10</td><td>?</td>"
             "<td>ok</td></tr></table>");
         const ImportResult result = HtmlImporter::importHtml(html, db, {});
         QVERIFY2(result.success, qPrintable(result.error));
-        // "Mystery" is unknown; "CON" is on the ignore list.
+        // "Mystery" is unknown; "Ability" is on the ignore list.
         QCOMPARE(result.unknownColumns, QStringList{QStringLiteral("Mystery")});
     }
 

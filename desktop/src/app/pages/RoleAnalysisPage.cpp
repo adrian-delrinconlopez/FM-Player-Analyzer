@@ -1,4 +1,5 @@
 #include "RoleAnalysisPage.h"
+#include "core/Constants.h"
 #include "core/DwrsDisplay.h"
 #include "widgets/RolePhaseSwitch.h"
 
@@ -240,7 +241,7 @@ void RoleAnalysisPage::rebuildTables()
             {tr("Alter"), [](const Player &p) { return p.age; }, nullptr, nullptr,
              Qt::AlignRight | Qt::AlignVCenter},
             {tr("Position"), [](const Player &p) { return p.positionRaw; }, nullptr, nullptr, {}},
-            {tr("Persönlichkeit"), [](const Player &p) { return p.personality; }, nullptr,
+            {tr("Persönlichkeit"), [](const Player &p) { return personalityLabel(p.personality); }, nullptr,
              [definitions](const Player &p) {
                  return personalityCellStyle(definitions->personalityCategory(p.personality));
              },

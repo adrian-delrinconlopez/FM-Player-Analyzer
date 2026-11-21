@@ -4,6 +4,7 @@
 #include "DwrsEngine.h"
 #include "RatingSnapshot.h"
 
+#include <QCoreApplication>
 #include <QHash>
 #include <QJsonArray>
 #include <QSet>
@@ -397,6 +398,11 @@ const std::vector<TrainingFocus> &trainingFocuses()
          false},
     };
     return focuses;
+}
+
+QString focusLabel(const QString &name)
+{
+    return QCoreApplication::translate("FootballTrainingFocus", name.toUtf8().constData());
 }
 
 static FocusAdvice focusesFromAdvice(const Advice &attrAdvice, bool isGkRole)

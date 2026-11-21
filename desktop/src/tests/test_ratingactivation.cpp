@@ -57,13 +57,8 @@ private slots:
         QCOMPARE(context.activeRatingProfileId(), QStringLiteral("dwrs-fm27-harvestgreen22"));
         QVERIFY(context.ratingSnapshot() && !context.ratingSnapshot()->isClassic());
         QVERIFY(!context.ratingDecisionPending());
-        QVERIFY2(context.createDatabase(QStringLiteral("new24"), QStringLiteral("fm24"), &error), qPrintable(error));
-        QCOMPARE(context.activeRatingProfileId(), QStringLiteral("dwrs-classic-florin133"));
-        QVERIFY(context.ratingSnapshot()->isClassic());
-        // Harvestgreen is FM27-only.
-        for (const auto &profile : context.compatibleRatingProfiles())
-            QVERIFY(profile.id != QStringLiteral("dwrs-fm27-harvestgreen22"));
-        QVERIFY(!context.activateRatingProfile(QStringLiteral("dwrs-fm27-harvestgreen22")).isEmpty());
+        QVERIFY(!context.createDatabase(QStringLiteral("new24"), QStringLiteral("fm24"), &error));
+        QCOMPARE(context.activeRatingProfileId(), QStringLiteral("dwrs-fm27-harvestgreen22"));
     }
 
     void existingFm27SaveAsksOnceAndSwitches()
@@ -112,18 +107,20 @@ private slots:
 
     void customWeightsBecomePersonalProfile()
     {
-        existingSave(QStringLiteral("own24"), QStringLiteral("fm24"));
+        existingSave(QStringLiteral("own27"), QStringLiteral("fm27"));
         AppPaths paths;
         paths.setDataDir(m_dir.path());
         {
             QSettings ini(paths.configFile(), QSettings::IniFormat);
-            ini.setValue(QStringLiteral("Weights/extremely_important"), QStringLiteral("11"));
+            ini.setValue(QStringLiteral("Weights_fm27/extremely_important"), QStringLiteral("11"));
         }
         AppContext context;
         startApp(context);
         QString error;
-        QVERIFY(context.openDatabase(QStringLiteral("own24"), &error));
-        QVERIFY(context.activeRatingProfileId().startsWith(QStringLiteral("my-weights-fm24")));
+        QVERIFY(context.openDatabase(QStringLiteral("own27"), &error));
+        QVERIFY(context.activeRatingProfileId().startsWith(QStringLiteral("my-weights-fm27")));
+        QVERIFY(context.ratingDecisionPending());
+        QVERIFY(context.keepPreviousRatingProfile().isEmpty());
         QVERIFY(!context.ratingDecisionPending());
         // Same numbers as the 2.2.3 engine with those weights.
         DwrsEngine engine(context.definitions(), context.config());

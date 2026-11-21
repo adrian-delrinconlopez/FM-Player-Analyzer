@@ -16,13 +16,13 @@ using namespace fm;
 
 namespace {
 
-const QString kFm24 = QStringLiteral("fm24");
+const QString kFm27 = QStringLiteral("fm27");
 const QString kTop = QStringLiteral("Extremely Important");
 const QString kOwnTactic = QStringLiteral("Edmunds 4-4-2");
 
-QJsonObject bundledFm24()
+QJsonObject bundledFm27()
 {
-    QFile file(QStringLiteral(":/defaults/definitions.json"));
+    QFile file(QStringLiteral(":/defaults/definitions_fm27.json"));
     file.open(QIODevice::ReadOnly);
     return QJsonDocument::fromJson(file.readAll()).object();
 }
@@ -63,6 +63,36 @@ class TestProfileSwitch : public QObject
     }
 
 private slots:
+    void rejectsUnsupportedSavesWithoutOpeningThem()
+    {
+        AppContext context;
+        startApp(context);
+        QString error;
+        for (const QString &version : {QStringLiteral("fm24"), QString(), QStringLiteral("fm99")}) {
+            const QString name = QStringLiteral("unsupported-") + version;
+            const QString path = context.paths().databaseFile(name);
+            {
+                Database old(Database::uniqueConnectionName(name));
+                QVERIFY(old.open(path));
+                if (!version.isEmpty())
+                    QVERIFY(old.setSetting(QStringLiteral("fm_version"), version));
+            }
+            const auto fileContents = [&path] {
+                QFile file(path);
+                return file.open(QIODevice::ReadOnly) ? file.readAll() : QByteArray();
+            };
+            const QByteArray before = fileContents();
+            QVERIFY(!before.isEmpty());
+            QVERIFY(!context.availableDatabases().contains(name));
+            QVERIFY(!context.openDatabase(name, &error));
+            QVERIFY(!error.isEmpty());
+            QCOMPARE(fileContents(), before);
+            QVERIFY(!context.hasDatabase());
+        }
+        QVERIFY(!context.createDatabase(QStringLiteral("new24"), QStringLiteral("fm24"), &error));
+        QVERIFY(!QFile::exists(context.paths().databaseFile(QStringLiteral("new24"))));
+    }
+
     void bundledRatingProfilesLoad() {
         QString error; const auto profiles = loadBuiltinRatingProfiles(&error);
         QVERIFY2(error.isEmpty(), qPrintable(error)); QCOMPARE(profiles.size(), 2);
@@ -80,13 +110,13 @@ private slots:
         // --- A data folder as 2.0.4 left it ---
         { AppConfig seed(paths.configFile()); }
         QSettings ini(paths.configFile(), QSettings::IniFormat);
-        ini.setValue(QStringLiteral("Weights/extremely_important"), QStringLiteral("11"));
+        ini.setValue(QStringLiteral("Weights_fm27/extremely_important"), QStringLiteral("11"));
         ini.setValue(QStringLiteral("ThemeSettings/current_mode"), QStringLiteral("day"));
         ini.setValue(QStringLiteral("ThemeSettings/day_primary_color"), QStringLiteral("#dc052d"));
         ini.sync();
-        QFile defs(paths.definitionsFile(kFm24));
+        QFile defs(paths.definitionsFile(kFm27));
         QVERIFY(defs.open(QIODevice::WriteOnly));
-        defs.write(QJsonDocument(withTactic(bundledFm24(), kOwnTactic)).toJson());
+        defs.write(QJsonDocument(withTactic(bundledFm27(), kOwnTactic)).toJson());
         defs.close();
         // The logo lived as a file in assets/.
         QImage image(8, 8, QImage::Format_ARGB32);
@@ -98,6 +128,7 @@ private slots:
         m_logo = logoFile.readAll();
         Database old(QStringLiteral("old"));
         QVERIFY(old.open(paths.databaseFile(QStringLiteral("alt"))));
+        QVERIFY(old.setSetting(QStringLiteral("fm_version"), kFm27));
         QVERIFY(old.setSetting(QStringLiteral("club_logo_path"), logoPath));
         QVERIFY(old.setSetting(QStringLiteral("user_club"), QStringLiteral("Alt FC")));
     }
@@ -111,7 +142,7 @@ private slots:
         QVERIFY2(context.openDatabase(QStringLiteral("alt"), &error), qPrintable(error));
         QCOMPARE(profileSpy.count(), 1);
         QCOMPARE(context.config().profileSeed(), QStringLiteral("config.ini"));
-        QCOMPARE(context.config().weight(kFm24, kTop), 11.0);
+        QCOMPARE(context.config().weight(kFm27, kTop), 11.0);
         QCOMPARE(context.config().themeSettings().value(QStringLiteral("current_mode")),
                  QStringLiteral("day"));
         QVERIFY(hasTactic(context, kOwnTactic));
@@ -124,15 +155,15 @@ private slots:
         AppContext context;
         startApp(context);
         QString error;
-        QVERIFY2(context.createDatabase(QStringLiteral("neu"), kFm24, &error), qPrintable(error));
+        QVERIFY2(context.createDatabase(QStringLiteral("neu"), kFm27, &error), qPrintable(error));
         QCOMPARE(context.config().profileSeed(), QStringLiteral("defaults"));
-        QCOMPARE(context.config().weight(kFm24, kTop), 8.0);
+        QCOMPARE(context.config().weight(kFm27, kTop), 8.0);
         QVERIFY(!hasTactic(context, kOwnTactic));
         QVERIFY(context.profileImage(AppContext::ProfileImage::ClubLogo).isEmpty());
 
         // Configure B: weights, colors, a tactic of its own.
         AppConfig::Transaction tx(context.config());
-        context.config().setWeight(kFm24, kTop, 3.0);
+        context.config().setWeight(kFm27, kTop, 3.0);
         context.config().saveThemeSettings({{QStringLiteral("current_mode"), QStringLiteral("night")},
                                             {QStringLiteral("night_primary_color"),
                                              QStringLiteral("#0057b8")}});
@@ -158,7 +189,7 @@ private slots:
                 QVERIFY2(context.openDatabase(QStringLiteral("alt"), &error), qPrintable(error));
                 QCOMPARE(databaseSpy.count(), 2 * round + 1);
                 QCOMPARE(dataSpy.count(), 0);
-                QCOMPARE(context.config().weight(kFm24, kTop), 11.0);
+                QCOMPARE(context.config().weight(kFm27, kTop), 11.0);
                 QCOMPARE(context.config().themeSettings().value(QStringLiteral("current_mode")),
                          QStringLiteral("day"));
                 QVERIFY(hasTactic(context, kOwnTactic));
@@ -166,7 +197,7 @@ private slots:
                 QCOMPARE(context.profileImage(AppContext::ProfileImage::ClubLogo), m_logo);
 
                 QVERIFY2(context.openDatabase(QStringLiteral("neu"), &error), qPrintable(error));
-                QCOMPARE(context.config().weight(kFm24, kTop), 3.0);
+                QCOMPARE(context.config().weight(kFm27, kTop), 3.0);
                 const auto theme = context.config().themeSettings();
                 QCOMPARE(theme.value(QStringLiteral("current_mode")), QStringLiteral("night"));
                 QCOMPARE(theme.value(QStringLiteral("night_primary_color")),
@@ -179,7 +210,7 @@ private slots:
         // config.ini's shared 2.0.x values were never overwritten.
         QSettings ini(QDir(m_dir.path()).filePath(QStringLiteral("config.ini")),
                       QSettings::IniFormat);
-        QCOMPARE(ini.value(QStringLiteral("Weights/extremely_important")).toString(),
+        QCOMPARE(ini.value(QStringLiteral("Weights_fm27/extremely_important")).toString(),
                  QStringLiteral("11"));
         QCOMPARE(ini.value(QStringLiteral("ThemeSettings/current_mode")).toString(),
                  QStringLiteral("day"));
@@ -211,20 +242,20 @@ private slots:
         AppContext context;
         startApp(context);
         QString error;
-        QVERIFY2(context.createDatabase(QStringLiteral("kopie"), kFm24, QStringLiteral("neu"),
+        QVERIFY2(context.createDatabase(QStringLiteral("kopie"), kFm27, QStringLiteral("neu"),
                                         &error),
                  qPrintable(error));
         QCOMPARE(context.config().profileSeed(), QStringLiteral("copy:neu"));
-        QCOMPARE(context.config().weight(kFm24, kTop), 3.0);
+        QCOMPARE(context.config().weight(kFm27, kTop), 3.0);
         QVERIFY(hasTactic(context, QStringLiteral("Nur in Neu")));
         // Club identity is not copied: no club settings, no logo.
         QVERIFY(context.profileImage(AppContext::ProfileImage::ClubLogo).isEmpty());
         QCOMPARE(context.userClub(), QString());
 
         // A copy is a copy: changing it leaves the source alone.
-        QVERIFY(context.config().setWeight(kFm24, kTop, 5.0));
+        QVERIFY(context.config().setWeight(kFm27, kTop, 5.0));
         QVERIFY(context.openDatabase(QStringLiteral("neu"), &error));
-        QCOMPARE(context.config().weight(kFm24, kTop), 3.0);
+        QCOMPARE(context.config().weight(kFm27, kTop), 3.0);
     }
 
     void newSaveDoesNotCopyLiveSource()
@@ -236,7 +267,7 @@ private slots:
         QVERIFY(context.config().setLiveSavePath(QStringLiteral("C:/games/Career-A.fm")));
         QVERIFY(context.config().setLiveSaveEnabled(true));
         QVERIFY(context.config().setLiveSaveLastModified(1234));
-        QVERIFY2(context.createDatabase(QStringLiteral("karriere-b"), kFm24, QStringLiteral("neu"),
+        QVERIFY2(context.createDatabase(QStringLiteral("karriere-b"), kFm27, QStringLiteral("neu"),
                                         &error),
                  qPrintable(error));
         QVERIFY(!context.config().liveSaveEnabled());
@@ -256,14 +287,15 @@ private slots:
         {
             Database other(QStringLiteral("other"));
             QVERIFY(other.open(paths.databaseFile(QStringLiteral("alt2"))));
+            QVERIFY(other.setSetting(QStringLiteral("fm_version"), kFm27));
         }
         AppContext context;
         startApp(context);
         QString error;
-        QVERIFY2(context.createDatabase(QStringLiteral("von-alt2"), kFm24, QStringLiteral("alt2"),
+        QVERIFY2(context.createDatabase(QStringLiteral("von-alt2"), kFm27, QStringLiteral("alt2"),
                                         &error),
                  qPrintable(error));
-        QCOMPARE(context.config().weight(kFm24, kTop), 11.0);
+        QCOMPARE(context.config().weight(kFm27, kTop), 11.0);
         QVERIFY(hasTactic(context, kOwnTactic));
         Database other(QStringLiteral("other2"));
         QVERIFY(other.open(paths.databaseFile(QStringLiteral("alt2"))));

@@ -117,9 +117,7 @@ private:
     // Last computed starters (no pointers into the store).
     struct StarterView {
         bool valid = false;
-        bool twoPhase = false;
         QString tactic;
-        QHash<QString, XiCell> xi;    // FM24: slot -> starter
         QHash<QString, XiCell> ip;    // two-phase: slot -> starter
         QHash<QString, XiCell> oop;
         QHash<QString, QPair<QString, QString>> slotsOfUid;

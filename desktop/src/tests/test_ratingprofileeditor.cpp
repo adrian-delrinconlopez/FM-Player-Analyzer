@@ -83,7 +83,7 @@ private slots:
     void rendersProfileEditor_data() {
         QTest::addColumn<QString>("language"); QTest::addColumn<QString>("mode");
         QTest::addColumn<int>("width");
-        for (const auto &language : {QStringLiteral("en"), QStringLiteral("de")})
+        for (const auto &language : {QStringLiteral("en"), QStringLiteral("de"), QStringLiteral("es")})
             for (const auto &mode : {QStringLiteral("day"), QStringLiteral("night")})
                 for (int width : {800, 1000})
                     QTest::newRow(qPrintable(language + "-" + mode + QString::number(width))) << language << mode << width;
@@ -91,8 +91,9 @@ private slots:
     void rendersProfileEditor() {
         QFETCH(QString, language); QFETCH(QString, mode); QFETCH(int, width);
         QTranslator translator;
-        if (language == QStringLiteral("en")) {
-            QVERIFY(translator.load(QStringLiteral(EDITOR_QM)));
+        if (language != QStringLiteral("de")) {
+            const QString catalog = QStringLiteral(EDITOR_QM_DIR "/fmplayeranalyzer_%1.qm").arg(language);
+            QVERIFY2(translator.load(catalog), qPrintable(catalog));
             QApplication::installTranslator(&translator);
         }
         QTemporaryDir directory; const auto path = directory.filePath("profiles.json");
@@ -100,8 +101,15 @@ private slots:
         RatingProfileEditor editor(path, "fm27");
         auto *attributes = editor.findChild<QListWidget *>(QStringLiteral("ratingAttributes"));
         QVERIFY(attributes); QCOMPARE(attributes->count(), 47);
-        for (int i = 0; i < attributes->count(); ++i)
-            if (attributes->item(i)->data(Qt::UserRole).toString() == QStringLiteral("Pace")) attributes->setCurrentRow(i); AppConfig config(directory.filePath("settings.ini")); ThemeManager theme(config);
+        for (int i = 0; i < attributes->count(); ++i) {
+            if (attributes->item(i)->data(Qt::UserRole).toString() != QStringLiteral("Pace"))
+                continue;
+            attributes->setCurrentRow(i);
+            if (language == QStringLiteral("es"))
+                QCOMPARE(attributes->item(i)->text(), QStringLiteral("Velocidad"));
+            break;
+        }
+        AppConfig config(directory.filePath("settings.ini")); ThemeManager theme(config);
         theme.setMode(mode); theme.apply();
         QPalette palette; palette.setColor(QPalette::Base, theme.surface());
         palette.setColor(QPalette::Text, theme.text());
@@ -113,8 +121,13 @@ private slots:
         const auto screenshot = qEnvironmentVariable("FM_PROFILE_EDITOR_SCREENSHOT");
         if (!screenshot.isEmpty()) QVERIFY(editor.grab().save(screenshot + "-" + language + "-" + mode + QString::number(width) + ".png"));
         QVERIFY(editor.width() <= width);
+        const QHash<QString, QString> saveLabels = {
+            {QStringLiteral("en"), QStringLiteral("Save profile")},
+            {QStringLiteral("de"), QStringLiteral("Profil speichern")},
+            {QStringLiteral("es"), QStringLiteral("Guardar perfil")},
+        };
         QCOMPARE(editor.findChild<QPushButton *>(QStringLiteral("profileAction0"))->text(),
-                 language == QStringLiteral("en") ? QStringLiteral("Save profile") : QStringLiteral("Profil speichern"));
+                 saveLabels.value(language));
         QCOMPARE(editor.findChild<QLineEdit *>(QStringLiteral("ratingProfileName"))->text(), QStringLiteral("Personal"));
         QApplication::removeTranslator(&translator);
         qApp->setStyleSheet({});

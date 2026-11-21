@@ -1,5 +1,6 @@
 #include "PersonalityFilterWidget.h"
 
+#include "core/Constants.h"
 #include "core/Definitions.h"
 
 #include <QHBoxLayout>
@@ -59,7 +60,7 @@ void PersonalityFilterWidget::rebuildSpecificMenu()
 {
     m_specificMenu->clear();
     for (const QString &personality : m_available) {
-        QAction *action = m_specificMenu->addAction(personality);
+        QAction *action = m_specificMenu->addAction(personalityLabel(personality));
         action->setCheckable(true);
         action->setChecked(m_specificChecked.contains(personality));
         connect(action, &QAction::toggled, this, [this, personality](bool checked) {
