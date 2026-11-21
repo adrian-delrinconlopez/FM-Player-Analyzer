@@ -1,41 +1,22 @@
-# FM Player Analyzer
+# FM27 Analyzer · instrucciones para agentes
 
-The Analyzer is a C++ desktop application using Qt 6 for FM24 and FM27.
-The current application is preserved in `old_version/desktop/`, with its historical migration reference in `old_version/legacy/`. The repository root is reserved for the next version.
+## Producto y autoridad
 
-## Working practices
+FM27 Analyzer es una aplicación nueva para Football Manager 27 en Windows 11 x64. Trabaja en castellano en especificaciones, documentación de uso y decisiones. Conserva nombres propios, IDs y denominaciones técnicas originales cuando sean necesarios. La interfaz inicial usa castellano y se prepara para inglés en la segunda entrega.
 
-- Verify the requested branch, tag or test-build commit and existing local changes. When reviewing a test build, its exact commit is authoritative.
-- Start from the affected feature. Search with `rg`, inspect callers and relevant tests, and expand the investigation when evidence requires it. For version questions, read the relevant `CHANGELOG.md` section first.
-- Keep changes within scope and reuse existing types and functions. Centralize domain decisions needed by multiple execution paths.
-- In reviews, lead with reproducible findings, triggers, impact and source locations. Distinguish measured runtimes, confirmed defects and hypotheses.
-- Preserve unrelated and uncommitted work. Never reset destructively or move published tags without explicit authorization.
+- Empieza por el [índice TO-BE](docs/to-be/00-indice-y-vision.md) y las [decisiones del propietario](docs/PRODUCT-DECISIONS.md). Las propuestas, los experimentos pendientes y las cuestiones abiertas se resuelven en sus registros. Un agente puede recomendar; la confirmación de alcance corresponde al propietario.
+- La referencia funcional congelada es [AS-IS 2.3.1](docs/as-is/00-indice-y-alcance.md). Conserva intacta esa carpeta. Usa el código de `old_version/` únicamente si la documentación deja ambigua una regla. FM24 es referencia histórica y está fuera del producto.
+- Identifica rama, commit y cambios locales antes de tocar archivos. Conserva trabajo ajeno, etiquetas y artefactos publicados. Cada bloque documental o funcional debe tener un commit descriptivo y una verificación que otro agente pueda repetir.
 
-## Entry points
+## Trabajo por capacidad
 
-Paths below are relative to `old_version/desktop/src/`; tests live in `tests/`.
+1. Elige los IDs de [requisitos](docs/to-be/02-catalogo-funcional.md), el tratamiento del [antecedente](docs/to-be/18-trazabilidad-as-is-to-be.md), las pruebas y el hito relevante. Limita la tarea a un resultado observable.
+2. Distingue dato observado, derivado, estimado, desconocido y restringido. Etiqueta edición, origen, revisión de perfil, cobertura y fecha. Una fórmula heredada sólo cambia con motivo, expectativa previa y expectativa nueva.
+3. Respeta las [políticas de visibilidad](docs/to-be/13-visibilidad-y-juego-limpio.md) antes de toda consulta, cálculo, filtro, ranking, exportación o herramienta. CA/PA apagados por defecto. Una sesión, trabajo o caché no cruza carreras ni revisiones de permiso.
+4. Separa núcleo determinista, casos de uso, SQLite, adaptador BepInEx de sólo lectura, presentación WinUI y cliente opcional de ChatGPT. Usa una solución .slnx y los mismos proyectos en terminal, VS Code y Visual Studio Enterprise. Reutiliza contratos probados en lugar de duplicar decisiones en controles de pantalla.
+5. Valida primero el caso afectado, después sus consumidores y los casos extremos. Registra entradas, comandos, salidas, pruebas reales omitidas y límites. Las pruebas con juego o datos de usuario utilizan copias o fixtures. Los resultados sintéticos y las referencias de terceros mantienen esa etiqueta.
+6. Actualiza requisitos, pruebas, decisiones abiertas y [registro de cambios](docs/CHANGELOG-TO-BE.md) cuando cambie comportamiento o alcance. Para WinUI consulta habilidades oficiales, muestras y metadatos del SDK elegido. La compilación debe ser independiente del agente.
 
-| Area | Entry points | Relevant tests |
-|---|---|---|
-| Import and FM27 live source | `core/ImportPipeline.cpp`, `core/HtmlImporter.cpp`, `core/Fm27SaveImport.cpp`, `app/LiveSaveWatcher.cpp` | `test_htmlimporter`, `test_fm27save` |
-| Database, save profiles, history | `core/Database.cpp`, `core/ProfileStore.cpp`, `core/ImportHistory.cpp`, `app/AppContext.cpp` | `test_database`, `test_profile`, `test_profileswitch`, `test_importhistory` |
-| Lineups and tactics | `core/SquadBuilder.cpp`, `core/TacticLibrary.cpp`, `core/PitchGeometry.cpp` | `test_squadbuilder`, `test_twophase`, `test_tacticlibrary`, `test_pitchgeometry` |
-| Registration | `core/Registration.cpp`, `app/pages/RegistrationPage.cpp` | `test_registration`, `test_database` |
-| Settings and appearance | `app/pages/SettingsPage.cpp`, `app/theming/ThemeManager.cpp`, `core/AppConfig.cpp` | `test_profileswitch`, `test_themecolors`, `test_charts` |
+## Estado de trabajo
 
-## Project rules
-
-- Domain logic belongs in `core/`; interaction and presentation belong in `app/`. Load only necessary data in frequent UI paths and measure repeated computation.
-- Save-specific data belongs to the active save profile. Copy settings only for reusable options such as weights, colours, roles and tactics. Club name, club assignment, crest, flag and live source stay with the original save.
-- For database changes, examine migrations, older data and import state together. Persisted and displayed values must agree after player merges. Copies and backups must include committed SQLite WAL changes.
-- Check FM27 visibility, scouting selection and attribute masking changes against the requested scope. Handle unknowns and ranges consistently across import, rating and export.
-- Check FM24 and FM27 separately when roles or lineups change. FM24 displays A/B teams side by side; FM27 distinguishes possession phases.
-- English is the default language. Maintain complete English and German UI translations using the existing translation system and language preference. Personal names are not translated. Write new documentation, technical comments and release notes in English, and update affected German user documentation.
-- For UI design work, use `.claude/skills/unslop/SKILL.md` when available. Club gradients and crests belong to club presentation. This optional local skill is not required to build the repository.
-
-## Build and tests
-
-- Windows build from the repository root: `.\old_version/desktop\scripts\build.ps1 -Preset msvc-release`. Requirements and other commands are in `old_version/desktop/README.md`.
-- After building, run affected suites first, for example `ctest --test-dir old_version/desktop/build/msvc-release --output-on-failure -R '^(test_database|test_htmlimporter)$'`. Add meaningful regression tests for otherwise undetected defects.
-- Before a test build or release, run the complete build and suite with `.\old_version/desktop\scripts\build.ps1 -Preset msvc-release -Test`. Tests using saves must use temporary files or copies. Report optional real-save FM27 tests and skipped tests separately.
-- Never label incomplete feature work as a complete test build. Keep prerelease versions unique and do not overwrite published artifacts.
+Fase B entrega especificaciones. El propietario revisa esos documentos antes de iniciar el prototipo HTML ficticio. La aprobación del prototipo antecede a implementar la UI definitiva. Las PoC se ejecutan al comienzo de sus fases, con los criterios del [roadmap](docs/roadmap/03-riesgos-y-pruebas-de-concepto.md). Las instrucciones para preparar Spec Kit están en el [flujo de desarrollo](docs/roadmap/04-preparacion-spec-kit.md).

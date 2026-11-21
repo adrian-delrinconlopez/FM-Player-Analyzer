@@ -1,6 +1,6 @@
 # Persistencia y recuperación en SQLite
 
-Propuesta de una base por carrera/rama lógica identificada, con una tabla Rama dentro de la base de carrera. Un catálogo local pequeño guarda UUID, nombre visible, ruta y última apertura. Configuración reutilizable en biblioteca separada. El contexto de operación enlaza conexión, carrera, rama, revisión y política; cambiar de partida cancela lectores y trabajos anteriores antes de enlazar vistas.
+Propuesta de una base por carrera. Cada rama temporal es un registro de la tabla Rama de esa misma base. Un catálogo local pequeño guarda UUID, nombre visible, ruta y última apertura. Configuración reutilizable en biblioteca separada. El contexto de operación enlaza conexión, carrera, rama, revisión y política; cambiar de partida cancela lectores y trabajos anteriores antes de enlazar vistas.
 
 | Conjunto | Claves e índices previstos | Mutación |
 |---|---|---|

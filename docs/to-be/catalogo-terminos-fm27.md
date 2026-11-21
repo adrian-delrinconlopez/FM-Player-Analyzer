@@ -134,3 +134,51 @@ Todos los registros corresponden a FM27. «Pend.» significa PENDIENTE DE VALIDA
 ## Otras familias
 
 Registrar cada posición y lado con la clave del catálogo de compatibilidad FM27 y cada instrucción con su fase y ámbito (equipo/persona). Mantener filas diferenciadas para el concepto de posesión y la abreviatura visible. Hasta reunir una vista verificada de instrucciones no se habilita su selector oficial. Los métodos de entrenamiento conservan su identificador de familia para distinguir homónimos.
+
+### Posiciones, fases y métodos de referencia
+
+| ID | EN de referencia | Categoría inicial | ES oficial | EN oficial | Abrev. | Orden oficial | Evidencia |
+|---|---|---|---|---|---|---|---|
+| pos.gk | GK | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.d_l | D (L) | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.d_c | D (C) | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.d_r | D (R) | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.wb_l | WB (L) | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.wb_r | WB (R) | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.dm | DM | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.m_l | M (L) | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.m_c | M (C) | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.m_r | M (R) | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.am_l | AM (L) | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.am_c | AM (C) | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.am_r | AM (R) | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| pos.st_c | ST (C) | Posición | Pend. | Pend. | Pend. | Pend. | A16 |
+| training.injury_rehab.quickness | Quickness | Método · Injury Rehab | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.injury_rehab.agility_and_balance | Agility and Balance | Método · Injury Rehab | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.injury_rehab.strength | Strength | Método · Injury Rehab | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.injury_rehab.endurance | Endurance | Método · Injury Rehab | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.injury_rehab.general_rehab | General Rehab | Método · Injury Rehab | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.set_pieces.free_kick_taking | Free Kick Taking | Método · Set Pieces | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.set_pieces.corner_taking | Corner Taking | Método · Set Pieces | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.set_pieces.penalty_taking | Penalty Taking | Método · Set Pieces | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.set_pieces.long_throws | Long Throws | Método · Set Pieces | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.quickness | Quickness | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.agility_and_balance | Agility and Balance | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.strength | Strength | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.endurance | Endurance | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.defensive_positioning | Defensive Positioning | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.attacking_movement | Attacking Movement | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.final_third | Final Third | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.shooting | Shooting | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.passing | Passing | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.crossing | Crossing | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.ball_control | Ball Control | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.aerial | Aerial | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.gk_reactions | GK Reactions | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.gk_tactical | GK Tactical | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.gk_technique | GK Technique | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.gk_sweeping | GK Sweeping | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.gk_distribution_long | GK Distribution (Long) | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| training.attributes.gk_distribution_short | GK Distribution (Short) | Método · Attributes | Pend. | Pend. | Pend. | Pend. | A17 |
+| phase.ip | In possession | Fase | Pend. | Pend. | Pend. | Pend. | A16 |
+| phase.oop | Out of possession | Fase | Pend. | Pend. | Pend. | Pend. | A16 |
