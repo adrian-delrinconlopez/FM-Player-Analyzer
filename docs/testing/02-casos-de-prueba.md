@@ -28,6 +28,9 @@ Ejecutar con datos controlados del [prototipo](../ux-ui/05-especificacion-protot
 | NV-22 | REQ-TECH-001 | Desde un clon limpio, misma revisión, pruebas y versión de artefactos en ambos IDE y terminal. |
 | NV-23 | REQ-OPS-001 | Una copia mientras hay cambios confirmados en WAL se restaura con esos cambios y con integridad referencial. |
 | NV-24 | REQ-TERM-001 | Se puede remontar cada etiqueta marcada oficial a edición, idioma, vista y evidencia. |
+| NV-25 | REQ-SQUAD-002, REQ-SQUAD-004, REQ-SCOUT-001, REQ-MARKET-001 | Desde AML con Leo y puente W-IP/WM-OOP abrir candidatos, comparar a Sol y simular. Mismo contexto, titular y delta de +11 (58 → 69 a 50 % IP). En un caso separado exigir 65 en cada fase: candidato 80/60 queda fuera aunque la media sea 70. Con vacante o titular sin nota se omite el delta. Si cambia la revisión, revisar la referencia antes de simular otra vez. |
+| NV-26 | REQ-STAT-002, REQ-VIS-001 | En la cohorte ficticia del Cabo, k=12 da 1,1 goles/90 y percentil 47,9 con N=24. El filtro percentil ≥47 devuelve k=12 a 24. Un jugador de 180 min y 1 gol muestra ese total y 0,5 provisional en detalle, fuera de la clasificación. Cambiar atributos autorizados, DWRS o PA conserva el resultado estadístico, orden y exportación. Cambiar de vista suspende y revalida criterios y descarta solicitudes anteriores. |
+| NV-27 | REQ-MARKET-003 | Sol tiene valor FM 4 M€ y sueldo vigente de 8.000 €/semana, precio observado ausente y presupuesto 6 M€. Antes de adoptar 4 M€ como compra hipotética, el saldo de compra queda indeterminado. Tras adoptarlo, quedan 2 M€ antes de gastos. El sueldo vigente no rellena el ofertado. Repetir con moneda distinta deja indeterminado el importe sin conversión. |
 
 ## Fronteras y regresiones
 
@@ -36,7 +39,7 @@ Ejecutar con datos controlados del [prototipo](../ux-ui/05-especificacion-protot
 | FR-01 | Curvas lineales de amplitud 7 y 3. Conocido a 20 sólo el primero y después sólo el segundo. | Cobertura 70 %, normalizada 100. Con 30 %, sin nota. |
 | FR-02 | Curva 0 hasta 10 y 1 desde 11. Observar 9–11 y después extremos invertidos. | Contribución media 1/3 y después intervalo inválido. |
 | FR-03 | Elegible sólo en IP y cuota IP=100 %. Fijarlo sin posición OOP. | Falta arista OOP, causa visible y ningún titular duplicado. |
-| FR-04 | Variar sólo secretos en dos fuentes gemelas y revocar un permiso a mitad de consulta. | Mismo orden, recuentos, resultados y explicaciones autorizados. |
+| FR-04 | Variar sólo secretos en dos fuentes gemelas y revocar un permiso a mitad de consulta. | Mismo orden, recuentos, resultados y explicaciones autorizados. Incluir búsqueda de refuerzo y Moneyball con sus exportaciones. |
 | FR-05 | Lote de dos páginas; cortar tras la primera, reabrir y reintentar dos veces. | Sin cambios parciales; un lote y un conjunto de hechos al confirmar. |
 | FR-06 | Cero goles en 90 min, goles sin minutos y pases 3/4 más 1/6. | 0 por 90, sin tasa y 40 % respectivamente. |
 | FR-07 | Duplicar perfil, cambiar etiqueta, editar curva y recalcular un corte antiguo. | Dos resultados identificables. El original conserva su valor; renombrar conserva la huella. |

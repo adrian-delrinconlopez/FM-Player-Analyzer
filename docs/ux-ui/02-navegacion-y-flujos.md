@@ -14,10 +14,10 @@ Una ventana con navegación lateral persistente en ancho de escritorio. Barra su
 
 Ficha y comparador son destinos contextuales con retorno a la tabla o al puesto. La explicación de DWRS se abre desde cualquier nota. En ancho reducido el botón del menú conserva todas las rutas.
 
-1. **Refuerzo.** Carencia → detalle del puesto y suplente → buscar sustituto con rol/presupuesto heredados → comparar → simular alta → guardar escenario o descartar.
+1. **Refuerzo.** Carencia → puesto, causa, titular y alternativa → abrir ojeo con rol o puente IP/OOP y límites elegidos → comparar candidato con titular → simular con importes explícitos → guardar escenario o descartar. Volver restaura el puesto, filtros y foco si siguen vigentes.
 2. **Día de partido.** Táctica → elegir formación y fase → fijar jugador → calcular XI → revisar vacantes y elegibilidad → abrir inscripción → volver a calcular tras confirmar.
 3. **Desarrollo.** Cantera/cedidos → ficha → dos observaciones → rol objetivo → atributo de mayor ganancia → método y evidencia.
-4. **Contexto de temporada.** Rendimiento → seleccionar cohorte → gráfico y tabla → ficha → comparar entre cierres, conservando filtros y muestra original al volver.
+4. **Contexto de temporada.** Rendimiento → seleccionar cohorte → tabla y dispersión → ficha → comparar entre cierres. En ojeo, elegir «Rendimiento observado» para filtrar candidatos con una métrica de la cohorte y mantenerla al comparar. Volver conserva filtros y muestra si siguen vigentes.
 5. **Juego limpio.** Ajustes → aviso CA/PA → aceptar o cancelar → volver a una comparación → desactivar → retirar campos y suspender filtros en todas las vistas.
 6. **Partida distinta.** Selector → revisar carrera y fecha → cambiar → reiniciar selección, consulta y conversación; los últimos resultados de otra carrera dejan de ser visibles. Sin enlace de FM se puede abrir el último corte guardado.
 7. **Ayuda contextual.** Acción «Explicar» abre panel de evidencias locales. Si el asistente está activado, el usuario puede enviar la consulta tras ver el alcance. La ayuda local sigue disponible sin conexión.

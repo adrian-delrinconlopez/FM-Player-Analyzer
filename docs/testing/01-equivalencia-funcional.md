@@ -24,7 +24,7 @@ G/M califica el escenario **de origen** del [anexo 24](../as-is/24-casos-de-acep
 | EQ-010 | REQ-TAC-002 | G | CONSERVADA | G04 cambia de Gnabry a Olise al pasar de 50 a 70 % IP. |
 | EQ-011 | REQ-TAC-003 | M | CONSERVADA | Baja del titular 80, única alternativa legal 71, pérdida 9. |
 | EQ-012 | REQ-SQUAD-001 | M | CONSERVADA | Único sobrante válido en tres roles cubre el tercero por reserva aun con límite inicial 2. |
-| EQ-013 | REQ-SQUAD-002 | G | CONSERVADA | G05 señala MC desplazado, mejor destino DMC, gravedad 30. |
+| EQ-013 | REQ-SQUAD-002 | G | AMPLIADA | G05 señala MC desplazado, mejor destino DMC, gravedad 30. El acceso contextual se verifica en NV-25. |
 | EQ-014 | REQ-SQUAD-003 | G | AMPLIADA | G05 da 11 titulares, media 71,5, mediana 71 y siete puestos frágiles. |
 | EQ-015 | REQ-NAT-001 | G | POSPUESTA | Al retomar, diez plazas, objetivo tres porteros y sólo dos disponibles producen dos y ocho de campo. |
 | EQ-016 | REQ-SCOUT-001 | M | MODIFICADA | Ritmo 12–14 con mínimo 13 es posible; con pase desconocido no satisface ambos mínimos seguros. |

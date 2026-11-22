@@ -11,6 +11,8 @@ La referencia funcional es FM Player Analyzer 2.3.1, revisión de producto `126c
 3. Usar el catálogo de pantallas y el guion del prototipo para revisar la experiencia. La implementación de ese prototipo empieza después de la revisión de esta documentación.
 4. Antes de planificar una capacidad, comprobar su prueba, sus fuentes y su dependencia en el roadmap. [Balance de la fase](../INFORME-FASE-B.md)
 
+La revisión del 22 de noviembre concreta el recorrido de refuerzo, la lectura económica y el uso de Moneyball en las vistas existentes. Sus cambios de alcance están pendientes de ratificación. [Contraste con ScoutSheet.fm](19-contraste-scoutsheet.md)
+
 ## Mapa de lectura
 
 ### Producto y comportamiento
@@ -34,6 +36,7 @@ La referencia funcional es FM Player Analyzer 2.3.1, revisión de producto `126c
 - [localizacion y nomenclaturas](../to-be/16-localizacion-y-nomenclaturas.md)
 - [configuracion](../to-be/17-configuracion.md)
 - [trazabilidad as is to be](../to-be/18-trazabilidad-as-is-to-be.md)
+- [contraste con ScoutSheet.fm](19-contraste-scoutsheet.md)
 
 ### Arquitectura y decisiones técnicas
 

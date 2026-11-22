@@ -8,7 +8,7 @@ Usar controles de plataforma para interacción y dibujo propio cuando el deporte
 | Tarjeta de jugador | Identidad, club, puesto, fecha, estado y acceso a ficha | Plantilla XAML con botón y nombre accesible. Foto bajo demanda y sustituto con iniciales. |
 | Atributo y DWRS | Rango o exacto, cobertura, escala, revisión y causas al pulsar | Texto, barra opcional y Flyout. Mostrar «Sin nota» accesible y referencia local al cálculo. |
 | Comparador | Columnas de personas fijadas y filas por atributo, señalan comparabilidad y huecos | Grid/ListView con encabezados de jugadores y acción de retirar; al estrechar, selector del par activo. |
-| Radar y pizza | Radios con percentiles de una cohorte, detalle por eje y diferencias de muestra | Candidato LiveCharts o dibujo Win2D/XAML; tabla alternativa accesible. Un dato ausente rompe el polígono. |
+| Radar de detalle | Radios con percentiles de una cohorte, detalle por eje y diferencias de muestra | Candidato LiveCharts o dibujo Win2D/XAML; tabla alternativa accesible. Un dato ausente rompe el polígono. |
 | Barras y líneas | Unidad y escala común, origen cero para magnitudes de barra, discontinuidades cuando falta una fecha | Biblioteca medida o dibujo por series; selector de intervalo, tabla y lista de valores focalizables. |
 | Dispersión, distribución y percentiles | Seleccionar punto/intervalo y filtrar personas. Incluir N, minutos, dirección y fuente | Win2D para nubes densas o biblioteca si cumple PC-07; tabla equivalente y agrupación anotada. |
 | Mapa de calor | Rejilla de frecuencia, normalización, orientación y leyenda; sin coordenadas, mensaje de indisponibilidad | Win2D o rectángulos XAML con lista descriptiva; pospuesto para datos reales. |

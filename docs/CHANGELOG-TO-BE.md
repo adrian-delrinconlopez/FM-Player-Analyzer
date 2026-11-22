@@ -1,5 +1,11 @@
 # Registro de cambios de la especificación
 
+## 22 de noviembre de 2026 · Revisión de ojeo y mercado a partir de ScoutSheet
+
+- REQ-SQUAD-002/004 y REQ-SCOUT-001 enlazan la carencia, la búsqueda y el par de comparación con la referencia del puesto. FPA-FUNC-013 pasa a AMPLIADA por el acceso contextual. G05 y G06 mantienen sus resultados de cálculo.
+- REQ-MARKET-003 distingue valor de FM, precio observado e importes del escenario. Los escenarios mantienen caja, horizonte y efecto A/B con sus unidades y cobertura.
+- REQ-STAT-002 sustituye pizza por comparación de rendimiento observado en las vistas de ojeo y comparación. Tabla y dispersión son la lectura inicial y radar queda como detalle. Se actualizan el guion del prototipo, las pruebas NV-25 a NV-27 y los hitos. [Contraste y alcance de la revisión](to-be/19-contraste-scoutsheet.md) · [Ratificación pendiente Q-16](OPEN-QUESTIONS.md)
+
 ## 22 de noviembre de 2026 · Captura de datos y exportación de tablas
 
 - DP-04 abre la evaluación de una captura híbrida de solo lectura que combine BepInEx y lectura de memoria. REQ-FM-001 y PC-01 a PC-03 recogen los criterios de adopción por campo. Las observaciones históricas mantienen su procedencia y su política de visibilidad.

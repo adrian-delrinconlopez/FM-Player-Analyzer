@@ -7,6 +7,8 @@ Aplicar el [guion visual](../ux-ui/06-criterios-de-aceptacion-visual.md) al prot
 | Menú y tabla | Navegar con teclado, filtrar, ordenar, abrir tercera fila y volver | Foco, consulta, UID y cantidad persisten; las páginas no duplican filas. |
 | Campo | Asignar a Ada por selector y por arrastre | Mismo UID/puesto; conflicto de bloqueo anunciado y ambas fases accesibles. |
 | Gráfico | Comparar con la tabla, activar contraste alto y retirar un dato | Unidad y N anunciados. El hueco se conserva, sin caer a cero. |
+| Refuerzo | Abrir candidatos por teclado desde AML, comparar y simular | Se anuncian puesto, fase, referente e importes. Al volver se recupera el foco. |
+| Moneyball | Cambiar a rendimiento observado con un filtro DWRS activo | Se anuncia qué filtro se suspende y qué cohorte se usa. El árbol accesible y la exportación respetan la vista activa. |
 | Configuración | Cancelar/aceptar PA y revocar durante lectura del comparador | Foco vuelve, ninguna columna antes de aceptar, revocación limpia también el árbol accesible. |
 | Diseño adaptable | Repetir escalas y tamaños previstos con texto largo e imagen ausente | Sin acciones recortadas, advertencias interpretables sin color. |
 | Localización | Recorrer recursos es-ES y prueba con inglés, manteniendo misma fixture | Cero claves sin resolver; orden cotejado en ficha, nombres personales iguales, mismos resultados. |
