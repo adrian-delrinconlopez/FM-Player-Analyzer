@@ -2,7 +2,8 @@
 
 | Frontera | Estímulo | Salida exigida |
 |---|---|---|
-| FM27 → plugin | Misma fecha/build, jugador propio, parcialmente ojeado y desconocido; comparar pantalla y lote | Todo dato publicado coincide con lo visible. Personas no visibles quedan fuera de agregados. |
+| FM27 → captura autorizada | Misma fecha y compilación, jugador propio, parcialmente ojeado y desconocido. Comparar pantalla y lote por cada vía candidata. | Todo dato publicado respeta lo visible y el permiso vigente. Personas no visibles quedan fuera de agregados. |
+| Captura híbrida | BepInEx aporta un intervalo 12–14 y memoria un exacto dentro del rango. Repetir con corte o identidad incompatibles. | Se conserva el intervalo y la procedencia de la observación autorizada. Se descarta la combinación cuando no se puede verificar el mismo contexto. |
 | Identidad | Dos carreras del mismo club con UID compartido; cambiar entre páginas | Pausa o confirmación de nuevo vínculo. Cero observaciones cruzadas. |
 | Compatibilidad | Cambiar versión mayor, build, idioma no validado o semántica de columna | Bloqueo o degradación explícita por capacidad; conservar última revisión válida. |
 | Transporte | Reordenar páginas, truncar marco, duplicar lote, desconectar antes y después de commit | Estado íntegro anterior o nuevo y confirmación idempotente. |

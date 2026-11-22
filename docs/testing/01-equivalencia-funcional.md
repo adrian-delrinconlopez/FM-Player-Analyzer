@@ -49,7 +49,7 @@ G/M califica el escenario **de origen** del [anexo 24](../as-is/24-casos-de-acep
 | EQ-035 | REQ-ROLE-003 | M | CONSERVADA | Rol manual X y predeterminado Y dan X+Y al completar y sólo Y al restablecer. |
 | EQ-036 | REQ-SQUAD-004 | M | MODIFICADA | Aceleración 12–16 y ritmo desconocido dan media 14 y cobertura 1/2. |
 | EQ-037 | REQ-NAT-002 | M | POSPUESTA | Al retomar, candidatos de 72 y 74 contra referencia 70 sugieren 74 sin convocarlo. |
-| EQ-038 | REQ-EXPORT-001 | M | MODIFICADA | Nombre con coma se escapa; al ocultar Sueldo desaparece su columna y CA/PA desactivados jamás entran. |
+| EQ-038 | REQ-EXPORT-001 | M | MODIFICADA | Exportar una lista filtrada de atributos con más filas que una página, un valor exacto, un rango 12–14, un valor desconocido y un nombre con coma. En ambos formatos coinciden selección, orden y valores. En Excel el exacto es numérico. En CSV se escapa el nombre. Sueldo oculto queda fuera por defecto y CA/PA desactivados quedan fuera de ambos archivos. Si falla Excel, CSV conserva la selección. |
 | EQ-039 | REQ-DEV-004 | M | CONSERVADA | Pico 60, bloqueo 30 y peso 8 se ajustan a 50/50/5. |
 | EQ-040 | REQ-SQUAD-005 | M | MODIFICADA | Ausente de una vista parcial conserva club; al cancelar la conciliación completa también. |
 | EQ-041 | REQ-FM-003 | M | POSPUESTA | Si se habilita, verificar los cinco archivos contra el inventario y huellas del contrato 041. |

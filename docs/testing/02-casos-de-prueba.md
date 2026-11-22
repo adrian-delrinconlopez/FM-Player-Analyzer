@@ -6,9 +6,9 @@ Ejecutar con datos controlados del [prototipo](../ux-ui/05-especificacion-protot
 |---|---|---|
 | NV-01 | REQ-SCOPE-001 | Un lote FM24 se rechaza antes de persistir. Sin red se completa plantilla → rol → XI. |
 | NV-02 | REQ-SAVE-002 | Dos carreras del mismo club con UID 42 conservan dos personas y dos históricos independientes. |
-| NV-03 | REQ-VIS-001 | Cambiar sólo valores secretos deja idénticos filas, totales, orden, herramientas y CSV autorizados. |
+| NV-03 | REQ-VIS-001 | Cambiar sólo valores secretos deja idénticos filas, totales, orden, herramientas y contenido de Excel y CSV autorizados. |
 | NV-04 | REQ-VIS-002 | Activar sin capacidad mantiene «No disponible»; desactivar cancela consultas y descarta proyecciones anteriores. |
-| NV-05 | REQ-FM-004 | Tras cambiar compilación sin validación se conserva el último estado con fecha y se explica el bloqueo. |
+| NV-05 | REQ-FM-004 | En una captura híbrida simulada, una vía queda incompatible tras un cambio de compilación. Se conserva el último dato autorizado de sus campos con fecha y motivo. La otra vía sólo actualiza sus campos independientes y validados. |
 | NV-06 | REQ-PREF-001 | Cambiar la prioridad de juventud altera el orden por preferencia, manteniendo DWRS e XI de referencia. |
 | NV-07 | REQ-RATING-004 | Dos atributos exactos 10 y 16 con pesos 1 y 2 dan 14/20; si falta uno no hay nota. |
 | NV-08 | REQ-SCOUT-003 | Recuperar una búsqueda de otra sesión conserva sus parámetros y revalida cada campo autorizado. |

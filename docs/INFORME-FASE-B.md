@@ -5,7 +5,7 @@
 | Tema | Resultado y consecuencia |
 |---|---|
 | Producto resultante | Aplicación de escritorio en castellano, exclusiva para FM27, con carreras aisladas, roles por fase, planificación y seguimiento durante la temporada. |
-| Diferencias frente al original | Integración de sólo lectura mediante BepInEx y observaciones autorizadas. Perfil, fórmula, fecha e incertidumbre acompañan cada resultado. Se proponen cambios explícitos para Classic parcial, medias de atributos, importes desconocidos, revocación y exportación. |
+| Diferencias frente al original | Integración de solo lectura con observaciones autorizadas. Se evaluará combinar BepInEx y lectura de memoria por campo. Perfil, fórmula, fecha e incertidumbre acompañan cada resultado. Se proponen cambios explícitos para Classic parcial, medias de atributos, importes desconocidos, revocación y exportación. |
 | Tecnología confirmada | Windows 11 x64, C#, .NET 10 LTS, WinUI 3/XAML y Windows App SDK compatible, SQLite, Git, .slnx, VS Code y Visual Studio Enterprise. Spec Kit con Codex/Copilot. ChatGPT opcional como único proveedor inicial. |
 | Mejoras definidas | Escenarios deportivos y económicos, filosofía configurable, perfiles alternativos, cortes incrementales, cohortes y comparación interanual, cuerpo técnico, recursos gráficos locales y herramientas de explicación. |
 | Descartes y aplazamientos | Se descartan FM24, lectura de .fm, escritura en juego y UI web definitiva. Se posponen convocatoria nacional, instalación de los .fmf, migración histórica, sinergias y modelos experimentales. |

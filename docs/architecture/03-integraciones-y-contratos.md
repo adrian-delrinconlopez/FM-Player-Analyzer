@@ -1,6 +1,6 @@
 # Contratos entre adaptadores y aplicación
 
-Propuesta de canal local Named Pipes restringido al usuario de Windows y a la sesión enlazada. El escritorio recibe mensajes del plugin con autenticación local de instancia; el usuario ve y acepta el vínculo a la carrera. Protocolo de sólo observación, con lista cerrada de tipos y capacidades. Usar marco con longitud limitada y JSON UTF-8 versionado (System.Text.Json donde el runtime lo permita). Un esquema común y casos de ida/vuelta verifican ambos runtimes. [Canalizaciones de .NET](https://learn.microsoft.com/en-us/dotnet/standard/io/pipe-operations)
+Propuesta de canal local Named Pipes restringido al usuario de Windows y a la sesión enlazada. El escritorio recibe mensajes del plugin con autenticación local de instancia; el usuario ve y acepta el vínculo a la carrera. Protocolo de sólo observación, con lista cerrada de tipos y capacidades. Usar marco con longitud limitada y JSON UTF-8 versionado (System.Text.Json donde el runtime lo permita). Un esquema común y casos de ida/vuelta verifican ambos runtimes. Si se adopta la captura híbrida, las observaciones de memoria se ajustan al mismo contrato de aplicación, con procedencia por campo. El canal de esa vía queda por decidir. [Criterios de integración](../to-be/12-integracion-fm27.md) [Canalizaciones de .NET](https://learn.microsoft.com/en-us/dotnet/standard/io/pipe-operations)
 
 | Mensaje | Campos esenciales | Resultado o error |
 |---|---|---|
