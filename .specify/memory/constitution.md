@@ -1,37 +1,95 @@
-<!-- Impacto de sincronización: plantilla inicial → borrador 0.1.0. Principios I–V. Las plantillas oficiales conservan su contenido. Revisión y ratificación a cargo del propietario. -->
+<!-- Impacto de sincronización · 0.1.0 → 0.2.0
+I–V conservan su objeto. II explicita la revocación y III la evidencia parcial.
+IV distingue contratos y vías candidatas. V concreta reproducción y accesibilidad.
+Se añade Ingeniería en .NET y Windows. Las preguntas iniciales se integran en III y Gobierno.
+Pendiente de ratificación por el propietario. -->
 
 # Constitución de FM27 Analyzer
 
-**Borrador 0.1.0 para discusión · 22 de noviembre de 2026 · ratificación pendiente.**
+**Versión 0.2.0 · Candidata a ratificación · Revisada el 2026-11-22**
 
-Esta constitución guía la redacción de especificaciones, planes y tareas. Las [decisiones del propietario](../../docs/PRODUCT-DECISIONS.md) fijan el alcance. Las elecciones pendientes están en el [registro de cuestiones](../../docs/OPEN-QUESTIONS.md). La aprobación de este texto corresponde al propietario.
+Las [decisiones del propietario](../../docs/PRODUCT-DECISIONS.md) fijan el alcance.
+Esta constitución establece cómo diseñar, probar y aceptar cada capacidad.
 
-## I. Un contrato observable por capacidad
+## Principios
 
-Cada especificación identifica los requisitos, el recorrido del usuario, la entrada, el resultado observable y al menos una condición límite relevante. Si la capacidad procede del AS-IS 2.3.1, enlaza su tratamiento y su caso de equivalencia FM27. Si cambia una fórmula, documenta expectativa anterior, expectativa nueva, motivo y repercusión histórica. La edición admitida es FM27. Las especificaciones y la primera interfaz se redactan en castellano.
+### I. Un resultado observable por capacidad
 
-## II. La autorización forma parte del dato
+Cada especificación vincula el requisito y su hito con un recorrido, una entrada, un
+resultado esperado y un caso límite. Para comportamientos heredados, identifica el tratamiento
+del AS-IS 2.3.1 y su prueba de equivalencia en FM27. El AS-IS permanece congelado. La
+documentación y la primera interfaz usan castellano. La interfaz conserva la nomenclatura
+oficial verificada y prepara los recursos para el inglés de la segunda entrega.
 
-La observación identifica carrera, perspectiva, fecha de juego, fuente, unidad y estado de conocimiento. Una carga parcial conserva la distinción entre un campo ausente y uno observado como desconocido. Sólo se publican lotes atribuibles a la carrera activa. El backend aplica el permiso antes de filtrar, ordenar, calcular, exportar o seleccionar contexto para IA. CA y PA empiezan deshabilitados. Ante un cambio de carrera o de permiso, una respuesta en curso sólo se publica si su contexto sigue vigente. La aceptación de un flujo con datos incluye un caso de aislamiento o revocación cuando corresponda.
+### II. La visibilidad se comprueba antes de usar el dato
 
-## III. Cálculo deportivo explicable y reproducible
+La captura y los casos de uso aplican la política vigente de carrera, rama y perspectiva
+antes de consultar, calcular, ordenar o contar. Históricos, cachés, exportaciones y
+herramientas de ChatGPT obedecen la misma política. CA y PA requieren activación expresa
+con advertencia y respetan los límites de ojeo y enmascaramiento de los demás campos.
+Al cambiar de carrera o de permisos se invalidan los resultados afectados, incluidos los
+que siguen en curso. Si dos fuentes sólo difieren en datos ocultos, todas las salidas
+autorizadas deben coincidir. [Política y prueba de visibilidad](../../docs/to-be/13-visibilidad-y-juego-limpio.md)
 
-El núcleo determinista recibe entradas autorizadas y devuelve resultados con escala, cobertura y revisión. El mismo cálculo alimenta la ficha, el XI y la explicación. Cada plan identifica qué oráculo, fixture o invariante permitirá detectar una regresión. Los históricos conservan la revisión de datos y de perfil que produjo cada resultado. Un cambio de pesos puede generar una serie recalculada identificable. El asistente ChatGPT es opcional y explica resultados locales mediante herramientas acotadas.
+### III. Un cálculo local que pueda reproducirse
 
-## IV. Arquitectura proporcional a la decisión
+Cada observación conserva edición, origen, carrera, rama, perspectiva, fechas de captura y
+de juego, unidad y revisión de visibilidad. Una carga parcial distingue ausencia, valor
+desconocido y restricción. El núcleo distingue lo observado de lo derivado o estimado.
+Con las mismas entradas y revisión de perfil produce el mismo resultado, escala y cobertura
+para ficha, XI y exportación. Un recálculo conserva la serie original e identifica la nueva.
 
-El destino es Windows 11 x64 con C#, .NET 10 LTS, WinUI 3/XAML y SQLite local. La solución .slnx y los proyectos serán comunes a CLI, VS Code y Visual Studio Enterprise. El adaptador de lectura BepInEx tiene su propio contrato de compatibilidad. Un plan que añada una dependencia o una copia importante de datos explica su necesidad, alternativa, coste y prueba. En consultas frecuentes o sobre más de 100.000 jugadores, declara volumen, métrica y procedimiento de medida. Una capacidad observada en otro proyecto sigue pendiente hasta contrastarla en nuestro entorno.
+Todo cambio de fórmula documenta motivo, resultado anterior y esperado para la misma entrada,
+y efecto en los históricos. Si sólo existe un ejemplo manual, se reproduce ese caso, se añade
+una prueba de límite o de una propiedad de la fórmula y se declara el alcance de la equivalencia.
+[Oráculos y tolerancias FM27](../../docs/testing/01-equivalencia-funcional.md)
 
-## V. Entregas que el propietario pueda revisar
+### IV. Contratos independientes de la interfaz y del juego
 
-Mantener separadas especificación, planificación y ejecución. El prototipo HTML local con datos ficticios sigue a la revisión de Fase B y su aprobación precede a la UI definitiva. Para cada bloque, registrar evidencia obtenida, supuestos y pruebas omitidas. Una comprobación documental, una fixture sintética y una ejecución con FM27 tienen alcances distintos. Las PoC se sitúan antes de comprometer la capacidad que depende de ellas.
+El dominio se prueba sin WinUI, SQLite, FM27 ni red. Los casos de uso coordinan permisos y
+persistencia. La presentación y el cliente opcional de ChatGPT consumen sus resultados.
+La captura es de solo lectura y excluye los archivos `.fm`. Habilitar BepInEx, lectura de
+memoria o su combinación para un campo exige validar identidad, exactitud y visibilidad
+en la compilación del juego. Cada dependencia o copia relevante de datos se justifica por
+su coste y una alternativa. En consultas frecuentes o de más de 100.000 jugadores se
+documentan volumen, métrica y procedimiento de medida.
+
+### V. Entregas verificables por el propietario
+
+El propietario revisa la Fase B antes del prototipo HTML ficticio y aprueba el prototipo
+antes de implementar la UI definitiva. Cada PoC precede a la decisión que depende de ella.
+Cada bloque se entrega en un commit con entradas, comandos, resultados y pruebas omitidas.
+La evidencia identifica su procedencia documental, sintética o real. Las pruebas con partidas
+utilizan copias.
+
+## Ingeniería en .NET y Windows
+
+- **Compilación.** El escritorio usa C#, .NET 10 LTS y WinUI 3/XAML con Windows App SDK
+  compatible en Windows 11 x64. Desde un clon limpio, terminal, VS Code y Visual Studio
+  Enterprise comparten solución `.slnx`, proyectos y versiones de herramientas y paquetes.
+  El código C# nuevo activa la nulabilidad y los analizadores del SDK. Toda supresión
+  identifica el diagnóstico y justifica su alcance. [Análisis de código .NET](https://learn.microsoft.com/es-es/dotnet/fundamentals/code-analysis/overview)
+- **Respuesta y consistencia.** Las consultas SQLite y los cálculos largos se ejecutan fuera
+  del hilo de UI. Un lote se confirma de forma atómica y su reenvío conserva el resultado.
+  La prueba de integración cubre interrupción y reintento.
+- **Accesibilidad.** Cada recorrido WinUI se puede completar con teclado y conserva un foco
+  identificable. La prueba comprueba los nombres, roles y valores de los controles mediante
+  UI Automation. [Accesibilidad en Windows](https://learn.microsoft.com/es-es/windows/apps/design/accessibility/basic-accessibility-information)
 
 ## Aplicación en Spec Kit
 
-En el apartado «Constitution Check» del plan, indicar principio aplicable, diseño que lo satisface y comprobación prevista. Por ejemplo, al diseñar una consulta por rol, el principio II se comprueba variando únicamente PA con el permiso apagado: la clasificación y el número de resultados deben coincidir. En la revisión del plan y antes de cerrar la capacidad, anotar toda divergencia, impacto y decisión pendiente. Las fases de aclaración y análisis pueden realizarse manualmente con el propietario.
+En `Constitution Check`, el plan vincula cada principio aplicable con una decisión de diseño
+y una comprobación. Al cierre se contrasta la evidencia con lo previsto y se registran las
+desviaciones. Se valida primero el caso afectado y después sus consumidores y límites.
 
 ## Gobierno y revisión
 
-El propietario ratifica y modifica los principios. Para una enmienda, proponer texto, razón, alternativa y requisitos, planes o pruebas afectados. Al ratificar, registrar fecha y versión. Como propuesta de versionado, 1.0.0 será la primera versión ratificada; después, un cambio incompatible incrementa la mayor, un principio nuevo la menor y una aclaración la de parche. Los cambios de alcance aprobados se reflejan también en las decisiones de producto y en su registro de cambios.
+Quien redacta el plan decide los detalles reversibles dentro de los contratos aprobados.
+El propietario resuelve los cambios de alcance, las excepciones y la ratificación expresa.
+Las [cuestiones abiertas](../../docs/OPEN-QUESTIONS.md) conservan su responsable y criterio
+de cierre. Toda enmienda identifica motivo, alternativa y requisitos, planes o pruebas
+afectados. Al aprobarla se registran fecha y versión y, si cambia el alcance, se actualizan
+las decisiones y el [registro de cambios](../../docs/CHANGELOG-TO-BE.md).
 
-**Preguntas para la primera revisión.** ¿Qué metadatos mínimos debe conservar toda observación histórica, incluso cuando la fuente deja de estar disponible? ¿Qué nivel de evidencia debe exigirse para una fórmula modificada si el original sólo aporta un caso manual? ¿Qué decisiones de diseño puede cerrar el autor de un plan y cuáles quieres reservarte?
+La primera ratificación establece la versión 1.0.0. Después, un cambio incompatible incrementa
+la versión mayor, un principio nuevo o ampliado la menor y una aclaración la de parche.
