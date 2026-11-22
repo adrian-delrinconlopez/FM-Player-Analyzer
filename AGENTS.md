@@ -19,4 +19,6 @@ FM27 Analyzer es una aplicación nueva para Football Manager 27 en Windows 11 x6
 
 ## Estado de trabajo
 
+Spec Kit está inicializado para trabajo manual por capacidades. Consulta la [guía por equipo](docs/roadmap/05-arranque-spec-kit.md) y la [constitución en revisión](.specify/memory/constitution.md). Al debatir una propuesta, distingue la revisión del texto, su edición y la ratificación por el propietario.
+
 Fase B entrega especificaciones. El propietario revisa esos documentos antes de iniciar el prototipo HTML ficticio. La aprobación del prototipo antecede a implementar la UI definitiva. Las PoC se ejecutan al comienzo de sus fases, con los criterios del [roadmap](docs/roadmap/03-riesgos-y-pruebas-de-concepto.md). Las instrucciones para preparar Spec Kit están en el [flujo de desarrollo](docs/roadmap/04-preparacion-spec-kit.md).

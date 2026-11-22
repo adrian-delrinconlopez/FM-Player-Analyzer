@@ -1,0 +1,3 @@
+# Conservar las huellas de los archivos gestionados por Spec Kit al clonar en Windows.
+.specify/** text eol=lf
+.agents/skills/speckit-*/** text eol=lf

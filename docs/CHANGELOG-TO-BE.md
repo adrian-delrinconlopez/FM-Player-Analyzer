@@ -1,5 +1,9 @@
 # Registro de cambios de la especificación
 
+## 22 de noviembre de 2026 · Preparación de Spec Kit
+
+Inicializada la infraestructura de Spec Kit 1.4.3 con scripts PowerShell y habilidades de proyecto. Se propone una [constitución 0.1.0](../.specify/memory/constitution.md) y se añade la [guía de puesta en marcha por ordenador](roadmap/05-arranque-spec-kit.md). El propietario conserva la decisión sobre la ratificación y el inicio de la primera capacidad.
+
 ## 21 de noviembre de 2026 · Fase B, revisión inicial
 
 - Fijada la referencia 2.3.1 y documentado el tratamiento individual de las 42 capacidades. Se incorporan nuevos requisitos de conocimiento, mercado, personal, estadísticas, históricos, integración, interfaz y calidad.
