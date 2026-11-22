@@ -241,6 +241,23 @@
       "sha256": "f6931f8e41e1a06c260b8c4229f483939b47a9f1678deb526d017686aad3fa25"
     },
     {
+      "id": "D06",
+      "producto": "FM27 Analyzer · estudio propio",
+      "dominio": "statistics",
+      "fuente": "../ux-ui/05-especificacion-prototipo-html.md",
+      "fecha_consulta": "2026-11-22",
+      "pantalla": "Producción frente a salario en Cabo",
+      "archivo": "references/statistics/cohorte-cabo.png",
+      "procedencia": "Lámina estática original con datos ficticios, producida para este estudio",
+      "patron": "Selección por jugador enlazada a tasa, total, percentil y salario.",
+      "observacion": "N=24 antes y después de filtrar resultados por percentil. La recta surge de esta fixture sintética, sin valor predictivo.",
+      "condiciones": "Trabajo propio de documentación, sin retratos ni escudos de terceros.",
+      "restricciones": "CANDIDATA. No representa un producto ejecutado ni acredita aprobación visual.",
+      "ancho": 1280,
+      "alto": 730,
+      "sha256": "03120956e5e4bd82709ee21f04ec75e363f394969ee7af8dab233b3423184366"
+    },
+    {
       "id": "E01",
       "producto": "ScoutSheet",
       "dominio": "scouting",
