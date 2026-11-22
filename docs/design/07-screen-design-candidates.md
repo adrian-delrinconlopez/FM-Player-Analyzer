@@ -1,5 +1,7 @@
 # Superficies candidatas y decisiones que deben sobrevivir a un rediseño
 
+Las alternativas de presentación se pueden revisar lado a lado en el [tablero de comparativas visuales](15-comparativas-visuales.md).
+
 Los IDs V proceden del [catálogo de Fase B](../ux-ui/03-catalogo-de-pantallas.md). Aquí se desarrolla la composición que se probaría y la alternativa que permitiría cambiarla. Los identificadores C remiten a las [piezas candidatas](08-component-candidates.md). En todas las vistas se conserva el ámbito de carrera y fecha. Al cambiar permisos se reconsulta o retira la información, incluso si ya se había mostrado. Carga, vacío, error, foco y contraste siguen el [sistema común](06-design-system.md).
 
 ### V01 · Resumen — RECOMENDADA para el mock

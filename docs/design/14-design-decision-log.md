@@ -12,6 +12,7 @@ La aprobación funcional se registra en [DP](../PRODUCT-DECISIONS.md) y las cues
 | UX-06 · CANDIDATA | Un radar secundario permite inspeccionar forma de una cohorte. La pizza de R03 queda como referencia de investigación, retirada del contenido propuesto en la revisión del 22-11. | Barras para magnitudes y tabla para cifras. Evaluar coste y huecos. Q-16, V-A6 y PC-07. |
 | UX-07 · RECOMENDADA | Añadir un contorno informativo a la paleta del sistema. El borde decorativo existente dio 1,60:1 sobre Panel. La alternativa propuesta arroja 4,22:1. | Recursos del sistema en tema de contraste. U11 y V-A3 sobre controles verdaderos. |
 | UX-08 · CANDIDATA | La revisión del borrador constitucional hace explícita la evolución de pantallas, visualizaciones y controles en el principio V. | Conservar sólo la delegación general de Gobierno dejaba ambiguo el catálogo anterior. Revisión y ratificación reservadas al propietario. |
+| UX-09 · RECOMENDADA | Evaluar la composición por tarea con referencias contrastantes. La ampliación del atlas cubre selección, lectura y recuperación en las superficies V01–V19. | El propietario puede elegir una variante, combinarlas o solicitar otra para el mock. [Tablero y límites](15-comparativas-visuales.md) |
 
 ### Revisión constitucional
 

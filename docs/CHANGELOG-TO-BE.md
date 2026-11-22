@@ -1,5 +1,10 @@
 # Registro de cambios de la especificación
 
+## 22 de noviembre de 2026 · Alternativas visuales por tarea
+
+Se amplían el atlas y su manifiesto con un [tablero comparativo](design/15-comparativas-visuales.md) para revisar la presentación de las 19 superficies y los 18 candidatos a componentes. Incluye procedencia, límites y prueba propuesta para el mock de REQ-UX-001.
+
+
 ## 22 de noviembre de 2026 · Investigación UX/UI y diseño evolutivo
 
 El [cuaderno de diseño](design/00-index.md) enlaza diez productos, un atlas local y los 66 requisitos con propuestas de interfaz y pruebas. REQ-UX-001 conserva sus recorridos, la revisión de Fase B y la aprobación previa a WinUI. V01–V19 identifican una distribución candidata en el guion. El principio V de la [constitución candidata 0.3.0](../.specify/memory/constitution.md) explicita cómo justificar alternativas. Q-04/08/13/16 y la ratificación constitucional siguen abiertas. [Cambios y motivación](design/14-design-decision-log.md)

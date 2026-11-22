@@ -1,5 +1,7 @@
 # Piezas que podrían repetirse
 
+Las alternativas de presentación se pueden revisar lado a lado en el [tablero de comparativas visuales](15-comparativas-visuales.md).
+
 Los IDs C describen problemas de presentación y comportamiento compartido. En una primera capacidad, una plantilla o un control existente pueden bastar. Extraer una pieza si varios usos necesitan la misma interacción, semántica accesible o tratamiento de estados y se puede mantener con menos duplicación. El [catálogo anterior](../ux-ui/04-catalogo-de-componentes.md) aporta casos de uso. Los nombres de esta tabla no fijan clases ni API.
 
 | ID y madurez | Problema, datos y variantes | Interacción, estados y accesibilidad | Uso repetido, alternativa y referencia |
