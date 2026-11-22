@@ -36,7 +36,7 @@ Carrera Faro, Club Faro, mánager Vega, 14-09-2027, EUR y sueldo semanal, presup
 
 | Flujo | Acciones y efecto observable |
 |---|---|
-| Navegación | Abrir las siete familias y las 19 superficies del catálogo. Volver de una ficha restaura filtros, selección y foco. La ruta activa y la carrera siguen visibles. |
+| Navegación | Recorrer las tareas acordadas en la revisión de Fase B. Las siete familias y V01–V19 son su distribución de referencia. Si se agrupan destinos, registrar dónde se completa cada tarea. Volver de una ficha restaura filtros, selección y foco. La ruta activa y la carrera siguen visibles. [Sesiones y variantes propuestas](../design/10-html-prototype-brief.md) |
 | Plantilla y ojeo | Por defecto mostrar 15 personas vinculadas a Faro, incluidas cantera y cesión etiquetadas. Desde la carencia AML de Leo abrir «Buscar refuerzo» y conservar AML/ML, W-IP/WM-OOP, táctica y titular. En la búsqueda general sólo por posición usar AML, edad ≤21, valor FM ≤6 M€ y Regate mínimo 14. «Sólo seguros» da Sol e «Incluir posibles» añade Mar. Guardar filtro y lista, salir y recuperar ambos. |
 | Comparar | Desde el resultado contextual, comparar a Sol abre Leo y Sol con notas IP/OOP, diferencia de puesto de +11 y sueldo semanal. Abrir atributos muestra Regate 13 frente a 14–16 (diferencia de +1 a +3). Añadir Mar muestra su Pase como «Sin observar». Volver restaura el puesto y el foco. |
 | Táctica | En 4-3-3 asignar 1–11 según la tabla, 6 en DM y 7/8 en MC. En 4-2-3-1 situar 6/7 en doble pivote y 8 en AMC. Para la demostración OOP conserva UID y representa los extremos más retrasados y el AMC cercano a MC. Cambio de fase conserva selección. |

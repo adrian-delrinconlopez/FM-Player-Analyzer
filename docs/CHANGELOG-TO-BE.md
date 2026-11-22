@@ -1,5 +1,9 @@
 # Registro de cambios de la especificación
 
+## 22 de noviembre de 2026 · Investigación UX/UI y diseño evolutivo
+
+El [cuaderno de diseño](design/00-index.md) enlaza diez productos, un atlas local y los 66 requisitos con propuestas de interfaz y pruebas. REQ-UX-001 conserva sus recorridos, la revisión de Fase B y la aprobación previa a WinUI. V01–V19 identifican una distribución candidata en el guion. El principio V de la [constitución candidata 0.3.0](../.specify/memory/constitution.md) explicita cómo justificar alternativas. Q-04/08/13/16 y la ratificación constitucional siguen abiertas. [Cambios y motivación](design/14-design-decision-log.md)
+
 ## 22 de noviembre de 2026 · Revisión de ojeo y mercado a partir de ScoutSheet
 
 - REQ-SQUAD-002/004 y REQ-SCOUT-001 enlazan la carencia, la búsqueda y el par de comparación con la referencia del puesto. FPA-FUNC-013 pasa a AMPLIADA por el acceso contextual. G05 y G06 mantienen sus resultados de cálculo.

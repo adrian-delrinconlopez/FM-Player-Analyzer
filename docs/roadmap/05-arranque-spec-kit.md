@@ -1,6 +1,6 @@
 # Empezar con GitHub Spec Kit en un equipo Windows
 
-La raíz del repositorio ya contiene un proyecto Spec Kit 1.4.3. Para retomar el trabajo en otro ordenador basta con obtener la rama que contiene esta preparación, instalar la CLI fijada y abrir la raíz. La primera sesión está dedicada a discutir la [constitución 0.1.0](../../.specify/memory/constitution.md).
+La raíz del repositorio ya contiene un proyecto Spec Kit 1.4.3. Para retomar el trabajo en otro ordenador basta con obtener la rama que contiene esta preparación, instalar la CLI fijada y abrir la raíz. La primera sesión está dedicada a discutir la [constitución candidata vigente](../../.specify/memory/constitution.md).
 
 ## Qué viaja con Git
 
@@ -56,7 +56,7 @@ Resultados esperados: `specify 1.4.3`, estado `OK`, integración `codex`, cero a
 
 Abre la constitución y el registro de cuestiones. Puedes pegar directamente este encargo:
 
-> Revisa conmigo el borrador 0.1.0 de la constitución de FM27 Analyzer. Contrástalo con PRODUCT-DECISIONS y OPEN-QUESTIONS. Empieza por las ambigüedades de identidad de carrera, visibilidad histórica y equivalencia de fórmulas. Para cada una explícame las alternativas y el efecto en el modelo de datos o en sus pruebas. Por ahora, sólo discusión; espera a que te pida editar o ratificar.
+> Revisa conmigo el borrador vigente de la constitución de FM27 Analyzer. Contrástalo con PRODUCT-DECISIONS y OPEN-QUESTIONS. Empieza por las ambigüedades de identidad de carrera, visibilidad histórica y equivalencia de fórmulas. Para cada una explícame las alternativas y el efecto en el modelo de datos o en sus pruebas. Por ahora, sólo discusión; espera a que te pida editar o ratificar.
 
 Después de debatir, invoca la habilidad de constitución indicando los acuerdos concretos que quieras incorporar y si autorizas ratificar. El siguiente paso disponible es Specify sobre un solo recorrido aprobado, por ejemplo el del prototipo con datos ficticios. Clarify, Plan, Tasks, Analyze y Converge tienen entradas y salidas en el [mapa de trabajo](04-preparacion-spec-kit.md). Puedes parar y revisar cada documento. El repositorio incluye el flujo estándar upstream para uso futuro; lanzar el ciclo completo también puede alcanzar Implement.
 

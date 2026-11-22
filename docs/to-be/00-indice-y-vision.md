@@ -53,6 +53,7 @@ La revisión del 22 de noviembre concreta el recorrido de refuerzo, la lectura e
 
 ### Diseño y prototipo
 
+- [Cuaderno de investigación UX/UI, referencias visuales y trazabilidad por requisito](../design/00-index.md)
 - [vision visual](../ux-ui/00-vision-visual.md)
 - [sistema de diseno](../ux-ui/01-sistema-de-diseno.md)
 - [navegacion y flujos](../ux-ui/02-navegacion-y-flujos.md)

@@ -1,5 +1,7 @@
 # Catálogo de pantallas y estados
 
+V01–V19 identifican la distribución estudiada en Fase B. Una capacidad puede pasar a otra vista, integrarse en un panel o resolverse mediante varias superficies. El plan conserva la decisión del usuario y su prueba. [Variantes por superficie](../design/07-screen-design-candidates.md) · [Matriz por requisito](../design/13-traceability-to-to-be.md)
+
 Las 19 superficies se agrupan según el [mapa de navegación](02-navegacion-y-flujos.md). Cada fila define objetivo, datos, componentes, filtros, acciones, destino y estados específicos. En todas: carga inicial con etiqueta de tarea, posibilidad de cancelar trabajo largo, estado vacío con próxima acción y error local con reintento; conservar el último dato válido con fecha cuando siga autorizado. Escape cierra inspector y devuelve el foco. Las consultas contextuales se construyen sólo si el usuario habilita ChatGPT.
 
 | Pantalla | Objetivo, información y componentes | Filtros, acciones y navegación | Dependencias, carga, vacío, error o falta de datos | Consulta contextual opcional |

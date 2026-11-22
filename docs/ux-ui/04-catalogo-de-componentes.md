@@ -1,6 +1,6 @@
 # Catálogo de componentes
 
-Usar controles de plataforma para interacción y dibujo propio cuando el deporte lo requiera. Cada componente acepta una proyección con ID, unidad, fuente y estado; expone eventos por ID. El cálculo deportivo pertenece al dominio. PC-05/06/07 comparan alternativas antes de aprobar dependencias.
+Este catálogo propone controles de plataforma para interacción y dibujo propio cuando el deporte lo requiera. Las vistas comparten el significado de ID, unidad, fuente y estado de la proyección. La necesidad de extraer un control y su contrato concreto se evalúan al planificar sus usos. El cálculo deportivo pertenece al dominio. PC-05/06/07 comparan alternativas antes de aprobar dependencias. [Candidatos, usos y alternativas](../design/08-component-candidates.md)
 
 | Componente | Interacción y semántica | Implementación WinUI propuesta |
 |---|---|---|
