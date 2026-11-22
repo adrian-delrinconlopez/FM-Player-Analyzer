@@ -1,6 +1,6 @@
 # Constitución de FM27 Analyzer
 
-**Versión 0.2.0 · Candidata a ratificación · Revisada el 2026-11-22**
+**Versión 0.3.0 · Candidata a ratificación · Revisada el 2026-11-22**
 
 FM27 es la única edición admitida. [Decisiones del propietario](../../docs/PRODUCT-DECISIONS.md)
 
@@ -53,6 +53,12 @@ El propietario revisa la Fase B antes del prototipo HTML ficticio y aprueba el p
 de implementar la UI definitiva. Cada PoC precede a la decisión que depende de ella. Cada
 bloque se entrega en un commit con entradas, comandos, resultados y pruebas omitidas. La
 evidencia identifica su procedencia documental, sintética o real. Las pruebas con partidas usan copias.
+
+Los catálogos de pantallas, visualizaciones y componentes orientan el diseño. El plan puede
+agrupar, dividir o sustituir vistas, adaptar controles existentes o crear uno propio. Registra
+la necesidad funcional, técnica o de usabilidad, la alternativa y cómo comprobar el resultado.
+Cada cambio preserva los requisitos, las decisiones confirmadas, la accesibilidad y los
+criterios de aceptación. La coherencia entre recorridos guía la adaptación del mock a WinUI.
 
 ## Ingeniería en .NET y Windows
 
