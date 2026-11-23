@@ -287,3 +287,58 @@ mismo directorio privado. La operación ajustó las columnas de la vista de
 ojeo, repuso el conmutador original y conservó los metadatos de la copia.
 A-01 queda pendiente de dos capturas independientes de la referencia y
 su cotejo mediante `verify`. [Guía del ensayo](quickstart.md#a-01)
+
+## A-01 · Captura real repetida y cotejo
+
+El 23 de noviembre de 2026 se reinició FM27 para cargar la sonda 0.2.0
+y se volvió a abrir la copia SK-01 del Valencia en Steam 26620374.
+La referencia original mantuvo su huella. Su copia de trabajo actualizó
+la vinculación y se fijó antes del primer lote. Las seis peticiones
+usaron la misma instancia, contador de cargas y fecha 1/8/2026. En
+pantalla se mantuvieron las 21:45 y la perspectiva del Valencia CF.
+Cada vuelta leyó tres páginas bajo permisos base y devolvió 20, 9 y 1
+identidades. La navegación y el filtro de ojeados se controlaron desde FM27.
+
+| Cotejo contra T018 | Coincidencias en ambos lotes | Discrepancias |
+| --- | ---: | ---: |
+| UID y vínculo de club | 30 de 30 | 0 |
+| Pase exacto o en intervalo | 30 de 30 | 0 |
+| Mejor posición | 2 de 2 | 0 |
+| Reflejos | 1 de 1 | 0 |
+| Marcaje desconocido | 1 de 1 | 0 |
+
+Las 30 identidades por lote se limitaron a la muestra autorizada.
+Se cotejó el vínculo de club en las 12 filas con referencia de club.
+El resto conserva el vínculo sin verificar. El alcance de ojeo procede
+de la vista «Sólo jugadores ojeados» confirmada por el operador. Los
+dos rangos conservaron ambos límites y el Marcaje desconocido se
+publicó con valor nulo. El jugador de control y los campos CA/PA
+quedaron fuera de los lotes y de sus recuentos. El control sintético de
+igualdad ante cambios en los datos ocultos pasó por separado. El primer
+intento de sellado bloqueó etiquetas de formato en los nombres de club.
+Se normalizaron las etiquetas de presentación y se volvieron a cotejar
+los mismos registros crudos de las seis peticiones.
+
+| Lote | Tiempo de recorrido en Unity | Tiempo de extremo a extremo | Pico residente acumulado de FM27 |
+| --- | ---: | ---: | ---: |
+| 1 | 63,1 ms | 2 min 46,4 s | 3.216.834.560 bytes |
+| 2 | 35,6 ms | 35,9 s | 3.366.006.784 bytes |
+
+El tiempo de extremo a extremo incluye navegación manual y, en el
+primer lote, preparación de columnas de ojeo. El pico de FM27 incluye
+el juego y el cargador. Sigue pendiente aislar el coste de la sonda por
+fotograma con una línea base equivalente. La captura preservó la fecha
+del juego y los metadatos del guardado de 43.957.632 bytes. Se repuso
+el filtro inicial y quedaron las nuevas columnas para repetir el ensayo.
+
+`verify` acreditó A-01 con E-01 a E-03 reales y E-03 sintético. Una
+segunda ejecución produjo la misma huella de informe. El control
+bloqueado devolvió un informe con los nueve escenarios y A-01 sin
+acreditar. Un manifiesto truncado terminó con código 2 y sin informe.
+Se guardaron `run.json`, `informe.json`, los dos lotes y los controles en
+`%LOCALAPPDATA%/FM27Analyzer/SK-01/ensayo-a01`. El SHA-256 del informe
+es `386AF1E457A6359397EB2037006D9E10E8E7711E11D10CD841DE0CCFCDE5E08E`.
+E-04 a E-09 figuran como omitidos en ese informe hasta integrar la
+evidencia de sus tareas. T021 queda abierta para completar los grupos
+de atributos, posiciones con familiaridad y acreditación de alcance
+más allá de la selección fijada. [Reproducción de A-01](quickstart.md#a-01)

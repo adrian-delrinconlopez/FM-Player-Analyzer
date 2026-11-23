@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 
 namespace FM27Analyzer.BepInExProbe;
 
-[BepInPlugin("fm27analyzer.sk01.visible-field", "FM27 Analyzer SK-01", "0.1.0")]
+[BepInPlugin("fm27analyzer.sk01.visible-field", "FM27 Analyzer SK-01", "0.2.0")]
 [BepInProcess("fm.exe")]
 public sealed class VisibleFieldProbe : BasePlugin
 {
@@ -51,8 +51,8 @@ public sealed class ProbeComponent(IntPtr pointer) : MonoBehaviour(pointer)
 
     private static void Capture(ProbeRequest request)
     {
-        if (request is not { Confirmed: true, Uid.Length: > 0 and <= 12 }
-            || !request.Uid.All(c => c is >= '0' and <= '9')
+        if (!request.Confirmed
+            || (request.Targets is null ? !ValidUid(request.Uid) : !ValidTargets(request))
             || request.ProcessStartUtcTicks != ProcessStarted.Ticks
             || request.ExpiresUtc <= DateTimeOffset.UtcNow
             || request.ExpiresUtc > DateTimeOffset.UtcNow.AddMinutes(2)
@@ -74,16 +74,26 @@ public sealed class ProbeComponent(IntPtr pointer) : MonoBehaviour(pointer)
 
             using var session = new CaptureSession(context, Current, _ => { });
             var clock = Stopwatch.StartNew();
-            var capture = session.Read(() => ReadPase(request.Uid, clock));
+            if (request.Targets is not null)
+            {
+                var rows = session.Read(() => ReadTable(request.Targets, request.View, clock));
+                game.Refresh();
+                Store(request.Id, new PageResult(request.Id, context.Build, request.Date, cut.Loads, request.View,
+                    rows, clock.Elapsed.TotalMilliseconds, game.PeakWorkingSet64, ProcessStarted.Ticks), session.Commit);
+                return;
+            }
+            var target = new PageTarget(request.Uid!, new() { ["passing"] = "visible" });
+            var capture = session.Read(() => ReadTable([target], null, clock).SingleOrDefault()?.Fields.GetValueOrDefault("passing"))
+                ?? throw new InvalidDataException("Pase y UID no visibles en una fila de la tabla.");
             var result = new ProbeResult(request.Id, context.Build, cut.Date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
                 cut.Loads, request.Uid,
                 "passing", capture, clock.Elapsed.TotalMilliseconds, ProcessStarted.Ticks, null);
-            Store(result, session.Commit);
+            Store(request.Id, result, session.Commit);
         }
         catch (Exception ex) when (ex is InvalidOperationException or InvalidDataException or OperationCanceledException
             or System.ComponentModel.Win32Exception)
         {
-            Store(new ProbeResult(request.Id, context.Build, null, null, null, "passing", null, null,
+            Store(request.Id, new ProbeResult(request.Id, context.Build, null, null, null, "passing", null, null,
                 ProcessStarted.Ticks, ex is InvalidDataException ? ex.Message : "Contexto o tabla no verificable."),
                 publish => publish());
         }
@@ -93,9 +103,25 @@ public sealed class ProbeComponent(IntPtr pointer) : MonoBehaviour(pointer)
         }
     }
 
-    private static string ReadPase(string uid, Stopwatch clock)
+    private static readonly Dictionary<string, string> Columns = new()
     {
-        var matches = new List<string>(1);
+        ["passing"] = "Pase", ["marking"] = "Marcaje", ["reflexes"] = "Reflejos",
+        ["best-position"] = "Mejor pos.", ["position"] = "Posición", ["club"] = "Club"
+    };
+
+    private static bool ValidUid(string? uid) => uid is { Length: > 0 and <= 12 } && uid.All(c => c is >= '0' and <= '9');
+
+    private static bool ValidTargets(ProbeRequest request) =>
+        request.View is "plantilla" or "ojeados" && request.Targets is { Length: > 0 and <= 30 } targets
+        && targets.All(t => t is not null && ValidUid(t.Uid) && t.Fields is { Count: > 0 and <= 6 }
+            && t.Fields.All(f => Columns.ContainsKey(f.Key) && f.Value is "exact" or "inclusiveRange" or "unknown"))
+        && targets.Select(t => t.Uid).Distinct(StringComparer.Ordinal).Count() == targets.Length;
+
+    private static PageRow[] ReadTable(PageTarget[] targets, string? view, Stopwatch clock)
+    {
+        var requested = targets.ToDictionary(t => t.Uid, StringComparer.Ordinal);
+        var matches = new List<PageRow>();
+        var seen = new HashSet<string>(StringComparer.Ordinal);
         int remaining = 12_000;
         string stage = "paneles";
         var panels = UIElementsRuntimeUtility.GetSortedPlayerPanels();
@@ -111,23 +137,34 @@ public sealed class ProbeComponent(IntPtr pointer) : MonoBehaviour(pointer)
                 Walk(headings.ElementAt(i)).FirstOrDefault(e => e.ClassListContains("table-header-xs"))
                     ?.TryCast<TextElement>()?.text?.Trim() ?? "").ToArray();
             int idColumn = Array.IndexOf(names, "Unique ID");
-            int passColumn = Array.IndexOf(names, "Pase");
-            if (idColumn < 0 || passColumn < 0)
-                throw new InvalidDataException("Cabeceras Unique ID y Pase no disponibles.");
+            if (idColumn < 0 || view == "plantilla" && !names.Contains("Mejor pos.")
+                || view == "ojeados" && (!names.Contains("Posición") || !names.Contains("Club")))
+                throw new InvalidDataException("La tabla activa no coincide con la vista de contraste.");
 
             stage = "filas";
             foreach (var row in Walk(table, IsRow).Where(IsRow))
             {
                 var cells = Walk(row, IsCell).Where(IsCell).ToArray();
-                if (cells.Length != names.Length || Text(cells[idColumn]) != uid) continue;
-                var value = Text(cells[passColumn]);
-                if (IsRangeOrExact(value)) matches.Add(value);
+                if (cells.Length != names.Length) continue;
+                var uid = Text(cells[idColumn]);
+                if (!requested.TryGetValue(uid, out var target)) continue;
+                if (!seen.Add(uid)) throw new InvalidDataException("UID de la muestra duplicado en la vista.");
+                var fields = new Dictionary<string, string>(StringComparer.Ordinal);
+                foreach (var (field, knowledge) in target.Fields)
+                {
+                    int column = Array.IndexOf(names, Columns[field]);
+                    if (column < 0 || Array.LastIndexOf(names, Columns[field]) != column) continue;
+                    var value = Text(cells[column]);
+                    bool categorical = field is "club" or "position" or "best-position";
+                    if (categorical ? knowledge == "exact" && value is { Length: > 0 and <= 100 } && !IsUnknown(value)
+                        : MatchesPrecision(value, knowledge))
+                        fields.Add(field, value);
+                }
+                matches.Add(new(uid, fields));
             }
             break;
         }
-        if (matches.Count != 1)
-            throw new InvalidDataException(matches.Count == 0 ? "Pase y UID no visibles en una fila de la tabla." : "UID duplicado en la vista.");
-        return matches[0];
+        return matches.ToArray();
 
         string Text(VisualElement element) => string.Join(" ", Walk(element)
             .Select(e => e.TryCast<TextElement>()?.text?.Trim())
@@ -154,18 +191,23 @@ public sealed class ProbeComponent(IntPtr pointer) : MonoBehaviour(pointer)
         }
     }
 
-    private static bool IsRangeOrExact(string raw)
+    private static bool IsUnknown(string raw) => raw is "-" or "–" or "—" or "Se necesita ojeo";
+
+    private static bool MatchesPrecision(string raw, string knowledge)
     {
+        if (knowledge == "unknown") return IsUnknown(raw);
         var parts = raw.Split(new[] { '-', '–' }, StringSplitOptions.TrimEntries);
         if (parts.Length is < 1 or > 2) return false;
+        if (knowledge != "visible" && (parts.Length == 1 ? knowledge != "exact" : knowledge != "inclusiveRange"))
+            return false;
         return int.TryParse(parts[0], NumberStyles.None, CultureInfo.InvariantCulture, out int low)
             && low is >= 1 and <= 20 && (parts.Length == 1
                 || int.TryParse(parts[1], NumberStyles.None, CultureInfo.InvariantCulture, out int high) && high >= low && high <= 20);
     }
 
-    private static void Store(ProbeResult result, Action<Action> commit)
+    private static void Store<T>(Guid id, T result, Action<Action> commit)
     {
-        string target = Path.Combine(RunFolder, "bepinex-" + result.Id.ToString("N") + ".json");
+        string target = Path.Combine(RunFolder, "bepinex-" + id.ToString("N") + ".json");
         string temp = target + ".tmp";
         try
         {
@@ -180,7 +222,13 @@ public sealed class ProbeComponent(IntPtr pointer) : MonoBehaviour(pointer)
     }
 
     private sealed record ProbeRequest(Guid Id, long ProcessStartUtcTicks, DateTimeOffset ExpiresUtc, bool Confirmed,
-        string Uid, string Copy, string Branch, string Perspective, string Club, string Date, string Cut);
+        string? Uid, string Copy, string Branch, string Perspective, string Club, string Date, string Cut,
+        string? View, PageTarget[]? Targets);
+
+    private sealed record PageTarget(string Uid, Dictionary<string, string> Fields);
+    private sealed record PageRow(string Uid, Dictionary<string, string> Fields);
+    private sealed record PageResult(Guid Id, string Build, string Date, ulong Loads, string? View, PageRow[] Rows,
+        double ElapsedMilliseconds, long GamePeakWorkingSetBytes, long ProcessStartUtcTicks);
 
     private sealed record ProbeResult(Guid Id, string Build, string? Date, ulong? Loads, string? Uid,
         string Field, string? Value, double? ElapsedMilliseconds, long ProcessStartUtcTicks, string? Reason);

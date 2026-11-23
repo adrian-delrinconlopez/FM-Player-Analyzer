@@ -122,7 +122,7 @@ obtenido en FM27 y el tratamiento aprobado para los huecos.
 
 | Orden | Qué falta decidir | Prueba mínima y evidencia de salida |
 | --- | --- | --- |
-| 1 | Vía inicial y contexto fiable | La referencia de T018 contiene 30 UID contrastados en pantalla. Ampliar BepInEx y cotejar dos capturas de A-01 contra esa referencia. Medir el coste en FM27 y ejecutar A-03 con recarga, cambio de perspectiva y dos carreras con UID coincidente. |
+| 1 | Vía inicial y contexto fiable | A-01 acreditada con 30 UID y 34 observaciones en dos capturas mediante BepInEx. Falta medir el coste por fotograma y ejecutar A-03 con recarga, cambio de perspectiva y dos carreras con UID coincidente. |
 | 2 | Ojeados, mundo y campos especiales | Contrastar exacto, rango, desconocido y exclusión en ojeo. Acreditar la referencia independiente para el universo mundial, o delimitar su cobertura. Ensayar CA y PA por separado y exactos ocultos con sus permisos y revocación. Registrar si hay una fuente viable para familiaridad numérica y para el modelo de proyección. |
 | 3 | Datos de las entregas posteriores | Ampliar el banco con un caso por familia crítica: contrato y cesión con moneda y periodicidad, táctica IP/OOP, formación y regla de inscripción de una competición, empleado por función, entrenamiento/juveniles y estadísticas con minutos por competición/temporada. Para cada caso, cotejar pantalla y lectura o cerrar una alternativa. Usar dos cortes para históricos y desarrollo. |
 | 4 | Decisiones de alcance | Revisar la matriz con cobertura, huecos, degradación, coste y dependencia de la build. Enlazar cada decisión a sus requisitos. Las familias que se derivan de datos o dependen de configuración local cierran con un contrato de entrada y un oráculo reproducible. |

@@ -1,8 +1,15 @@
 # Requiere PowerShell 7 y el directorio privado del banco SK-01.
 param(
-    [Parameter(Mandatory)]
+    [Parameter(Mandatory, ParameterSetName='Field')]
     [ValidatePattern('^[0-9]{1,12}$')]
     [string]$Uid,
+
+    [Parameter(Mandatory, ParameterSetName='Page')]
+    [ValidateSet('plantilla','ojeados')]
+    [string]$View,
+
+    [Parameter(Mandatory, ParameterSetName='Page')]
+    [object[]]$Targets,
 
     [Parameter(Mandatory)]
     [switch]$ConfirmSk01Copy,
@@ -40,12 +47,17 @@ $request = [ordered]@{
     date = $ExpectedDate
     cut = "${ExpectedDate}T21:45:00"
 }
+if ($PSCmdlet.ParameterSetName -eq 'Page') {
+    $request.Remove('uid')
+    $request['view'] = $View
+    $request['targets'] = $Targets
+}
 
 $key = $id.ToString('N')
 $tempPath = Join-Path $runFolder "$key.tmp"
 $requestPath = Join-Path $runFolder 'bepinex-request.json'
 $resultPath = Join-Path $runFolder "bepinex-$key.json"
-[IO.File]::WriteAllText($tempPath, ($request | ConvertTo-Json -Compress))
+[IO.File]::WriteAllText($tempPath, ($request | ConvertTo-Json -Depth 8 -Compress))
 try {
     [IO.File]::Move($tempPath, $requestPath)
 } finally {

@@ -1,7 +1,16 @@
 using System.Runtime.InteropServices;
 using FM27Analyzer.Extraction.Poc.Capture;
+using FM27Analyzer.Extraction.Poc.Evidence;
 
 const string status = "SK-01 · Base de extracción FM27. El contraste A-01 está pendiente.";
+if (OperatingSystem.IsWindows())
+{
+    if (args is ["verify", "--run", var run, "--out", var report])
+        return A01Commands.Verify(run, report);
+    if (args is ["seal-a01", "--reference", var reference, "--content", var content, "--out", var batch])
+        return A01Commands.Seal(reference, content, batch);
+}
+
 if (args is ["probe-external", "--confirm-sk01", var pidText, var startText, var copyPath]
     && int.TryParse(pidText, out int pid) && long.TryParse(startText, out long startTicks))
 {

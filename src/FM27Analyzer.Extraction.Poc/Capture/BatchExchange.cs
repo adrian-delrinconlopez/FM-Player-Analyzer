@@ -102,6 +102,24 @@ public sealed class BatchExchange
     }
 
     internal ComparisonReference ReadReference(string file) => ReadReference(file, ceiling.MaxBytes);
+    internal RunManifest ReadManifest(string file) => Decode<RunManifest>(ReadBytes(file, ceiling.MaxBytes));
+    internal BatchContent ReadContent(string file) => Decode<BatchContent>(ReadBytes(file, ceiling.MaxBytes));
+
+    internal void WriteReport(string file, EvidenceReport report)
+    {
+        string target = LocalPath(file);
+        string temp = Path.Combine(directory.FullName, Guid.NewGuid().ToString("N") + ".tmp");
+        try
+        {
+            using (var stream = new FileStream(temp, FileMode.CreateNew, FileAccess.Write, FileShare.None))
+            {
+                stream.Write(Encode(report, ceiling.MaxBytes));
+                stream.Flush(flushToDisk: true);
+            }
+            File.Move(temp, target, overwrite: true);
+        }
+        finally { File.Delete(temp); }
+    }
 
     private ComparisonReference ReadReference(string file, int maxBytes) =>
         Decode<ComparisonReference>(ReadBytes(file, maxBytes));
@@ -118,7 +136,7 @@ public sealed class BatchExchange
     public RunInputs ReadRun(string file, CaptureSession? session = null, CaptureAuthorization? access = null,
         CaptureAuthorization? referenceAccess = null)
     {
-        var manifest = Decode<RunManifest>(ReadBytes(file, ceiling.MaxBytes));
+        var manifest = ReadManifest(file);
         BatchValidation.CheckSchema(manifest.Schema);
         if (manifest.Id == Guid.Empty || string.IsNullOrWhiteSpace(manifest.Extent)
             || manifest.Batches.IsDefault || manifest.Execution.IsDefault

@@ -143,6 +143,47 @@ negativo en `SK-01/lectura-externa.json` y la comparación y vía elegida en
 
 ### A-01
 
+Con la sonda 0.2.0 de laboratorio cargada en BepInEx, confirmar la copia de SK-01 y
+el corte en pantalla. Conservar la referencia prefijada y los controles de
+T018 en el directorio privado. Tras una recarga, `Bind` prepara una copia
+de la referencia con la nueva vinculación y conserva la huella del original.
+Los pasos siguientes escriben artefactos con nombres fijos. Para repetir
+todo el ensayo, archivar primero los artefactos de la ejecución anterior.
+
+```powershell
+$a01Probe = 'experiments/FM27Analyzer.BepInExProbe/Invoke-A01Page.ps1'
+& $a01Probe -Step Bind -ConfirmSk01Copy
+```
+
+En Primer equipo, mostrar «Unique ID», «Pase», «Club», «Reflejos» y
+«Mejor pos.». Mantener visibles las filas fijadas. En Base de datos de
+jugadores, mantener los criterios del contraste, activar «Sólo jugadores
+ojeados» y mostrar «Unique ID», «Pase», «Marcaje», «Posición» y «Club».
+Para cada vuelta, ejecutar los pasos en este orden y colocarse en la vista
+indicada antes de cada petición.
+
+```powershell
+# Ejecutar una vez con $round = 1 y otra con $round = 2.
+& $a01Probe -Step Squad -Round $round -ConfirmSk01Copy         # Primer equipo
+& $a01Probe -Step ScoutedTop -Round $round -ConfirmSk01Copy    # Inicio de ojeados
+& $a01Probe -Step ScoutedBottom -Round $round -ConfirmSk01Copy # Final de ojeados
+```
+
+Tras repetir el control sintético `BaseVisibilityTests`, confirmar
+que se mantuvieron copia, perspectiva y corte, que el control excluido
+sigue fuera del filtro y que la captura fue de solo lectura. Desde la
+raíz, compilar la consola en Release y ejecutar:
+
+```powershell
+& 'experiments/FM27Analyzer.BepInExProbe/Complete-A01.ps1' -ConfirmReadOnlyAndExclusion -SyntheticVisibilityPassed
+```
+
+El script reúne las tres páginas de cada vuelta, normaliza las etiquetas
+visuales de club, sella los lotes y llama a `verify`. El informe se puede
+generar de nuevo con los mismos archivos. El filtro y el desplazamiento
+se controlan en pantalla. La sonda utiliza la selección fijada y
+compara la huella de la build, fecha, proceso y contador de cargas.
+
 Anotar la revisión y los pasos o el comando exactos de cada vía. Hacer dos
 lecturas por vía viable del mismo campo visible, los mismos UID y el mismo
 corte. Para A-01, usar la vía elegida, permisos base y dos capturas consecutivas

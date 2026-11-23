@@ -40,8 +40,8 @@ description: "Tareas de implementación y validación de SK-01"
 
 ### Pruebas
 
-- [ ] T012 [P] [US1] Escribir casos para dos lotes cotejables, ejecución bloqueada sin lotes y entrada malformada en `tests/FM27Analyzer.Extraction.Tests/A01ComparisonTests.cs`. Cubrir discrepancias de UID, campos, corte, procedencia y estados. Comprobar que el informe conserva evidencia A-02/A-03 cuando existe y registra la omisión cuando falta, según SC-001/002/004.
-- [ ] T013 [P] [US1] Escribir el control de E-03 con dos conjuntos sintéticos que difieran sólo en datos ocultos en `tests/FM27Analyzer.Extraction.Tests/BaseVisibilityTests.cs`. Comparar proyección, recuentos y diagnósticos bajo los permisos base.
+- [X] T012 [P] [US1] Escribir casos para dos lotes cotejables, ejecución bloqueada sin lotes y entrada malformada en `tests/FM27Analyzer.Extraction.Tests/A01ComparisonTests.cs`. Cubrir discrepancias de UID, campos, corte, procedencia y estados. Comprobar que el informe conserva evidencia A-02/A-03 cuando existe y registra la omisión cuando falta, según SC-001/002/004.
+- [X] T013 [P] [US1] Escribir el control de E-03 con dos conjuntos sintéticos que difieran sólo en datos ocultos en `tests/FM27Analyzer.Extraction.Tests/BaseVisibilityTests.cs`. Comparar proyección, recuentos y diagnósticos bajo los permisos base.
 
 ### Implementación y contraste
 
@@ -50,10 +50,10 @@ description: "Tareas de implementación y validación de SK-01"
 - [X] T016 [US1] Evaluar R2 con el mismo campo visible, UID y corte, en solo lectura y con privilegios mínimos. Si existe una interpretación verificable y autorizada, aplicar T009 y obtener dos lecturas en `src/FM27Analyzer.Extraction.Poc/Capture/ExternalFieldProbe.cs`. Registrar el contraste o la causa del bloqueo en `%LOCALAPPDATA%/FM27Analyzer/SK-01/lectura-externa.json`.
 - [X] T017 [US1] Comparar los dos resultados de cada vía viable según R3, conservando valores, estados y procedencia. Registrar la vía elegida o la causa del bloqueo en `%LOCALAPPDATA%/FM27Analyzer/SK-01/decision-via.json`. Limitar la ampliación a una vía que cumpla solo lectura, identidad, coincidencia, visibilidad y repetibilidad.
 - [X] T018 [US1] Si T017 acredita una vía apta para ampliar, fijar al menos 30 UID y sus casos de contraste independientes antes de la primera captura de A-01. Guardar la referencia en `%LOCALAPPDATA%/FM27Analyzer/SK-01/ensayo-a01/referencia.json` con el contexto E-01 y los mínimos de SC-001. Si la vía o la referencia faltan, registrar la causa para el manifiesto bloqueado de T022.
-- [ ] T019 [P] [US1] Implementar el cotejo determinista de los dos lotes con la referencia, con estado y causa por campo, en `src/FM27Analyzer.Extraction.Poc/Evidence/A01Comparison.cs`. Cumplir E-02 y SC-001/002/004.
-- [ ] T020 [US1] Conectar `verify --run <manifiesto> --out <informe>` al validador en `src/FM27Analyzer.Extraction.Poc/Program.cs`. En modalidad `contrastable`, ejecutar el cotejo. En modalidad `bloqueada`, emitir A-01 sin acreditar, con motivo, alcance y clase de evidencia. Diagnosticar por separado la entrada inválida.
+- [X] T019 [P] [US1] Implementar el cotejo determinista de los dos lotes con la referencia, con estado y causa por campo, en `src/FM27Analyzer.Extraction.Poc/Evidence/A01Comparison.cs`. Cumplir E-02 y SC-001/002/004.
+- [X] T020 [US1] Conectar `verify --run <manifiesto> --out <informe>` al validador en `src/FM27Analyzer.Extraction.Poc/Program.cs`. En modalidad `contrastable`, ejecutar el cotejo. En modalidad `bloqueada`, emitir A-01 sin acreditar, con motivo, alcance y clase de evidencia. Diagnosticar por separado la entrada inválida.
 - [ ] T021 [US1] Si T017 selecciona una vía, ampliar esa vía en `experiments/FM27Analyzer.BepInExProbe/VisibleFieldProbe.cs` o `src/FM27Analyzer.Extraction.Poc/Capture/ExternalFieldProbe.cs` a los campos de FR-004 y la muestra de T018. Aplicar el contrato, la política y el control de sesión de T009 antes de aceptar o publicar una captura.
-- [ ] T022 [US1] Ejecutar E-01 a E-03 cuando estén disponibles la vía apta y la referencia independiente. Guardar el manifiesto y el informe en `%LOCALAPPDATA%/FM27Analyzer/SK-01/ensayo-a01/run.json` y `%LOCALAPPDATA%/FM27Analyzer/SK-01/ensayo-a01/informe.json`. Si faltan entradas para el contraste real, usar modalidad `bloqueada`, consignar el motivo y mantener separada la evidencia sintética.
+- [X] T022 [US1] Ejecutar E-01 a E-03 cuando estén disponibles la vía apta y la referencia independiente. Guardar el manifiesto y el informe en `%LOCALAPPDATA%/FM27Analyzer/SK-01/ensayo-a01/run.json` y `%LOCALAPPDATA%/FM27Analyzer/SK-01/ensayo-a01/informe.json`. Si faltan entradas para el contraste real, usar modalidad `bloqueada`, consignar el motivo y mantener separada la evidencia sintética.
 
 ## Fase 4 · US3 (P1) · Detectar incompatibilidades y descartar capturas inválidas
 
