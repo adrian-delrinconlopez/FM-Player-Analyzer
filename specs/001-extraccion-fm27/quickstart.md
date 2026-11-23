@@ -1,7 +1,41 @@
 # Guía de validación · SK-01
 
-**Estado** Procedimiento previsto para la implementación. Los proyectos, comandos
-del validador y capturas del juego se generarán en esa fase.
+**Estado a 23 de noviembre de 2026.** Setup y Foundational disponen de una solución de consola
+y pruebas MSTest. La orden `verify` y los ensayos A-01 de las secciones posteriores corresponden a US1.
+
+### Repetir la comprobación de Setup y Foundational
+
+Desde la raíz del clon, en Windows 11 x64 con el SDK .NET 10. En el equipo del ensayo
+el SDK disponible en el PATH inicial era 3.1.426. Para usar la instalación privada verificada
+de 10.0.404 en una nueva terminal PowerShell de ese equipo, ejecutar primero:
+
+```powershell
+$env:DOTNET_ROOT = Join-Path $env:LOCALAPPDATA 'FM27Analyzer/toolchain/dotnet'
+$env:PATH = "$env:DOTNET_ROOT;$env:PATH"
+```
+
+```powershell
+dotnet --version
+dotnet restore FM27Analyzer.slnx
+dotnet build FM27Analyzer.slnx -c Release --no-restore -warnaserror
+dotnet test tests/FM27Analyzer.Extraction.Tests/FM27Analyzer.Extraction.Tests.csproj -c Release --no-build --filter FullyQualifiedName~CaptureGuardTests
+dotnet test FM27Analyzer.slnx -c Release --no-build
+```
+
+**Resultado observado.** Compilación con cero errores y advertencias. Pasaron los 13 casos de
+sesión y los 41 casos de la batería completa, incluidos esos 13. MSTest utiliza identidades,
+permisos y valores sintéticos. Para comprobar el intercambio escribe archivos de ensayo
+privados bajo `%LOCALAPPDATA%/FM27Analyzer/SK-01` y los retira al terminar. El sobre JSON
+1.x admite metadatos opcionales en el objeto `metadata`. El cierre cuenta las identidades y
+observaciones y usa SHA-256 sobre el contenido JSON UTF-8 en orden ordinal de claves.
+
+**Banco local T003.** El manifiesto de Steam identifica FM27 build 26620374. Los metadatos de
+la instalación identifican BepInEx 6.0.0-be.791, Il2CppInterop.Runtime 1.5.3 y el
+runtime distribuido 6.0.7. El inventario y sus fuentes están en
+`%LOCALAPPDATA%/FM27Analyzer/SK-01/banco.json`. Durante el inventario había cero procesos
+`fm`. Quedan pendientes la confirmación de copia, perspectiva y corte, la línea base del
+juego abierto y la revisión de derechos de uso para el ensayo concreto. La primera lectura real
+requiere esas comprobaciones y el control de sesión de la vía que se ensaye.
 
 ## Preparar el entorno
 
