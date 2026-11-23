@@ -75,8 +75,8 @@ El perfil identifica la ubicación de la fecha. Su código de localización refe
 el formato de ordinal de día y año. [Perfil Steam 26620374](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/steam-26620374.toml) ·
 [Decodificación](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/crates/fmlibre-core/src/locate.rs)
 
-**Estado de las tareas.** T014 cuenta con una referencia de pantalla fijada. T015–T017
-siguen abiertas para contrastar dos lecturas de «Pase» por vía y elegir si ampliar.
+**Estado en ese corte del ensayo.** T014 quedó con una referencia de pantalla fijada
+para contrastar dos lecturas de «Pase» por vía y elegir si ampliar.
 La compilación Release volvió a terminar con cero advertencias y errores y pasaron
 las 41 pruebas sintéticas. El inventario de fuentes para las entregas completas
 se mantiene en la [matriz TO-BE](matriz-fuentes-to-be.md).
@@ -172,3 +172,43 @@ objeto con `UiUids` y `Players`. Sus campos constan en los tipos `References` y
 Las 42 pruebas del repositorio pasaron en Release, incluido el caso nuevo de
 cancelación ante datos de contexto inválidos. Los ensayos formales y su integración
 en el contrato de informes siguen abiertos.
+
+## T015 · Lectura de un atributo visible mediante BepInEx
+
+La sonda propia se cargó en BepInEx 6.0.0-be.791 e Il2CppInterop 1.5.3
+en FM27 Steam 26620374 con el runtime de juego .NET 6.0.7. Se volvió a cargar
+la copia `SK-01 Valencia 2026-08-01`, con el Valencia CF a 1/8/2026 21:45,
+y se añadió «Pase» junto a «Unique ID» en Primer equipo. La ficha y la fila de
+José Gayà coincidieron con las dos lecturas de la sonda.
+
+| Lectura | UID | «Pase» | Fecha | Duración del recorrido |
+| --- | --- | --- | --- | --- |
+| FM27, ficha y fila identificada en pantalla | 67178177 | 13 | 2026-08-01 | |
+| BepInEx, primera petición | 67178177 | 13 | 2026-08-01 | 23,5 ms |
+| BepInEx, segunda petición | 67178177 | 13 | 2026-08-01 | 10,6 ms |
+
+Ambas peticiones vieron el mismo proceso y contador de cargas igual a 1. Se
+leyó de la tabla UI Toolkit el texto de las celdas UID y «Pase». Se comprobaron
+la huella de la build, la fecha y el contador de cargas antes de leer y antes de
+publicar. La copia, hora de juego y perspectiva se confirmaron en la interfaz.
+El tamaño y la fecha de modificación de la copia coincidieron antes y después.
+Durante el ensayo se reinició FM27 para cargar el DLL de laboratorio y se
+ajustaron las columnas de la vista. Se preservaron los metadatos del guardado.
+[Estructura de la tabla en FM View Exporter](https://github.com/ElectroHugin/FM-View-Exporter/blob/2ed5898f6e3b8597b6b8ec5401f41d16b961cdfd/src/FMViewExporter/Export/PlayerTable.cs) ·
+[Perfil Steam 26620374](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/steam-26620374.toml)
+
+Dos intentos de la primera revisión devolvieron «Límite de recorrido visual».
+La revisión contrastada evitó entrar en el contenido de las demás celdas.
+El menú sin carrera, una fecha incorrecta con la copia cargada y un UID
+ausente produjeron diagnósticos con UID y valor nulos. El tiempo medido
+corresponde a la operación dentro de Unity. Quedan por medir memoria atribuible
+y coste de fotograma con una línea base equivalente. La muestra sólo acredita
+un jugador propio y un atributo exacto en una vista. Falta probar el recorrido
+de ojeados y la lectura de rangos, desconocimiento y exclusión en ese ámbito.
+
+El registro agregado está en `%LOCALAPPDATA%/FM27Analyzer/SK-01/bepinex.json`.
+Se completó T015. La compilación Release y Laboratorio terminó con cero
+advertencias y errores y pasaron las 42 pruebas de Release. T016 requiere
+incorporar y repetir el contraste externo mediante su adaptador de la PoC.
+T017 decidirá qué vía ampliar a la muestra de al menos 30 UID de A-01.
+[Guía para repetir T015](quickstart.md#sonda-bepinex-t015) · [Tareas](tasks.md)

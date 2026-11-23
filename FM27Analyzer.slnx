@@ -1,4 +1,16 @@
 <Solution>
+  <Configurations>
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+    <BuildType Name="Laboratorio" />
+  </Configurations>
+  <Folder Name="/experiments/">
+    <Project Path="experiments/FM27Analyzer.BepInExProbe/FM27Analyzer.BepInExProbe.csproj">
+      <Build Project="false" />
+      <Build Solution="Laboratorio|*" Project="true" />
+      <BuildType Solution="Laboratorio|*" Project="Release" />
+    </Project>
+  </Folder>
   <Folder Name="/src/">
     <Project Path="src/FM27Analyzer.Extraction.Poc/FM27Analyzer.Extraction.Poc.csproj" />
   </Folder>

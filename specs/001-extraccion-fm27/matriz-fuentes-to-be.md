@@ -10,6 +10,8 @@ La v1 y las entregas posteriores siguen el [roadmap aprobado](../../docs/roadmap
 y con lo visible en FM27. El UID visible de un jugador coincidió con la salida del
 plugin de terceros cargado mediante BepInEx. Un ensayo local de memoria externa
 repitió «Pase», CA y PA para ese UID y coincidió con la ficha y el editor oficial.
+La sonda propia de BepInEx repitió el mismo UID y «Pase» desde la tabla de
+plantilla. Las dos lecturas coincidieron con la interfaz en el corte fijado.
 Quedan pendientes el adaptador mantenido y las pruebas de alcance y revocación.
 La ampliación halló 19.917 UID únicos en memoria y cotejó los 15 UID de la muestra
 visual. Dos jugadores externos, uno ojeado y otro sin informe, coincidieron en
@@ -98,9 +100,12 @@ los permisos de campo.
 La referencia tiene un UID confirmado en pantalla, «Pase» y un corte fijado antes del ensayo.
 El ensayo externo encontró un selector por las claves de club y los miembros del primer
 equipo. Verificó el vínculo, UID y corte y obtuvo dos coincidencias de «Pase» con la ficha.
-En BepInEx, el primer candidato es el texto de la ficha o la celda «Pase» de una fila ya
-identificada por «Unique ID». T015–T017 reúnen las dos lecturas por vía y evalúan si procede
-ampliar a A-01. [Lector de referencia](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/crates/fmlibre-core/src/players.rs) · [Tareas](tasks.md)
+T015 acreditó dos lecturas de la celda «Pase» y su «Unique ID» mediante BepInEx.
+En la tabla de plantilla se pudo obtener exactamente el texto mostrado. Este
+resultado permite ensayar la misma técnica para los estados visibles del ojeo.
+T016 y T017 incorporan la vía externa y formalizan la comparación para A-01.
+[Contraste BepInEx](evidencia.md#t015--lectura-de-un-atributo-visible-mediante-bepinex) ·
+[Lector de referencia](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/crates/fmlibre-core/src/players.rs) · [Tareas](tasks.md)
 
 ## Cierre de viabilidad antes de la aplicación definitiva
 
@@ -113,7 +118,7 @@ obtenido en FM27 y el tratamiento aprobado para los huecos.
 
 | Orden | Qué falta decidir | Prueba mínima y evidencia de salida |
 | --- | --- | --- |
-| 1 | Vía inicial y contexto fiable | Terminar T015–T017 y A-01. Comparar campo visible, UID, permiso, exactitud, tiempo y memoria por vía. Ejecutar A-03 con recarga, cambio de perspectiva y dos carreras con UID coincidente. |
+| 1 | Vía inicial y contexto fiable | Terminar T016–T017 y A-01. Comparar campo visible, UID, permiso, exactitud, tiempo y memoria por vía. Ejecutar A-03 con recarga, cambio de perspectiva y dos carreras con UID coincidente. |
 | 2 | Ojeados, mundo y campos especiales | Contrastar exacto, rango, desconocido y exclusión en ojeo. Acreditar la referencia independiente para el universo mundial, o delimitar su cobertura. Ensayar CA y PA por separado y exactos ocultos con sus permisos y revocación. Registrar si hay una fuente viable para familiaridad numérica y para el modelo de proyección. |
 | 3 | Datos de las entregas posteriores | Ampliar el banco con un caso por familia crítica: contrato y cesión con moneda y periodicidad, táctica IP/OOP, formación y regla de inscripción de una competición, empleado por función, entrenamiento/juveniles y estadísticas con minutos por competición/temporada. Para cada caso, cotejar pantalla y lectura o cerrar una alternativa. Usar dos cortes para históricos y desarrollo. |
 | 4 | Decisiones de alcance | Revisar la matriz con cobertura, huecos, degradación, coste y dependencia de la build. Enlazar cada decisión a sus requisitos. Las familias que se derivan de datos o dependen de configuración local cierran con un contrato de entrada y un oráculo reproducible. |

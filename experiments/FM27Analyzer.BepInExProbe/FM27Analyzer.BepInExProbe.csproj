@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <LangVersion>14.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../src/FM27Analyzer.Extraction.Poc/Capture/CaptureContext.cs" Link="CaptureContext.cs" />
+    <Compile Include="../../src/FM27Analyzer.Extraction.Poc/Capture/CapturePolicy.cs" Link="CapturePolicy.cs" />
+    <Compile Include="../../src/FM27Analyzer.Extraction.Poc/Capture/CaptureSession.cs" Link="CaptureSession.cs" />
+    <Reference Include="BepInEx.Core" HintPath="$(FM27GameRoot)/BepInEx/core/BepInEx.Core.dll" Private="false" />
+    <Reference Include="BepInEx.Unity.IL2CPP" HintPath="$(FM27GameRoot)/BepInEx/core/BepInEx.Unity.IL2CPP.dll" Private="false" />
+    <Reference Include="Il2CppInterop.Runtime" HintPath="$(FM27GameRoot)/BepInEx/core/Il2CppInterop.Runtime.dll" Private="false" />
+    <Reference Include="Il2Cppmscorlib" HintPath="$(FM27GameRoot)/BepInEx/interop/Il2Cppmscorlib.dll" Private="false" />
+    <Reference Include="UnityEngine.CoreModule" HintPath="$(FM27GameRoot)/BepInEx/interop/UnityEngine.CoreModule.dll" Private="false" />
+    <Reference Include="UnityEngine.UIElementsModule" HintPath="$(FM27GameRoot)/BepInEx/interop/UnityEngine.UIElementsModule.dll" Private="false" />
+  </ItemGroup>
+  <Target Name="CheckLabReferences" BeforeTargets="ResolveAssemblyReferences"
+          Condition="!Exists('$(FM27GameRoot)/BepInEx/core/BepInEx.Unity.IL2CPP.dll')">
+    <Error Text="Indica FM27GameRoot con la ruta local de FM27 y BepInEx para compilar el ensayo." />
+  </Target>
+</Project>

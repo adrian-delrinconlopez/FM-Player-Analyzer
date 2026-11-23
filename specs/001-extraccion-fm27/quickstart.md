@@ -76,6 +76,42 @@ permisos. Un cambio de contexto o revisión durante el trabajo debe cancelar
 la captura e impedir la publicación del lote pendiente. El productor revalida
 el contexto justo antes de publicar.
 
+### Sonda BepInEx T015
+
+Con FM27 cerrado, compilar el proyecto de laboratorio contra las bibliotecas
+del BepInEx instalado para Steam 26620374. Copiar únicamente el DLL del
+experimento a la carpeta de plugins de ese BepInEx. Conservar el hash para
+identificar y retirar el archivo al acabar con el juego cerrado.
+
+```powershell
+dotnet build FM27Analyzer.slnx -c Laboratorio "-p:FM27GameRoot=$fm27GameRoot" -warnaserror
+Copy-Item -LiteralPath 'experiments/FM27Analyzer.BepInExProbe/bin/Release/net6.0/FM27Analyzer.BepInExProbe.dll' -Destination (Join-Path $fm27GameRoot 'BepInEx/plugins')
+```
+
+Comprobar el arranque de `FM27 Analyzer SK-01` en `BepInEx/LogOutput.log`.
+Cargar expresamente la copia `SK-01 Valencia 2026-08-01`, verificar
+Valencia CF y el corte 1/8/2026 21:45. En «Primer equipo», añadir
+«Unique ID» y «Pase» mediante «Insertar columna» y ajustar el ancho del UID.
+Dejar la fila fijada a la vista. Ejecutar las peticiones una a una con
+PowerShell 7 y el directorio privado del ensayo ya preparado.
+
+```powershell
+$sk01Probe = 'experiments/FM27Analyzer.BepInExProbe/Request-VisibleField.ps1'
+& $sk01Probe -Uid '67178177' -ConfirmSk01Copy
+& $sk01Probe -Uid '67178177' -ConfirmSk01Copy
+```
+
+La sonda toma la identidad y el atributo de la tabla de Unity. Comprueba
+compilación, fecha y recarga en memoria del proceso. El operador acredita
+copia, hora y perspectiva en pantalla. El ensayo sólo permite «Pase» y la
+petición caduca tras 15 segundos. Los JSON de cada intento se guardan en
+`%LOCALAPPDATA%/FM27Analyzer/SK-01/viabilidad`. Cotejar UID, fecha y
+valor con FM27 y guardar el resultado agregado en `SK-01/bepinex.json`.
+Para un control negativo, repetir con la vista sin la tabla de jugadores o
+usar `-ExpectedDate '2000-01-01'` en la misma copia y verificar el bloqueo.
+
+### Contraste de vías y A-01
+
 Anotar la revisión y los pasos o el comando exactos de cada vía. Hacer dos
 lecturas por vía viable del mismo campo visible, los mismos UID y el mismo
 corte. Para A-01, usar la vía elegida, permisos base y dos capturas consecutivas
