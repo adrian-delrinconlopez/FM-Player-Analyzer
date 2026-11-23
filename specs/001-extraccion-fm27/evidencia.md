@@ -254,3 +254,36 @@ La evidencia privada se conserva como `SK-01/lectura-externa.json` y
 `SK-01/decision-via.json` bajo `%LOCALAPPDATA%/FM27Analyzer`. Release
 compiló sin advertencias ni errores. Pasaron los 14 controles de sesión
 y las 42 pruebas de la batería. [Reproducción de T016 y T017](quickstart.md#sonda-externa-t016-y-comparación-t017)
+
+## T018 · Referencia independiente para A-01
+
+Se fijó el 23 de noviembre de 2026 a las 19:57, hora de Madrid, en el
+mismo corte de juego y con política base. Se transcribieron 20 filas de
+Primer equipo y 10 de «Sólo jugadores ojeados», antes de capturar lotes
+de A-01. En ojeo se eligieron nueve filas de la primera página y una del
+final. La búsqueda mostraba 29 resultados con ese conmutador activo,
+los tres criterios previos y el filtro de interés original. Al desactivarlo
+volvió a mostrar 461 con los mismos criterios.
+
+| Caso | Referencia de FM27 |
+| --- | --- |
+| Portero de la muestra | Stole Dimitrievski, Valencia CF, posición POR, Pase 10 y Reflejos 16. Identidad y Pase en la tabla, y club, posición y atributos cotejados en ficha. |
+| Jugador de campo de la muestra | José Gayà, Valencia CF, mejor posición CR (I) y Pase 13. La ficha confirma el lado izquierdo y muestra DF/CR/ME/MP (I). |
+| Intervalo visible | Pase 2–7 en Tomáš Hašler y 13–16 en Reda Belahyane. Se conservan ambos extremos. |
+| Desconocimiento explícito | «Marcaje» de Tomáš Hašler aparece con guion en la ficha y su personalidad muestra «Se necesita ojeo». La referencia registra Marcaje como desconocido y valor nulo. |
+| Exclusión | Un jugador sin informe aparecía en la búsqueda con el conmutador desactivado. Se comprobó su ausencia al recorrer las 29 filas con «Sólo jugadores ojeados». El estímulo queda en el registro privado de controles. |
+
+El contrato C# aceptó el JSON y selló un lote de comprobación en memoria
+con 30 UID únicos y 34 observaciones. Las 34 observaciones corresponden
+a 30 de Pase, dos posiciones, un caso de Reflejos y un estado de
+desconocimiento. Fuera de los dos casos de Primer equipo con ficha cotejada,
+sus filas acreditan pertenencia a la plantilla visible. El club de
+contrato de esas filas queda sin afirmar.
+
+La referencia está en `SK-01/ensayo-a01/referencia.json` con SHA-256
+`9EE8711965DABB0483E6EBE5B1E160392FEED79E355571EF569938164ED0B6A5`.
+`controles-de-pantalla.json` conserva los casos de comprobación en el
+mismo directorio privado. La operación ajustó las columnas de la vista de
+ojeo, repuso el conmutador original y conservó los metadatos de la copia.
+A-01 queda pendiente de dos capturas independientes de la referencia y
+su cotejo mediante `verify`. [Guía del ensayo](quickstart.md#a-01)
