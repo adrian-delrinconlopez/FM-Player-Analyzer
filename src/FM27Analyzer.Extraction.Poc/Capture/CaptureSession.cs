@@ -37,7 +37,8 @@ public sealed class CaptureSession(CaptureContext expected, Func<CaptureContext?
         Token.ThrowIfCancellationRequested();
         CaptureContext? observed;
         try { observed = current(); }
-        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException or InvalidOperationException)
+        catch (Exception ex) when (ex is IOException or InvalidDataException or UnauthorizedAccessException
+            or InvalidOperationException)
         {
             observed = null;
         }

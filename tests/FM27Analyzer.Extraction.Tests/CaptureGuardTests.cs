@@ -78,6 +78,21 @@ public sealed class CaptureGuardTests
     }
 
     [TestMethod]
+    public void InvalidContextDataCancelsBeforePublishing()
+    {
+        var expected = Context();
+        var causes = new List<string>();
+        bool readable = true;
+        using var session = new CaptureSession(expected,
+            () => readable ? expected : throw new InvalidDataException("Cabecera incompatible."), causes.Add);
+        session.Read(() => 42);
+        readable = false;
+        Assert.ThrowsExactly<OperationCanceledException>(() => session.Commit(() => Assert.Fail()));
+        Assert.IsTrue(session.Token.IsCancellationRequested);
+        Assert.HasCount(1, causes);
+    }
+
+    [TestMethod]
     [DataRow(true)]
     [DataRow(false)]
     public void UncertainContextBlocksBeforeReadOrCommit(bool beforeRead)
