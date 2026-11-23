@@ -1,4 +1,7 @@
 /* A · el club como portal operativo. */
+body:is([data-direction="fm"], [data-direction="pro"]) {
+  min-height: 100vh;
+}
 body[data-direction="fm"] {
   --panel: #1c1c30;
   --deep: #151626;

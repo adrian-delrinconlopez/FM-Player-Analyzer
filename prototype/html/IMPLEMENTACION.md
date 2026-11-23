@@ -1,5 +1,7 @@
 # Registro de implementación y cobertura
 
+Este registro documenta la primera entrega en c1a3007. La segunda iteración cambia la exportación, las valoraciones y la comparación visual. [Registro de evolución](EVOLUCION.md)
+
 **23 de noviembre de 2026 · Fase 1 del roadmap · REQ-UX-001.** Prototipo para revisión del propietario. Rama `prototype/centro-analisis-fm27`, iniciada con el árbol limpio en `4aad880`. La base contenía el guion y el Design Reference Pack. La primera entrada ejecutable está en [index.html](index.html).
 
 ## Qué se puede evaluar

@@ -10,6 +10,10 @@ Invoke-Item .\prototype\html\index.html
 
 ![Resumen deportivo de Valencia CF con el once de referencia y sus prioridades](review/resumen.png)
 
+## Alternar la dirección visual
+
+El selector **Dirección visual** de la barra superior cambia el menú lateral, la cabecera, las pantallas y los diálogos. **Original** recupera la presentación base con las operaciones actuales. A organiza el trabajo como portal de club y B como informe de scouting. El cambio conserva la ruta, la carrera, los datos y la selección. La revisión parte de Original al recargar. [Comparación de propuestas](EVOLUCION.md)
+
 ## Primer recorrido
 
 1. En **Resumen**, abre **Revisar la banda izquierda**. El inspector de AML muestra a Leo Nube, su nota y los relevos disponibles.
@@ -25,15 +29,15 @@ Invoke-Item .\prototype\html\index.html
 
 Faro reúne 139 futbolistas ficticios. Incluye 15 vinculados a Valencia CF, tres objetivos del Club Salina, 25 delanteros del Cabo y 96 registros sintéticos adicionales. El corte de Faro es el 14 de septiembre de 2027. Bruma permite comprobar el aislamiento con otra persona bajo el mismo UID 1. Datos deportivos, notas e importes proceden de la demostración. La imagen de estadio es una creación para el prototipo y el escudo es geométrico.
 
-Los datos y la construcción del estado están en [data.js](data.js). Las vistas comparten identidades, observaciones, selección y permisos dentro de cada carrera. Al cambiar de carrera se conservan los planes de ambas en memoria. Recargar la página o elegir **Configuración → Reiniciar demostración → Restaurar datos originales** restablece las dos carreras.
+Los datos y la construcción del estado están en [data.js](data.js). Las vistas comparten identidades, observaciones, selección y permisos dentro de cada carrera. Al cambiar de carrera se conservan los planes de ambas en memoria. Recargar la página restablece las dos carreras y conserva las preferencias de columnas por carrera y vista si el navegador admite almacenamiento local. **Configuración → Reiniciar demostración → Restaurar datos originales** también borra esas preferencias.
 
-CA y PA requieren consentimientos independientes. Sólo Sol Arce dispone de esos campos ficticios. Revocar el permiso retira el dato de las vistas y limpia los criterios afectados en las búsquedas guardadas. Un intervalo permanece como intervalo. El signo **≈** identifica una estimación.
+CA y PA requieren consentimientos independientes. Ada Neral, Leo Nube, Sol Arce y Jan Silo disponen de casos de desarrollo ficticios. La proyección requiere ambos permisos y familiaridad hipotética de 20/20. Revocar un permiso retira las proyecciones, sus órdenes y los criterios afectados de las búsquedas guardadas. Un intervalo permanece como intervalo. El signo **≈** identifica una estimación.
 
 ## Alcance de la simulación
 
 La pizarra asigna jugadores aptos a puestos compatibles. Las notas IP/OOP son las del guion y el XI usa una búsqueda limitada a esta plantilla. El editor de perfiles es un ejercicio con dos atributos. Las temporadas y las reglas de Copa Faro tienen observaciones y cupos prefijados.
 
-El asistente ofrece respuestas locales y enlaces al análisis. La sincronización cambia estados de demostración. La exportación a Excel o CSV presenta una vista previa de filas y columnas. Estas operaciones funcionan sin credenciales, conexión al juego, SQLite ni servicios de IA.
+El asistente ofrece respuestas locales y enlaces al análisis. La sincronización cambia estados de demostración. **Exportar a Excel** descarga un archivo XLSX válido. En una lista paginada, elige todos los resultados filtrados, la página o la selección filtrada. El libro incluye una hoja de contexto. Estas operaciones funcionan sin credenciales, conexión al juego, SQLite ni servicios de IA.
 
 ## Repetir la validación
 
@@ -48,7 +52,7 @@ Get-ChildItem .\prototype\html\*.js | ForEach-Object {
 $entornoPruebas = Join-Path $env:TEMP 'fm27-pruebas-html'
 python -m venv $entornoPruebas
 $pythonPruebas = Join-Path $entornoPruebas 'Scripts\python.exe'
-& $pythonPruebas -m pip install playwright==1.65.2
+& $pythonPruebas -m pip install playwright==1.65.2 openpyxl==3.1.5
 & $pythonPruebas -X utf8 .\prototype\html\tests\review.py
 ```
 
