@@ -1,6 +1,6 @@
 # Decisiones confirmadas del producto
 
-Autoridad: encargo de Fase B y aclaraciones del propietario del 21 y el 22 de noviembre de 2026. En este documento **CONFIRMADA** significa aprobada por el propietario. Una solución técnica candidata, una referencia comunitaria y el resultado de una prueba requieren registros distintos. Para cambiar una decisión, anotar fecha, motivo, IDs afectados y efecto en pruebas e históricos en el [registro de cambios](CHANGELOG-TO-BE.md).
+Autoridad: encargo de Fase B y aclaraciones del propietario del 21, el 22 y el 23 de noviembre de 2026. En este documento **CONFIRMADA** significa aprobada por el propietario. Una solución técnica candidata, una referencia comunitaria y el resultado de una prueba requieren registros distintos. Para cambiar una decisión, anotar fecha, motivo, IDs afectados y efecto en pruebas e históricos en el [registro de cambios](CHANGELOG-TO-BE.md).
 
 | ID | Decisión CONFIRMADA | Consecuencia verificable |
 |---|---|---|
@@ -16,3 +16,6 @@ Autoridad: encargo de Fase B y aclaraciones del propietario del 21 y el 22 de no
 | DP-10 | Git y GitHub Spec Kit, Codex y/o Copilot, una solución .slnx para VS Code y Visual Studio Enterprise. | Los comandos de compilación y prueba se pueden ejecutar sin un IDE. El propietario puede dirigir cada paso. |
 | DP-11 | Conservar algoritmos valiosos y explicar las diferencias. Preferencias deportivas configurables. | Calidad, rol, táctica, filosofía y conveniencia económica se muestran como indicadores diferenciados. |
 | DP-12 | Permitir exportar tablas seleccionadas de la aplicación, tanto de datos disponibles como de resultados generados, preferentemente a Excel (.xlsx), con CSV como alternativa. | Como casos iniciales, exportar los atributos de la plantilla propia o de una lista de jugadores. Respetar el ámbito, las columnas y la visibilidad autorizados. |
+
+| DP-13 | Comparar calidad actual y potencial por puesto y rol para cada fase. La proyección basada en CA y PA evalúa familiaridad de 20. | Exigir ambos permisos y fuente acreditada. Comparar porcentajes en pp. La función de desarrollo y el horizonte requieren validación en Q-17. |
+| DP-14 | Las tablas de jugadores permiten configurar columnas, orden y valoración de rol. Las principales ofrecen «Exportar a Excel». | La descarga XLSX conserva ámbito, filtros, orden, columnas visibles, contexto y política. Las variantes visuales requieren elección del propietario. |

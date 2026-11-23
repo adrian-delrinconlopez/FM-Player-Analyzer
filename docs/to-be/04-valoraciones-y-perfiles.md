@@ -1,6 +1,6 @@
 # Valoraciones, perfiles y explicación
 
-REQ-RATING-001 a 004, REQ-ROLE-001/002 y REQ-PROFILE-001/002. Toda valoración identifica persona, rol o posición, fase, modelo, revisión numérica, observación y cobertura. Ordenar por el valor interno con un desempate estable; redondear sólo para mostrar. Comparar dos jugadores exige misma escala, definición y revisión o dos columnas explícitamente diferenciadas.
+REQ-RATING-001 a 005, REQ-ROLE-001/002 y REQ-PROFILE-001/002. Toda valoración identifica persona, rol o posición, fase, modelo, revisión numérica, observación y cobertura. Ordenar por el valor interno con un desempate estable; redondear sólo para mostrar. Comparar dos jugadores exige misma escala, definición y revisión o dos columnas explícitamente diferenciadas.
 
 ## DWRS Classic
 
@@ -25,3 +25,18 @@ El proyecto externo también compara mejor nota / referencia de edad tabulada y 
 ## Editor y ciclo de vida
 
 Crear a partir de plantilla o duplicar con ID nuevo. Editar en borrador y previsualizar el mismo jugador antes/después. Validar edición FM27, finitud, amplitudes no negativas, monotonía, claves, vínculos y escala. El editor de 20 aportaciones reconstruye base, peso y forma según el contrato 042. Cancelar conserva revisión activa. Activar crea revisión inmutable con huella canónica de parámetros y versión de motor; cambiar etiquetas no altera la huella de cálculo. Exportar documento versionado sin jugadores ni credenciales. Al importar revisar errores y conflictos; crear copia para una definición distinta con igual ID. Un recálculo histórico se guarda como serie derivada identificable. [Operaciones y límites del editor](../as-is/12-configuracion-y-reglas-globales.md)
+
+
+## Evaluación presente y proyección por rol
+
+La evaluación compara la misma posición y rol de fase, escala, perfil y revisión. La calidad actual usa las observaciones y la familiaridad posicional presentes. El porcentaje y las diferencias en puntos porcentuales corresponden a la escala normalizada de la valoración. Para un indicador 1–20, la diferencia se expresa en puntos de esa escala. Un índice táctico de dos fases puede coexistir si declara su ponderación y propósito.
+
+**Escenario aprobado.** REQ-RATING-005 estima el encaje futuro en un rol por fase. El evaluador recibe atributos hipotéticos del escenario y familiaridad **20/20 en la posición evaluada**, incluso al ensayar una posición distinta. El expediente indica horizonte, insumos, cobertura e hipótesis. Llegar a esa familiaridad requiere condiciones de desarrollo en el juego. Retener como variables separadas CA, PA, margen CA–PA expresado como PA − CA, atributos actuales, atributos relevantes por rol y fase, familiaridad observada y familiaridad del escenario. El PA bruto sólo informa del margen de desarrollo.
+
+DWRS Classic y curvas, reglas de cobertura y marcas por rol están documentados para valorar entradas. El talento y la prioridad marginal de entrenamiento valoran el estado o una ganancia local. La revisión del AS-IS no aporta una transformación verificada de CA/PA a atributos futuros por posición y fase. La producción resolverá esa transformación en Q-17 antes de publicar la proyección. El mock usa casos ficticios deterministas con márgenes y afinidades distintos, claramente marcados.
+
+- **Bandas de atributos por desarrollo observado.** Ajustar los cambios con trayectorias de FM27 comparables por edad, minutos y entrenamiento. Aplicar límites por atributo y validar error por puesto. Requiere cohortes longitudinales representativas y un horizonte común. Los traspasos, lesiones y registros incompletos pueden sesgar la estimación.
+- **Escenarios acotados por coste de desarrollo.** Repartir el margen con pesos de crecimiento documentados y restricciones del juego por posición, luego valorar el vector hipotético. Requiere cotejar costes, redistribución y límites por compilación. Un reparto centrado en el rol sería un escenario favorable, con supuestos explícitos.
+- **Rango entre escenarios.** Si hay varias trayectorias plausibles, ofrecer límites y sus supuestos después de validar las dos anteriores. Con evidencia insuficiente publicar indisponibilidad.
+
+El caso de uso comprueba permisos, capacidad, cobertura y revisión antes de proyectar, clasificar o exportar. La futura estimación con sólo ojeo, si se aprueba, tendrá definición y nombre propios. [Visibilidad](13-visibilidad-y-juego-limpio.md) · [Decisión matemática Q-17](../OPEN-QUESTIONS.md)

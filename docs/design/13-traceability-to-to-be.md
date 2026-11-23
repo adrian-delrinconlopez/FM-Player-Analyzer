@@ -41,19 +41,20 @@ El requisito y el tratamiento proceden del [catálogo funcional](../to-be/02-cat
 | REQ-PROFILE-001 | F | FPA-FUNC-033 · AMPLIADA | Distinguir duplicado, revisión y activación de un perfil. | V17/V08 | C17/C07 | B04, FR-07 | U02/U13 | EQ-033 |
 | REQ-TAC-004 | C | FPA-FUNC-034 · CONSERVADA | Validar una táctica importada y alternar definiciones conservando la activa. | V09/V19 | C08/C18 | R07/D02 | U06/U13 | EQ-034 |
 | REQ-ROLE-003 | C | FPA-FUNC-035 · CONSERVADA | Distinguir completar asignaciones manuales y restablecer las de catálogo. | V08/V09 | C07/C08 | R09/R07 | U06 | EQ-035 |
-| REQ-SQUAD-004 | F | FPA-FUNC-036 · MODIFICADA | Comparar 2–5 personas, cobertura del área y anotación manual. | V07/V06 | C05/C06 | R06/D01 | U02/U03 | EQ-036, NV-25 |
+| REQ-SQUAD-004 | F | FPA-FUNC-036 · MODIFICADA | Evaluar 2–5 personas en la misma posición y un rol por fase. Deltas comparables y evidencia de coste. | V07/V06 | C05/C06/C08 | R06/D01 | U02/U03 | EQ-036, NV-25, NV-28 |
 | REQ-NAT-002 | P | FPA-FUNC-037 · POSPUESTA | Al reabrirse, distinguir comparar candidatos nacionales de convocarlos. | V07/V16 (futuro) | C05/C16 | B03, Q-14 | U13 | EQ-037 |
-| REQ-EXPORT-001 | F | FPA-FUNC-038 · MODIFICADA | Saber qué filas, columnas y orden se exportan en Excel o CSV. | V03/V05 | C03/C18 | B05/R02, DP-12 | U04/U09 | EQ-038 |
+| REQ-EXPORT-001 | F | FPA-FUNC-038 · MODIFICADA | Exportar un XLSX con el conjunto, columnas, contexto y orden elegidos. | V03/V05 | C03/C18 | B05/R02, DP-12 | U04/U09 | EQ-038, NV-29 |
 | REQ-DEV-004 | C | FPA-FUNC-039 · CONSERVADA | Comprobar límites de una banda antes de activar su revisión. | V12/V17 | C17/C07 | R08 | U07/U13 | EQ-039 |
 | REQ-SQUAD-005 | C | FPA-FUNC-040 · MODIFICADA | Revisar una salida sólo con evidencia de cobertura completa. | V02/V03 | C18/C03 | B03/D05 | U01/U12 | EQ-040 |
 | REQ-FM-003 | P | FPA-FUNC-041 · POSPUESTA | Si se reabre, conocer procedencia y disponibilidad de cinco archivos .fmf. | V02/V19 (futuro) | C18 | Q-14, B03 | U13 | EQ-041 |
 | REQ-PROFILE-002 | C | FPA-FUNC-042 · CONSERVADA | Detectar punto de curva inválido y deshacer sin afectar la activa. | V17 | C17/C07 | B03/B04 | U02/U13 | EQ-042 |
 | REQ-SCOPE-001 | F | Transversal/nueva | Completar análisis local de FM27 con el juego o la red desconectados. | V02/V03/V10 | C02/C18 | DP-01/DP-06 | U01/U12 | NV-01 |
 | REQ-SAVE-002 | F | Transversal/nueva | Identificar carrera y mánager antes de sincronizar dos UID iguales. | V02 | C02/C01 | DP-03 | U01 | NV-02 |
-| REQ-VIS-001 | F | Transversal/nueva | Obtener la misma proyección autorizada al ordenar, exportar o explicar. | Transversal, V03/V05/V18 | C03/C04/C14 | DP-05/D05 | U09 | NV-03, NV-26 |
+| REQ-VIS-001 | F | Transversal/nueva | Obtener la misma proyección autorizada al ordenar, exportar o explicar. | Transversal, V03/V05/V18 | C03/C04/C14 | DP-05/D05 | U09 | NV-03, NV-26, NV-28 |
 | REQ-VIS-002 | F | Transversal/nueva | Entender aviso, alcance efectivo y revocación de CA/PA. | V19/V07 | C15/C02 | DP-05, Q-04 | U09 | NV-04 |
 | REQ-FM-004 | F | Transversal/nueva | Entender por qué una vía no actualiza sus datos y otras siguen disponibles. | V02/V01 | C18/C02 | DP-04, Q-15 | U12 | NV-05 |
 | REQ-PREF-001 | C | Transversal/nueva | Distinguir orden por filosofía del DWRS y el XI de referencia. | V19/V05 | C15/C07 | R09, DP-11 | U02/U03 | NV-06 |
+| REQ-RATING-005 | C | Transversal/nueva | Distinguir la calidad actual de una proyección por fase con familiaridad 20/20 bajo permisos. | V06/V07 | C07/C08 | D01/D05 | U02/U09 | NV-28 |
 | REQ-RATING-004 | C | Transversal/nueva | Leer escala 1–20 del perfil alternativo por posición. | V08/V17 | C07/C17 | B04/E09 | U02 | NV-07 |
 | REQ-SCOUT-003 | C | Transversal/nueva | Guardar criterio o lista, revalidar y recuperar contexto. | V05/V07 | C04/C05 | B01/B05 | U04/U09 | NV-08 |
 | REQ-MARKET-003 | C | Transversal/nueva | Adoptar una oferta explícita y distinguirla de sueldo y valor FM. | V11/V07 | C10/C05 | B10/D01 | U05 | NV-09, NV-27 |
@@ -66,7 +67,7 @@ El requisito y el tratamiento proceden del [catálogo funcional](../to-be/02-cat
 | REQ-AI-002 | A | Transversal/nueva | Seguir la recomendación hasta la evidencia local de la misma revisión. | V18/V08 | C14/C07 | B05, DP-06 | U10 | NV-16 |
 | REQ-ART-001 | C | Transversal/nueva | Reconocer persona o club aun con retrato ausente o ambiguo. | V06/V19 | C01/C18 | R03, DP-07 | U11/U12 | NV-17 |
 | REQ-I18N-001 | F | Transversal/nueva | Leer la ficha en orden oficial y conservar identidad al cambiar cultura. | V06/V19 | C06/C15 | DP-08, Q-05 | U02/U11 | NV-18 |
-| REQ-UI-001 | F | Transversal/nueva | Completar el recorrido con teclado, texto ampliado y alto contraste. | Transversal, V03/V09 | C03/C08 | E10/D05 | U11 | NV-19 |
+| REQ-UI-001 | F | Transversal/nueva | Completar el recorrido con teclado, ajustar las columnas y recuperar sus preferencias. | Transversal, V03/V09 | C03/C08 | E10/D05 | U11 | NV-19, NV-29 |
 | REQ-UX-001 | F | Transversal/nueva | Ensayar decisiones con fixture local tras revisión del propietario. | Transversal, V01/V07 | C02/C05 | D01/D04, DP-09 | U03/U11 | NV-20 |
 | REQ-PERF-001 | F | Transversal/nueva | Cambiar filtro o selección con memoria acotada y salida vigente. | V05/V03 | C03/C18 | R02, PC-05 | U12 | NV-21 |
 | REQ-TECH-001 | F | Transversal/nueva | Reproducir las pruebas de presentación en el mismo escritorio compilado. | Transversal, sin vista propia | C03 como muestra de prueba | DP-02/DP-10, PC-04/10 | U11/U12 | NV-22 |

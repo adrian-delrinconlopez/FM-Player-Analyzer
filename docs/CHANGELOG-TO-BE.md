@@ -1,5 +1,10 @@
 # Registro de cambios de la especificación
 
+## 23 de noviembre de 2026 · Comparación por rol, columnas y Excel
+
+El propietario confirma DP-13/14. REQ-SQUAD-004 separa las fases y pide seleccionar puesto y roles. REQ-RATING-005 añade proyección con familiaridad 20/20 bajo ambos permisos. Q-17 conserva la decisión matemática pendiente. REQ-UI-001 amplía la configuración de columnas y REQ-EXPORT-001 exige XLSX en las tablas principales. NV-28/29 vinculan las pruebas. Las fórmulas vigentes conservan sus contratos y las revisiones históricas mantienen sus escalas. Los principios II y III de la Constitución cubren autorización y reproducibilidad.
+
+
 ## 22 de noviembre de 2026 · Alternativas visuales por tarea
 
 Se amplían el atlas y su manifiesto con un [tablero comparativo](design/15-comparativas-visuales.md) para revisar la presentación de las 19 superficies y los 18 candidatos a componentes. Incluye procedencia, límites y prueba propuesta para el mock de REQ-UX-001.
