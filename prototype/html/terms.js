@@ -1,238 +1,50 @@
 // FM27 · orden de A17 y etiquetas de referencia pendientes de cotejo.
 const terms = [
-  [
-    "attr.one_vs_one",
-    "One On Ones",
-    "Portería"
-  ],
-  [
-    "attr.acceleration",
-    "Acceleration",
-    "Física"
-  ],
-  [
-    "attr.aerial_reach",
-    "Aerial Reach",
-    "Portería"
-  ],
-  [
-    "attr.aggression",
-    "Aggression",
-    "Mental"
-  ],
-  [
-    "attr.agility",
-    "Agility",
-    "Física"
-  ],
-  [
-    "attr.anticipation",
-    "Anticipation",
-    "Mental"
-  ],
-  [
-    "attr.balance",
-    "Balance",
-    "Física"
-  ],
-  [
-    "attr.bravery",
-    "Bravery",
-    "Mental"
-  ],
-  [
-    "attr.command_of_area",
-    "Command Of Area",
-    "Portería"
-  ],
-  [
-    "attr.concentration",
-    "Concentration",
-    "Mental"
-  ],
-  [
-    "attr.composure",
-    "Composure",
-    "Mental"
-  ],
-  [
-    "attr.corners",
-    "Corners",
-    "Técnica"
-  ],
-  [
-    "attr.crossing",
-    "Crossing",
-    "Técnica"
-  ],
-  [
-    "attr.decisions",
-    "Decisions",
-    "Mental"
-  ],
-  [
-    "attr.determination",
-    "Determination",
-    "Mental"
-  ],
-  [
-    "attr.dribbling",
-    "Dribbling",
-    "Técnica"
-  ],
-  [
-    "attr.finishing",
-    "Finishing",
-    "Técnica"
-  ],
-  [
-    "attr.first_touch",
-    "First Touch",
-    "Técnica"
-  ],
-  [
-    "attr.flair",
-    "Flair",
-    "Mental"
-  ],
-  [
-    "attr.handling",
-    "Handling",
-    "Portería"
-  ],
-  [
-    "attr.heading",
-    "Heading",
-    "Técnica"
-  ],
-  [
-    "attr.jumping_reach",
-    "Jumping Reach",
-    "Física"
-  ],
-  [
-    "attr.kicking",
-    "Kicking",
-    "Portería"
-  ],
-  [
-    "attr.leadership",
-    "Leadership",
-    "Mental"
-  ],
-  [
-    "attr.long_shots",
-    "Long Shots",
-    "Técnica"
-  ],
-  [
-    "attr.marking",
-    "Marking",
-    "Técnica"
-  ],
-  [
-    "attr.off_the_ball",
-    "Off The Ball",
-    "Mental"
-  ],
-  [
-    "attr.pace",
-    "Pace",
-    "Física"
-  ],
-  [
-    "attr.passing",
-    "Passing",
-    "Técnica"
-  ],
-  [
-    "attr.positioning",
-    "Positioning",
-    "Mental"
-  ],
-  [
-    "attr.reflexes",
-    "Reflexes",
-    "Portería"
-  ],
-  [
-    "attr.rushing_out_tendency",
-    "Rushing Out (Tendency)",
-    "Portería"
-  ],
-  [
-    "attr.stamina",
-    "Stamina",
-    "Física"
-  ],
-  [
-    "attr.strength",
-    "Strength",
-    "Física"
-  ],
-  [
-    "attr.tackling",
-    "Tackling",
-    "Técnica"
-  ],
-  [
-    "attr.teamwork",
-    "Team Work",
-    "Mental"
-  ],
-  [
-    "attr.technique",
-    "Technique",
-    "Técnica"
-  ],
-  [
-    "attr.throwing",
-    "Throwing",
-    "Portería"
-  ],
-  [
-    "attr.vision",
-    "Vision",
-    "Mental"
-  ],
-  [
-    "attr.work_rate",
-    "Work Rate",
-    "Mental"
-  ],
-  [
-    "attr.communication",
-    "Communication",
-    "Portería"
-  ],
-  [
-    "attr.eccentricity",
-    "Eccentricity",
-    "Portería"
-  ],
-  [
-    "attr.natural_fitness",
-    "Natural Fitness",
-    "Física"
-  ],
-  [
-    "attr.free_kick_taking",
-    "Free Kick Taking",
-    "Técnica"
-  ],
-  [
-    "attr.long_throws",
-    "Long Throws",
-    "Técnica"
-  ],
-  [
-    "attr.penalty_taking",
-    "Penalty Taking",
-    "Técnica"
-  ],
-  [
-    "attr.punching",
-    "Punching",
-    "Portería"
-  ]
+  ["attr.one_vs_one", "One On Ones", "Portería"],
+  ["attr.acceleration", "Acceleration", "Física"],
+  ["attr.aerial_reach", "Aerial Reach", "Portería"],
+  ["attr.aggression", "Aggression", "Mental"],
+  ["attr.agility", "Agility", "Física"],
+  ["attr.anticipation", "Anticipation", "Mental"],
+  ["attr.balance", "Balance", "Física"],
+  ["attr.bravery", "Bravery", "Mental"],
+  ["attr.command_of_area", "Command Of Area", "Portería"],
+  ["attr.concentration", "Concentration", "Mental"],
+  ["attr.composure", "Composure", "Mental"],
+  ["attr.corners", "Corners", "Técnica"],
+  ["attr.crossing", "Crossing", "Técnica"],
+  ["attr.decisions", "Decisions", "Mental"],
+  ["attr.determination", "Determination", "Mental"],
+  ["attr.dribbling", "Dribbling", "Técnica"],
+  ["attr.finishing", "Finishing", "Técnica"],
+  ["attr.first_touch", "First Touch", "Técnica"],
+  ["attr.flair", "Flair", "Mental"],
+  ["attr.handling", "Handling", "Portería"],
+  ["attr.heading", "Heading", "Técnica"],
+  ["attr.jumping_reach", "Jumping Reach", "Física"],
+  ["attr.kicking", "Kicking", "Portería"],
+  ["attr.leadership", "Leadership", "Mental"],
+  ["attr.long_shots", "Long Shots", "Técnica"],
+  ["attr.marking", "Marking", "Técnica"],
+  ["attr.off_the_ball", "Off The Ball", "Mental"],
+  ["attr.pace", "Pace", "Física"],
+  ["attr.passing", "Passing", "Técnica"],
+  ["attr.positioning", "Positioning", "Mental"],
+  ["attr.reflexes", "Reflexes", "Portería"],
+  ["attr.rushing_out_tendency", "Rushing Out (Tendency)", "Portería"],
+  ["attr.stamina", "Stamina", "Física"],
+  ["attr.strength", "Strength", "Física"],
+  ["attr.tackling", "Tackling", "Técnica"],
+  ["attr.teamwork", "Team Work", "Mental"],
+  ["attr.technique", "Technique", "Técnica"],
+  ["attr.throwing", "Throwing", "Portería"],
+  ["attr.vision", "Vision", "Mental"],
+  ["attr.work_rate", "Work Rate", "Mental"],
+  ["attr.communication", "Communication", "Portería"],
+  ["attr.eccentricity", "Eccentricity", "Portería"],
+  ["attr.natural_fitness", "Natural Fitness", "Física"],
+  ["attr.free_kick_taking", "Free Kick Taking", "Técnica"],
+  ["attr.long_throws", "Long Throws", "Técnica"],
+  ["attr.penalty_taking", "Penalty Taking", "Técnica"],
+  ["attr.punching", "Punching", "Portería"],
 ];
