@@ -12,9 +12,9 @@ description: "Tareas de implementación y validación de SK-01"
 
 ## Fase 1 · Preparación compartida
 
-- [ ] T001 [P] Crear `FM27Analyzer.slnx` y `src/FM27Analyzer.Extraction.Poc/FM27Analyzer.Extraction.Poc.csproj` con C#/.NET 10, nulabilidad y analizadores. La configuración habitual debe compilar sin FM27 ni dependencias del cargador.
-- [ ] T002 Incorporar `tests/FM27Analyzer.Extraction.Tests/FM27Analyzer.Extraction.Tests.csproj` a `FM27Analyzer.slnx` como proyecto MSTest. Verificar que restauración, compilación y pruebas se pueden invocar por terminal en Windows 11 x64.
-- [ ] T003 [P] Registrar el entorno, la compilación y tienda de FM27, las versiones verificables del BepInEx ya instalado, los derechos que afectan al ensayo y la línea base sin captura en `%LOCALAPPDATA%/FM27Analyzer/SK-01/banco.json`. Identificar la copia y las condiciones de solo lectura sin abrir archivos `.fm`. Si falta un recurso, registrar qué ensayo queda bloqueado. Seguir la [preparación](quickstart.md#preparar-el-entorno) y [R1/R4](research.md).
+- [X] T001 [P] Crear `FM27Analyzer.slnx` y `src/FM27Analyzer.Extraction.Poc/FM27Analyzer.Extraction.Poc.csproj` con C#/.NET 10, nulabilidad y analizadores. La configuración habitual debe compilar sin FM27 ni dependencias del cargador.
+- [X] T002 Incorporar `tests/FM27Analyzer.Extraction.Tests/FM27Analyzer.Extraction.Tests.csproj` a `FM27Analyzer.slnx` como proyecto MSTest. Verificar que restauración, compilación y pruebas se pueden invocar por terminal en Windows 11 x64.
+- [X] T003 [P] Registrar el entorno, la compilación y tienda de FM27, las versiones verificables del BepInEx ya instalado, los derechos que afectan al ensayo y la línea base sin captura en `%LOCALAPPDATA%/FM27Analyzer/SK-01/banco.json`. Identificar la copia y las condiciones de solo lectura sin abrir archivos `.fm`. Si falta un recurso, registrar qué ensayo queda bloqueado. Seguir la [preparación](quickstart.md#preparar-el-entorno) y [R1/R4](research.md).
 
 ## Fase 2 · Contrato y reglas compartidas
 

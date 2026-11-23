@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/FM27Analyzer.Extraction.Poc/FM27Analyzer.Extraction.Poc.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/FM27Analyzer.Extraction.Tests/FM27Analyzer.Extraction.Tests.csproj" />
+  </Folder>
+</Solution>

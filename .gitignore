@@ -49,3 +49,12 @@ CMakeLists.txt.user*
 aqtinstall.log
 *.log
 .qtcreator/
+
+# FM27 Analyzer (.NET)
+bin/
+obj/
+.vs/
+*.user
+*.suo
+packages/
+TestResults/
