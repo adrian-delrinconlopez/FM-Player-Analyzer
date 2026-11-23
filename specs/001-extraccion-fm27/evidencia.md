@@ -46,3 +46,37 @@ La instantánea de un segundo en esta sesión sólo sirve como control del banco
 del capturador queda para las pruebas de campo. Los registros locales de esta comprobación son
 `%LOCALAPPDATA%/FM27Analyzer/SK-01/preflight-20261123-144915.json` y
 `%LOCALAPPDATA%/FM27Analyzer/SK-01/viabilidad-valencia-20260801.json`.
+
+## Contraste tras recarga con la interfaz predeterminada
+
+Se verificó una nueva instancia de FM27 y el guardado local abierto desde el diálogo de
+guardado, que se canceló. La tabla Primer equipo mostró el UID del jugador fijado y su ficha
+volvió a mostrar «Pase» con el mismo valor exacto. El UID coincidió con el identificador
+registrado por FM ActionLink - FMSH 2.2.3. Esta coincidencia acredita el UID emitido por
+ese plugin para la ficha observada. El plugin registró tres mensajes coincidentes en
+la sesión. La muestra independiente de un UID y un campo se fijó antes del ensayo de
+«Pase» en `%LOCALAPPDATA%/FM27Analyzer/SK-01/viabilidad/referencia.json`.
+
+**Memoria externa.** Se compararon tamaño de imagen y marca PE de `game_plugin.dll` con
+el perfil publicado para la build, y se leyeron dos veces los cuatro bytes del campo
+de fecha documentado. Ambas lecturas devolvieron **2026-08-01**, igual que la pantalla.
+Se comprobó identidad del proceso tras cada intento. El total de lectura fue de
+96 bytes incluidos los de la huella, sin leer registros de jugadores. El tamaño
+y la fecha de modificación de la copia coincidieron antes y después. Este control
+aporta evidencia de fecha, con hora observada desde la pantalla. La comprobación
+completa de sesión de T009 queda para el adaptador, incluido detectar una recarga
+que conserve la fecha. La evidencia local está en
+`%LOCALAPPDATA%/FM27Analyzer/SK-01/contraste-20261123-150320.json`.
+
+Para reproducir, comprobar copia y fecha en FM27, localizar el módulo cargado,
+comparar su huella PE con el perfil fijado y aplicar la codificación de la fecha
+documentada por la fuente. Leer dos veces con los derechos indicados arriba.
+El perfil identifica la ubicación de la fecha. Su código de localización referencia
+el formato de ordinal de día y año. [Perfil Steam 26620374](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/steam-26620374.toml) ·
+[Decodificación](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/crates/fmlibre-core/src/locate.rs)
+
+**Estado de las tareas.** T014 cuenta con una referencia de pantalla fijada. T015–T017
+siguen abiertas para contrastar dos lecturas de «Pase» por vía y elegir si ampliar.
+La compilación Release volvió a terminar con cero advertencias y errores y pasaron
+las 41 pruebas sintéticas. El inventario de fuentes para las entregas completas
+se mantiene en la [matriz TO-BE](matriz-fuentes-to-be.md).
