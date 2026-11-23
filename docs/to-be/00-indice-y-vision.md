@@ -73,6 +73,8 @@ La revisión del 22 de noviembre concreta el recorrido de refuerzo, la lectura e
 
 ### Entregas y Spec Kit
 
+- [Alcance funcional v1, matriz y orden de Spec Kit](../roadmap/06-alcance-v1.md)
+- [PoC A/B y evidencia del modelo de valoración](../roadmap/07-poc-y-modelo-v1.md)
 - [roadmap general](../roadmap/00-roadmap-general.md)
 - [fases y entregables](../roadmap/01-fases-y-entregables.md)
 - [dependencias y prioridades](../roadmap/02-dependencias-y-prioridades.md)

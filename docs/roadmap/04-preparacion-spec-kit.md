@@ -2,6 +2,8 @@
 
 La preparación posterior a Fase B ya está disponible. Consulta la [guía de instalación por equipo y primera sesión](05-arranque-spec-kit.md) y la [constitución propuesta](../../.specify/memory/constitution.md).
 
+El [orden de especificaciones v1](06-alcance-v1.md#incrementos-dependencias-y-orden-de-spec-kit) comienza con SK-01 para la PoC A. Cada bloque consume la evidencia de las PoC y los casos V1 que correspondan.
+
 El propietario puede ejecutar los pasos manualmente con Codex o GitHub Copilot. El repositorio conserva las decisiones y los casos de aceptación entre sesiones. Se fija la revisión de Spec Kit al preparar el primer bloque; la sintaxis de comandos puede depender de su versión/integración. No se inicializa Spec Kit en Fase B. [Flujo oficial de GitHub Spec Kit](https://github.com/github/spec-kit)
 
 | Etapa | Insumos de esta fase | Salida a revisar antes de avanzar |

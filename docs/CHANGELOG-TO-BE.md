@@ -1,5 +1,9 @@
 # Registro de cambios de la especificación
 
+## 23 de noviembre de 2026 · Alcance funcional v1
+
+DP-15/16 fijan el recorrido v1 desde la captura real hasta la recomendación por impacto en el XI. La [matriz v1](roadmap/06-alcance-v1.md) incorpora proyección, diagnóstico, simulación de refuerzo y XLSX, y difiere los flujos avanzados. REQ-FM-005, REQ-VIS-003 y REQ-RATING-005/006 trazan universo mundial, permisos independientes y escenarios actuales y potenciales. V1-01 a V1-10 fijan las comprobaciones. Los [protocolos A/B](roadmap/07-poc-y-modelo-v1.md) y Q-15/17/18 conservan las decisiones técnicas y matemáticas pendientes. La comprobación de los principios I–V figura en el alcance v1.
+
 ## 23 de noviembre de 2026 · Comparación por rol, columnas y Excel
 
 El propietario confirma DP-13/14. REQ-SQUAD-004 separa las fases y pide seleccionar puesto y roles. REQ-RATING-005 añade proyección con familiaridad 20/20 bajo ambos permisos. Q-17 conserva la decisión matemática pendiente. REQ-UI-001 amplía la configuración de columnas y REQ-EXPORT-001 exige XLSX en las tablas principales. NV-28/29 vinculan las pruebas. Las fórmulas vigentes conservan sus contratos y las revisiones históricas mantienen sus escalas. Los principios II y III de la Constitución cubren autorización y reproducibilidad.

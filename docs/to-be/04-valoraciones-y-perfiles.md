@@ -1,6 +1,6 @@
 # Valoraciones, perfiles y explicación
 
-REQ-RATING-001 a 005, REQ-ROLE-001/002 y REQ-PROFILE-001/002. Toda valoración identifica persona, rol o posición, fase, modelo, revisión numérica, observación y cobertura. Ordenar por el valor interno con un desempate estable; redondear sólo para mostrar. Comparar dos jugadores exige misma escala, definición y revisión o dos columnas explícitamente diferenciadas.
+REQ-RATING-001 a 006, REQ-ROLE-001/002 y REQ-PROFILE-001/002. Toda valoración identifica persona, rol o posición, fase, modelo, revisión numérica, observación y cobertura. Ordenar por el valor interno con un desempate estable; redondear sólo para mostrar. Comparar dos jugadores exige misma escala, definición y revisión o dos columnas explícitamente diferenciadas.
 
 ## DWRS Classic
 
@@ -29,9 +29,9 @@ Crear a partir de plantilla o duplicar con ID nuevo. Editar en borrador y previs
 
 ## Evaluación presente y proyección por rol
 
-La evaluación compara la misma posición y rol de fase, escala, perfil y revisión. La calidad actual usa las observaciones y la familiaridad posicional presentes. El porcentaje y las diferencias en puntos porcentuales corresponden a la escala normalizada de la valoración. Para un indicador 1–20, la diferencia se expresa en puntos de esa escala. Un índice táctico de dos fases puede coexistir si declara su ponderación y propósito.
+La evaluación compara la misma posición y rol de fase, escala, perfil y revisión. REQ-RATING-006 usa atributos observados y familiaridad posicional presente cuando corresponde. El escenario actual a 20/20 mantiene los mismos atributos. El porcentaje y las diferencias en puntos porcentuales corresponden a la escala normalizada de la valoración. Para un indicador 1–20, la diferencia se expresa en puntos de esa escala. Un índice táctico de dos fases puede coexistir si declara su ponderación y propósito.
 
-**Escenario aprobado.** REQ-RATING-005 estima el encaje futuro en un rol por fase. El evaluador recibe atributos hipotéticos del escenario y familiaridad **20/20 en la posición evaluada**, incluso al ensayar una posición distinta. El expediente indica horizonte, insumos, cobertura e hipótesis. Llegar a esa familiaridad requiere condiciones de desarrollo en el juego. Retener como variables separadas CA, PA, margen CA–PA expresado como PA − CA, atributos actuales, atributos relevantes por rol y fase, familiaridad observada y familiaridad del escenario. El PA bruto sólo informa del margen de desarrollo.
+**Proyección para v1.** REQ-RATING-005 estima el encaje futuro en un rol por fase. El evaluador recibe atributos hipotéticos, con una referencia que mantiene la familiaridad observada cuando es utilizable y el escenario aprobado de familiaridad **20/20 en la posición evaluada**. El expediente indica horizonte, insumos, cobertura e hipótesis. Llegar a esa familiaridad requiere condiciones de desarrollo en el juego. Retener como variables separadas CA, PA, margen PA − CA, atributos actuales, atributos relevantes por rol y fase, familiaridad observada y familiaridad del escenario. El PA bruto informa del margen de desarrollo. [Alcance v1](../roadmap/06-alcance-v1.md) · [Protocolo de PoC B](../roadmap/07-poc-y-modelo-v1.md#poc-b--calidad-actual-y-potencial-por-rol)
 
 DWRS Classic y curvas, reglas de cobertura y marcas por rol están documentados para valorar entradas. El talento y la prioridad marginal de entrenamiento valoran el estado o una ganancia local. La revisión del AS-IS no aporta una transformación verificada de CA/PA a atributos futuros por posición y fase. La producción resolverá esa transformación en Q-17 antes de publicar la proyección. El mock usa casos ficticios deterministas con márgenes y afinidades distintos, claramente marcados.
 

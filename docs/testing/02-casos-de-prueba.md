@@ -2,6 +2,8 @@
 
 Ejecutar con datos controlados del [prototipo](../ux-ui/05-especificacion-prototipo-html.md) o del [banco de rendimiento](03-validacion-rendimiento.md). Probar el núcleo directamente sin depender del HTML.
 
+Los [casos V1-01 a V1-10](../roadmap/06-alcance-v1.md#aceptación-de-v1) especifican los recorridos de entrega y enlazan a las pruebas de equivalencia, casos nuevos y fronteras reutilizados. El contraste con FM27 real sigue el [protocolo A/B](../roadmap/07-poc-y-modelo-v1.md).
+
 | Caso | Requisito | Entrada, acción y resultado esperado |
 |---|---|---|
 | NV-01 | REQ-SCOPE-001 | Un lote FM24 se rechaza antes de persistir. Sin red se completa plantilla → rol → XI. |

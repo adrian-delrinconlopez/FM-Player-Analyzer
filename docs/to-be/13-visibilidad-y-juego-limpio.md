@@ -1,6 +1,8 @@
 # Política de visibilidad y juego limpio
 
-REQ-VIS-001/002, REQ-EXPORT-001 y REQ-AI-002. La política efectiva depende de carrera, rama, mánager/perspectiva, fecha de observación, capacidad certificada, clase de campo y permiso vigente. La política se aplica en cada vía de captura y en la consulta del backend antes de construir claves de orden, índices derivados, agregados, páginas o herramientas. Si se desconoce la legitimidad de un campo o incluso la visibilidad de una persona, se omite. Por defecto el almacenamiento persistente contiene sólo observaciones autorizadas.
+REQ-VIS-001 a 003, REQ-FM-005, REQ-EXPORT-001 y REQ-AI-002. La política efectiva depende de carrera, rama, mánager/perspectiva, fecha de observación, capacidad certificada, clase de campo y permiso vigente. La política se aplica en cada vía de captura y en la consulta del backend antes de construir claves de orden, índices derivados, agregados, páginas o herramientas. Si se desconoce la legitimidad de un campo o incluso la visibilidad de una persona, se omite. Por defecto el almacenamiento persistente contiene sólo observaciones autorizadas.
+
+**Ámbito mundial en v1.** El ámbito inicial reúne la plantilla y los jugadores conocidos u ojeados. La activación expresa de mundo amplía identidades dentro del universo cargado acreditado. El acceso a valores de atributos ocultos o desconocidos requiere su propio permiso explícito y fuente acreditada por campo. CA/PA conservan su permiso específico. Las tres autorizaciones se evalúan en conjunto antes de consultar o usar un valor. [PoC A y test de permisos](../roadmap/07-poc-y-modelo-v1.md#poc-a--extracción-autorizada-de-fm27) · [Casos v1](../roadmap/06-alcance-v1.md#aceptación-de-v1)
 
 | Circunstancia | Representación permitida | Cálculos y acciones permitidos |
 |---|---|---|

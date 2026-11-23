@@ -2,6 +2,8 @@
 
 Todas están **PENDIENTES DE VALIDACIÓN**. Registrar entorno, revisión, entradas, salidas, desviaciones y artefactos permitidos. Una aprobación vale únicamente para la combinación ensayada. Los umbrales de muestra son PROPUESTAS de protocolo.
 
+La v1 empieza por [PoC A](07-poc-y-modelo-v1.md#poc-a--extracción-autorizada-de-fm27), que ejecuta PC-01 a PC-03 y contrasta universo y CA/PA. La [PoC B](07-poc-y-modelo-v1.md#poc-b--calidad-actual-y-potencial-por-rol) usa esas entradas acreditadas junto con los oráculos AS-IS para validar familiaridad y proyección antes de elegir el modelo.
+
 | ID y momento | Qué debe demostrarse / requisitos | Experimento y aceptación | Decisión si falla |
 |---|---|---|---|
 | PC-01 · antes de capturar | Plugin de lectura con FM27, IL2CPP y BepInEx de una compilación declarada; copia de prueba, dos vistas | Comparar al menos 30 filas en plantilla/externos, UID y cada tipo de campo con pantalla; repetir carga y desconexión. Cero exactos inventados, filas duplicadas o cambios en juego atribuibles al analizador. Para campos candidatos a captura híbrida, comparar BepInEx, lectura de memoria y su combinación. Registrar ganancia, discrepancias y coste. | Habilitar sólo las vías y campos contrastados. Usar vista tabular visible si hace falta. |
