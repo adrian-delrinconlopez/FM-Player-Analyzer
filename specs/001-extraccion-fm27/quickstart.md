@@ -17,9 +17,10 @@ del validador y capturas del juego se generarán en esa fase.
   registrar la omisión y usar un control sintético. Identidades fuera del
   ámbito inicial se usan como control, excluidas de la muestra compartible.
 - Fijar copia, fecha, perspectiva, permisos base, casos y límites antes de
-  capturar. Seleccionar hasta tres jugadores para el ensayo de viabilidad y
-  una lista previa de al menos 30 futbolistas para A-01. Cotejar UID y campos
-  con fichas o vistas de FM27 del mismo corte que sean independientes de
+  capturar. Seleccionar hasta tres jugadores para el ensayo de viabilidad.
+  Tras elegir una vía, fijar una lista de al menos 30 futbolistas antes de
+  la primera captura de A-01. Cotejar UID y campos con fichas o vistas de FM27
+  del mismo corte que sean independientes de
   la vía bajo ensayo. Conservar las referencias locales autorizadas.
 - Anotar el estado visible del juego y metadatos de instalación y guardados
   antes y después, sin abrir los archivos `.fm`. Registrar las operaciones del
@@ -36,23 +37,36 @@ dotnet test tests/FM27Analyzer.Extraction.Tests/FM27Analyzer.Extraction.Tests.cs
 ```
 
 La compilación normal y las pruebas sintéticas funcionan sin FM27 ni el loader.
-El procedimiento de captura del adaptador que pase la prueba pequeña se anota
-con su revisión y sus pasos o comando exactos. Las dos vías candidatas se
-comparan en el mismo corte y con el mismo campo visible. Para A-01, usar la
-vía elegida, permisos base y dos capturas consecutivas con los mismos UID y
-alcance. Dejar el juego en el mismo corte entre capturas.
+Antes de la primera captura real, ejecutar el control sintético de sesión y
+permisos. Un cambio de contexto o revisión durante el trabajo debe cancelar
+la captura e impedir la publicación del lote pendiente. El productor revalida
+el contexto justo antes de publicar.
 
-Con los lotes y la referencia local preparados según el
-[contrato](contracts/captura.md), ejecutar el comando de contraste previsto.
-El directorio de ejemplo representa el directorio local de ese ensayo:
+Anotar la revisión y los pasos o el comando exactos de cada vía. Hacer dos
+lecturas por vía viable del mismo campo visible, los mismos UID y el mismo
+corte. Para A-01, usar la vía elegida, permisos base y dos capturas consecutivas
+con los mismos UID y alcance de la referencia independiente. Dejar el juego
+en el mismo corte entre capturas.
+
+Preparar el manifiesto de acuerdo con la
+[modalidad del ensayo](contracts/captura.md#modalidades-de-a-01-y-resultados-adicionales).
+El directorio de ejemplo representa el directorio local de ese ensayo.
 
 ```powershell
 $sk01Run = Join-Path $env:LOCALAPPDATA 'FM27Analyzer\SK-01\ensayo-a01'
 dotnet run --project src/FM27Analyzer.Extraction.Poc/FM27Analyzer.Extraction.Poc.csproj -c Release -- verify --run (Join-Path $sk01Run 'run.json') --out (Join-Path $sk01Run 'informe.json')
 ```
 
-El manifiesto referencia los dos lotes y el cotejo directo de FM27. Registrar
-duración de cada captura, memoria pico del capturador y del validador, y el
+- **A-01 contrastable.** El manifiesto referencia los dos lotes y el cotejo
+  directo de FM27 por separado.
+- **A-01 bloqueada.** El manifiesto registra el motivo, el alcance y la clase
+  de evidencia disponible. El mismo comando genera un informe con A-01 sin
+  acreditar. Se registra la omisión o el fallo que corresponda.
+- **Resultados adicionales.** Si existen, indicar en el manifiesto las rutas
+  de `capacidades-adicionales.json` y `aislamiento.json`. El informe conserva
+  la clase de evidencia y el estado de cada escenario.
+
+Registrar duración de cada captura, memoria pico del capturador y del validador, y el
 coste observado dentro de FM27 si aplica, con la misma técnica de medida y línea
 base. Usar el mismo hardware, revisión, corte, alcance y método de referencia
 al comparar vías. Anotar cancelaciones y resultados parciales.
@@ -70,8 +84,9 @@ al comparar vías. Anotar cancelaciones y resultados parciales.
 
 Cerrar con los nueve escenarios marcados como aprobados, fallidos u omitidos
 y su clase de evidencia. A-01 se acredita conforme a SC-004 de la
-[especificación](spec.md#criterios-de-éxito-obligatorio). Entregar una muestra
-local autorizada y el informe con la matriz de capacidades y sus límites.
+[especificación](spec.md#criterios-de-éxito-obligatorio). Entregar el informe
+con la matriz de capacidades y sus límites, y la muestra local autorizada si
+está disponible.
 Si el entorno impide la captura de FM27, conservar el contraste sintético y
 la causa del bloqueo como evidencia del trabajo realizado. La prueba real
 queda sin acreditar.

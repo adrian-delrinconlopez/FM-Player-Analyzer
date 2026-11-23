@@ -58,8 +58,12 @@ la referencia tabular disponible y qué falta para reintentar.
 
 **Decisión** Pasar de la prueba pequeña a A-01 con una sola vía. Exigir identidad
 verificada, coincidencia con la referencia, prueba de visibilidad, repetibilidad y
-solo lectura. Comparar el coste de preparación, la duración, la memoria y la
-dependencia de la compilación si más de una supera la puerta. La vía y el reparto
+solo lectura. Cada vía viable aporta dos lecturas del mismo campo visible,
+los mismos UID y el mismo corte. Comparar valores, estados y procedencia
+descontando sólo los metadatos variables de ejecución. Tras elegir una vía,
+fijar la referencia de al menos 30 UID para las dos capturas de A-01. Si más de
+una vía supera la prueba pequeña, comparar el coste de preparación, la duración,
+la memoria y la dependencia de la compilación. La vía y el reparto
 por campo se eligen con evidencia. El contrato común se intercambia como un lote
 local acotado en JSON UTF-8 versionado. Para una fuente en el mismo proceso del
 validador puede usarse el mismo modelo en memoria.

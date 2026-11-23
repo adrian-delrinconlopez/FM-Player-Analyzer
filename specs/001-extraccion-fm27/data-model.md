@@ -11,7 +11,8 @@ vías y para fixtures sintéticas. [Especificación](spec.md) ·
 | --- | --- |
 | Contexto de captura | Edición FM27, compilación exacta, distribución e idioma cuando se verifican, instancia efímera, sesión, referencia local a la copia, identidad de carrera verificada o confirmación expresa de copia y corte, rama, perspectiva, club dirigido y fecha del juego. Incluye el ámbito y la revisión de política efectivos. Una recarga exige confirmar de nuevo el vínculo. |
 | Política efectiva | Ámbito base de plantilla y conocidos u ojeados. Autorizaciones independientes para mundo, atributos ocultos y CA/PA con revisión por sesión. El contraste de CA y PA se acredita por separado, sea cual sea el diseño posterior de sus controles. |
-| Muestra | Identificador de lote, esquema, contexto, vía y revisión del adaptador, instante UTC, límites y manifiesto de cierre. Contiene identidades autorizadas y observaciones. A-01 fija por anticipado la muestra esperada, por separado del contenido recuperado. |
+| Muestra | Identificador de lote, esquema, contexto, vía y revisión del adaptador, instante UTC, límites y manifiesto de cierre. Contiene identidades autorizadas y observaciones recuperadas. |
+| Referencia de contraste | Contexto verificado del ensayo, muestra esperada fijada por anticipado y observaciones de referencia con fuente independiente de la vía ensayada. El manifiesto referencia este artefacto por separado del lote. |
 | Futbolista | UID de origen textual con prefijos, tipo de fuente y carrera. El vínculo de club usa ID o asociación confirmada cuando hay evidencia. «Sin club» requiere confirmación explícita. Nombre, etiqueta de club o coincidencia de UID entre carreras son insuficientes para conciliar. |
 | Observación | Jugador, clave de campo y calificador si aplica (por ejemplo, posición y lado), tipo y unidad o escala, valor sólo cuando corresponda, estados y procedencia del dato y de la evidencia de visibilidad. Hereda el contexto común de la muestra. Incluye referencia a la revisión del catálogo si se usa para interpretar el campo. |
 | Comparación | Referencia independiente, entidad y campo comparables, esperados, recuperados, coincidencias, discrepancias, alcance, duración, memoria pico y clase de evidencia. La acreditación de dato y de cobertura se registra por vía, compilación, perspectiva y familia o campo. |
@@ -50,7 +51,9 @@ y el motivo, y los valores quedan fuera de la muestra y de los diagnósticos.
   dejando aparte sólo los metadatos que cambian legítimamente entre ejecuciones.
 - **Si cambia el contexto o hay un fallo.** Descartar resultados pendientes
   afectados por recarga, cambio de instancia, carrera, rama, perspectiva, corte
-  o permiso. Si se interrumpe o queda incompatible una vía, la última muestra
+  o permiso. Cancelar el trabajo afectado en cuanto se detecte el cambio. Una
+  vía que no pueda confirmar el contexto vigente deja el ensayo bloqueado.
+  Si se interrumpe o queda incompatible una vía, la última muestra
   válida se consulta únicamente en su contexto y bajo los permisos vigentes, con
   fecha y causa. Una vía independiente se valida por separado.
 
