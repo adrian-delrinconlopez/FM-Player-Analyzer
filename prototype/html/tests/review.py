@@ -1,5 +1,6 @@
 """Recorridos de aceptación del mock. Ejecutar desde cualquier directorio con Python 3.11+."""
 import argparse
+from zipfile import ZipFile
 from pathlib import Path
 import unittest
 
@@ -153,7 +154,8 @@ class Prototype(unittest.TestCase):
         self.click("close")
         self.click("export")
         expect(self.page.locator("dialog tbody tr")).to_have_count(139)
-        self.choose("exportFormat", "CSV")
+        self.choose("exportScope", "page")
+        expect(self.page.locator("dialog tbody tr")).to_have_count(16)
         expect(self.page.locator("dialog")).to_contain_text("Pase /20")
 
     def test_03_tacticas_y_bloqueos(self):
@@ -399,6 +401,208 @@ class Prototype(unittest.TestCase):
         self.page.keyboard.press("Enter")
         self.contains("Puesto DR")
 
+    def test_11_calidad_y_excel(self):
+        from openpyxl import load_workbook
+        from io import BytesIO
+
+        def workbook(action):
+            with self.page.expect_download() as download:
+                self.click(action)
+            file = download.value.path()
+            self.assertTrue(download.value.suggested_filename.endswith(".xlsx"))
+            with ZipFile(file) as archive:
+                self.assertIsNone(archive.testzip())
+                self.assertIn("xl/workbook.xml", archive.namelist())
+            return load_workbook(BytesIO(file.read_bytes()), data_only=True)
+
+        self.navigate("scout")
+        filtered = self.page.locator("[data-live=q]")
+        filtered.fill("Club Salina")
+        self.contains("3 jugadores")
+        self.click("sort:currentIP")
+        self.click("sort:currentIP")
+        self.click("export")
+        book = workbook("downloadList:all")
+        self.assertEqual(book.sheetnames, ["Ojeo", "Contexto"])
+        sheet = book["Ojeo"]
+        headers = [cell.value for cell in sheet[1]]
+        ip_column = next(i for i,h in enumerate(headers, 1) if "Actual · con posesión" in h)
+        self.assertEqual(sheet.cell(2, 1).value, "Sol Arce")
+        self.assertEqual(sheet.cell(2, ip_column).value, .72)
+        self.assertEqual(sheet.cell(2, ip_column).number_format, "0.0%")
+        self.assertEqual(sheet.cell(4, 1).value, "Mar Olmo")
+        self.assertIsNone(sheet.cell(4, ip_column).value)
+        self.assertTrue(sheet.auto_filter.ref)
+        self.assertTrue(all("Proyección" not in h and h not in {"PA", "CA"} for h in headers))
+
+        self.click("columns")
+        self.control("column:salary").uncheck()
+        self.control("column:pass").check()
+        self.click("moveColumn:pass:-1")
+        self.click("close")
+        customized = self.main.locator("thead").inner_text()
+        self.page.reload()
+        self.navigate("scout")
+        self.assertEqual(self.main.locator("thead").inner_text().replace(" ↓",""), customized.replace(" ↓",""))
+        self.click("export")
+        self.choose("exportScope", "page")
+        page_book = workbook("downloadList:page")
+        self.assertEqual(page_book["Ojeo"].max_row,17)
+        custom_headers = [cell.value for cell in page_book["Ojeo"][1]]
+        self.assertNotIn("Sueldo semanal (EUR/semana)",custom_headers)
+        self.assertLess(custom_headers.index("Pase /20"),custom_headers.index("Valor de mercado (EUR)"))
+        self.click("columns")
+        self.click("resetColumns")
+        self.click("close")
+
+        self.navigate("squad")
+        self.click("player:10")
+        self.choose("evaluation:pos","AML")
+        self.contains("W-IP","W-OOP","60 %","56 %","requiere habilitar CA y PA")
+        self.click("compareFrom:10")
+        self.choose("second",21)
+        self.contains("+12 pp","+10 pp", "puntos porcentuales")
+        self.choose("reference",21)
+        self.contains("-12 pp","-10 pp")
+        self.choose("reference",10)
+        self.assertEqual(self.page.evaluate("phaseDifference(80,80)"),"0 pp")
+        self.click("evalPosition:ST")
+        self.contains("Puesto ST","CFD-IP","CFD-OOP")
+        self.click("evalPosition:AML")
+        ip = self.main.locator(".phase-quality.ip .role-value").all_inner_texts()
+        oop = self.main.locator(".phase-quality.oop .role-value").all_inner_texts()
+        self.choose("evaluation:IP","IF")
+        self.assertNotEqual(ip,self.main.locator(".phase-quality.ip .role-value").all_inner_texts())
+        self.assertEqual(oop,self.main.locator(".phase-quality.oop .role-value").all_inner_texts())
+        self.choose("evaluation:OOP","TW")
+        self.assertNotEqual(oop,self.main.locator(".phase-quality.oop .role-value").all_inner_texts())
+        ip = self.main.locator(".phase-quality.ip .role-value").all_inner_texts()
+        self.choose("evaluation:profile","technique")
+        self.assertNotEqual(ip,self.main.locator(".phase-quality.ip .role-value").all_inner_texts())
+        self.contains("IF","TW")
+        self.choose("compareAdd",22)
+        self.contains("Mar Olmo","No disponible")
+        compare_book = workbook("exportComparison")
+        self.assertEqual(compare_book["Evaluación de rol"].max_row, 3)
+        self.assertTrue(compare_book["Evaluación de rol"].cell(2,4).number_format.endswith('0.0" pp"'))
+
+        self.navigate("settings")
+        for key in ["CA","PA"]:
+            self.click("permit:"+key)
+            self.click("acceptPermit:"+key)
+        self.navigate("squad")
+        self.click("player:10")
+        self.click("compareFrom:10")
+        self.choose("second",21)
+        self.choose("compareAdd",23)
+        self.choose("compareAdd",22)
+        self.contains("62 %","84 %","20/20","Datos insuficientes")
+        if OPTIONS.capture:
+            target = BASE / "review" / "evolucion"
+            target.mkdir(parents=True,exist_ok=True)
+            self.page.evaluate("window.scrollTo(0,0)")
+            self.page.screenshot(path=target / "comparador-proyeccion-1600x900.png", animations="disabled")
+        self.click("evalPosition:MC")
+        self.contains("Familiaridad actual en MC","4/20")
+        self.click("projection")
+        expect(self.page.locator("dialog")).to_contain_text("20/20")
+        self.click("close")
+        self.click("evalPosition:AML")
+        compare_future = workbook("exportComparison")
+        self.assertEqual(compare_future["Evaluación de rol"].max_row,5)
+        self.assertEqual(compare_future["Evaluación de rol"].cell(3,3).value,.84)
+        self.navigate("scout")
+        self.click("columns")
+        self.control("column:futureIP").check()
+        self.control("column:futureOOP").check()
+        self.click("close")
+        self.click("sort:futureIP")
+        self.click("sort:futureIP")
+        self.click("export")
+        enabled = workbook("downloadList:all")
+        authorized_headers = [cell.value for cell in enabled["Ojeo"][1]]
+        self.assertIn("CA",authorized_headers)
+        self.assertIn("PA",authorized_headers)
+        col = next(i for i,h in enumerate(authorized_headers,1) if "Proyección · con posesión" in h)
+        self.assertEqual(enabled["Ojeo"].cell(2,col).value,.84)
+        self.assertEqual(enabled["Ojeo"].cell(2,1).value,"Sol Arce")
+        self.navigate("settings")
+        self.click("permit:PA")
+        self.navigate("scout")
+        self.assertFalse(self.action("sort:futureIP").count())
+        self.click("export")
+        revoked = workbook("downloadList:all")
+        self.assertTrue(all("Proyección" not in cell.value and cell.value!="PA" for cell in revoked["Ojeo"][1]))
+        self.assertEqual(revoked["Contexto"]["B7"].value,"UID ascendente")
+        # Dos fuentes que sólo difieren en valores revocados deben emitir las mismas filas.
+        self.page.evaluate("developmentCases[21].PA = 199; developmentCases[21].gains.Ataque = 30")
+        self.click("export")
+        twin = workbook("downloadList:all")
+        self.assertEqual(list(twin["Ojeo"].values),list(revoked["Ojeo"].values))
+
+    def test_12_alternativas_visuales(self):
+        legacy = self.ctx.new_page() if OPTIONS.baseline else None
+        target = BASE / "review" / "evolucion"
+        if OPTIONS.capture:
+            target.mkdir(parents=True,exist_ok=True)
+
+        def shot(page, name):
+            expect(page.locator("main h1")).to_be_visible()
+            self.assertTrue(page.evaluate("document.documentElement.scrollWidth<=innerWidth+1"))
+            page.evaluate("window.scrollTo(0,0)")
+            if OPTIONS.capture:
+                page.screenshot(path=target / (name + ".png"), animations="disabled")
+
+        for w,h in [(1920,1080),(1366,768)]:
+            self.page.set_viewport_size({"width":w,"height":h})
+            self.page.reload()
+            size = f"{w}x{h}"
+            if legacy:
+                legacy.set_viewport_size({"width":w,"height":h})
+                legacy.goto(OPTIONS.baseline.resolve().as_uri())
+                shot(legacy,"resumen-original-"+size)
+                legacy.locator('[data-act="player:21"]').first.click()
+                shot(legacy,"ficha-original-"+size)
+            for direction in ["fm","pro"]:
+                self.navigate("home")
+                self.choose("visualDirection",direction)
+                shot(self.page,"resumen-"+direction+"-"+size)
+                self.click("player:21")
+                expect(self.control("visualDirection")).to_have_value(direction)
+                self.contains("Sol Arce","72 %","66 %")
+                shot(self.page,"ficha-"+direction+"-"+size)
+                self.click("ptab:Atributos")
+                self.contains("14–16")
+                self.click("compareFrom:21")
+                self.choose("second",10)
+                expect(self.page.locator("body")).to_have_attribute("data-direction",direction)
+                suffix = "-fm-" if direction=="fm" else "-"
+                shot(self.page,"comparador"+suffix+size)
+                self.navigate("scout")
+                shot(self.page,"ojeo"+suffix+size)
+                if w==1366:
+                    self.navigate("tactics")
+                    shot(self.page,"tactica-"+direction+"-"+size)
+
+    def test_13_direcciones_en_toda_la_interfaz(self):
+        expected = {"fm": ("rgb(24, 25, 45)", "rgb(37, 45, 83)"),
+                    "pro": ("rgb(236, 240, 233)", "rgb(243, 245, 239)")}
+        for direction,(rail,top) in expected.items():
+            self.choose("visualDirection",direction)
+            for width,height in [(1366,768),(911,512),(640,480)]:
+                self.page.set_viewport_size({"width":width,"height":height})
+                for page in ["home","squad","tactics","youth","reg","staff","scout","db","watch","market","stats","history","profiles","saves","settings","ai"]:
+                    with self.subTest(direction=direction,viewport=(width,height),page=page):
+                        self.navigate(page)
+                        self.assertTrue(self.main.locator("h1").is_visible())
+                        self.assertTrue(self.page.evaluate("document.documentElement.scrollWidth<=innerWidth+1"))
+                        for selector,color in [("#rail",rail),("#top",top)]:
+                            expect(self.page.locator(selector)).to_have_css("background-color",color)
+            self.navigate("scout")
+            self.click("columns")
+            expect(self.page.locator("dialog")).to_be_visible()
+            self.click("close")
+
     def test_10_teclado_y_contraste(self):
         keys = self.page.keyboard
         keys.press("Control+k")
@@ -438,6 +642,7 @@ class Prototype(unittest.TestCase):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--channel",default="msedge",help="Canal Playwright de Chromium instalado")
+    parser.add_argument("--baseline",type=Path,help="index.html del commit original para capturas comparables")
     parser.add_argument("--capture",action="store_true",help="Actualizar evidencias en review/")
     OPTIONS, remaining = parser.parse_known_args()
     unittest.main(argv=[__file__, *remaining], verbosity=2)

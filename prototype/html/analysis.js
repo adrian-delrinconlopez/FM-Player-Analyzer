@@ -75,16 +75,55 @@ function radar(p, pool) {
     )
   );
 }
+function performanceIndicators(cohort) {
+  const pool = cohort.ids.map(person);
+  return [
+    [metricsDef[cohort.metric][0], (p) => statValue(p, cohort.metric)],
+    ["Percentil · N=" + pool.length, (p) => percentile(p, pool, cohort.metric)],
+    ["Minutos", (p) => p.stats.minutes],
+    ["Sueldo semanal (EUR)", (p) => p.salary],
+  ];
+}
+
+function statResults(scope, pool, criteria) {
+  return criteria.pct > 0
+    ? pool.filter((p) => percentile(p, pool, criteria.metric) >= criteria.pct)
+    : scope.filter((p) => p.stats && (pool.includes(p) || (pool.length && p.stats.minutes < criteria.min)));
+}
+actions.exportStats = () => {
+  const criteria = state().stats,
+    { scope, pool } = statPool();
+  const rows = statResults(scope, pool, criteria);
+  const metric = criteria.metric;
+  exportExcel(
+    "Rendimiento observado",
+    ["Jugador", "Minutos", metricsDef[metric][0], "Percentil", "Sueldo semanal (EUR)"],
+    rows.map((p) => [p.name, p.stats.minutes, statValue(p, metric), percentile(p, pool, metric), p.salary]),
+    [
+      ["Temporada y competición", statSeason(scope[0])],
+      [
+        "Población",
+        criteria.pop === "own"
+          ? club()
+          : criteria.pop === "small"
+            ? "Cabo · ordinales 1–12"
+            : "Cabo · delanteros",
+      ],
+      ["N de la cohorte", pool.length],
+      ["Mínimo de minutos", criteria.min],
+      ["Percentil mínimo", criteria.pct],
+      ["Ámbito", "Todos los resultados filtrados"],
+    ],
+  );
+};
+
 function statsView() {
   const s = state().stats,
     { scope, pool } = statPool(),
     p = person(s.focus),
     metric = s.metric,
     chosen = s.chosen || [];
-  const qualifying =
-    s.pct > 0
-      ? pool.filter((q) => percentile(q, pool, metric) >= s.pct)
-      : scope.filter((q) => q.stats && (pool.includes(q) || (pool.length && q.stats.minutes < s.min)));
+  const qualifying = statResults(scope, pool, s);
   const goodFocus = qualifying.includes(p) ? p : qualifying[0];
   if (goodFocus) s.focus = goodFocus.id;
   const controls = `<div class="toolbar">${select(
@@ -141,7 +180,8 @@ function statsView() {
             ]),
           )
         : empty("Sin resultados para la población y el umbral elegidos."),
-      chosen.length >= 2 ? btn("Comparar selección", "statCompare", "primary", "compare") : "",
+      `<div class="actions">${qualifying.length ? btn("Exportar a Excel", "exportStats", "", "list") : ""}
+      ${chosen.length >= 2 ? btn("Comparar selección", "statCompare", "primary", "compare") : ""}</div>`,
     )
   );
 }

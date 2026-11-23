@@ -199,15 +199,17 @@ const person = (id) => people().find((p) => p.id === Number(id));
 const club = () => (career === "Faro" ? "Valencia CF" : "Club Bruma");
 const today = () => (career === "Faro" ? cuts[2] : "01 mar 2028");
 function special(p) {
-  if (career !== "Faro" || p.id !== 21) return {};
+  if (career !== "Faro") return {};
+  const scenario = developmentCases[p.id];
+  if (!scenario) return {};
   const allowed = {};
-  if (state().permissions.CA) allowed.CA = 122;
-  if (state().permissions.PA) allowed.PA = 151;
+  if (state().permissions.CA) allowed.CA = scenario.CA;
+  if (state().permissions.PA) allowed.PA = scenario.PA;
   return allowed;
 }
 function family(pos) {
   if (pos === "GK") return "Portería";
-  if (["DL", "DR", "DCL", "DCR"].includes(pos)) return "Defensa";
+  if (["DL", "DR", "DCL", "DCR", "WBL", "WBR"].includes(pos)) return "Defensa";
   return ["MC", "DM", "AMC"].includes(pos) ? "Medio" : "Ataque";
 }
 const roleBase = {

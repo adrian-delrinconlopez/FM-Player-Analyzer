@@ -155,6 +155,7 @@ views.saves = () =>
      `<p class="note">${{ Cargando: "Esperando el lote simulado. El último corte sigue disponible.", "Fuente incompatible": "Se conserva el último corte autorizado.", "Sin datos": "No hay registros en la vista del corte.", "Lista parcial": "Lectura incompleta. Las ausencias no acreditan salidas.", Disponible: "El corte ficticio está disponible en esta carrera." }[state().source]}</p><div class="actions">${btn("Reintentar sincronización", "retry", "primary")}</div>`,
  )}</div>`;
 changes.career = (el) => {
+  exportRevision++;
   closeDialog();
   career = el.value;
   trail = [];
@@ -163,6 +164,7 @@ changes.career = (el) => {
   render();
 };
 changes.source = (el) => {
+  exportRevision++;
   state().source = el.value;
   render();
 };
@@ -174,7 +176,7 @@ actions.retry = () => {
 function settingsView() {
   const s = state(),
     perm = (k) =>
-      `<div class="setting"><div><b>${k === "CA" ? "Capacidad actual" : "Capacidad potencial"} (${k})</b><small>${s.permissions[k] ? "Habilitada" : "Oculta"} · ${career === "Faro" ? "Fuente ficticia disponible para Sol Arce" : "Sin fuente disponible en Bruma"}</small></div>${career !== "Faro" ? chip("Sin fuente") : btn(s.permissions[k] ? "Desactivar " + k : "Activar " + k, "permit:" + k, s.permissions[k] ? "" : "plain")}</div>`;
+      `<div class="setting"><div><b>${k === "CA" ? "Capacidad actual" : "Capacidad potencial"} (${k})</b><small>${s.permissions[k] ? "Habilitada" : "Oculta"} · ${career === "Faro" ? "Datos ficticios para el conjunto de desarrollo" : "Sin fuente disponible en Bruma"}</small></div>${career !== "Faro" ? chip("Sin fuente") : btn(s.permissions[k] ? "Desactivar " + k : "Activar " + k, "permit:" + k, s.permissions[k] ? "" : "plain")}</div>`;
   return (
     heading("Configuración", "Preferencias de la carrera " + career) +
     panel(
@@ -207,8 +209,15 @@ Object.assign(actions, {
   permit: (k) => {
     if (state().permissions[k]) {
       state().permissions[k] = false;
-      for (const filter of [...Object.values(state().filters), ...Object.values(state().saved)])
+      exportRevision++;
+      for (const filter of [...Object.values(state().filters), ...Object.values(state().saved)]) {
         delete filter[k];
+        if (filter.sort === k || qualityColumns[filter.sort]?.kind === "future") {
+          filter.sort = "id";
+          filter.desc = false;
+          filter.page = 0;
+        }
+      }
       state().selection = {};
       state().messages = state().messages.filter((m) => m.kind !== "permission");
       render();
@@ -221,6 +230,7 @@ Object.assign(actions, {
   },
   acceptPermit: (k) => {
     state().permissions[k] = true;
+    exportRevision++;
     closeDialog();
     render();
     tell("Permiso " + k + " habilitado en " + career);
@@ -237,6 +247,8 @@ Object.assign(actions, {
       `<p>Se restaurarán ambas carreras, sus permisos, listas y escenarios de esta sesión.</p><div class="actions">${btn("Cancelar", "close")}${btn("Restaurar datos originales", "reset", "primary")}</div>`,
     ),
   reset: () => {
+    exportRevision++;
+    clearTablePreferences();
     sessions.Faro = newSession();
     sessions.Bruma = newSession();
     career = "Faro";

@@ -1,0 +1,209 @@
+/* Puesto y valoración compartidos por ficha, comparador y tablas. */
+.evaluation-controls {
+  display: flex;
+  align-items: end;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 12px;
+  background: var(--deep);
+  border: 1px solid var(--soft);
+  border-radius: 4px;
+}
+.role-fields {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-width: 0;
+}
+.role-fields label {
+  flex: 1 1 126px;
+  min-width: 0;
+}
+.role-fields select {
+  width: 100%;
+}
+.role-fields > strong {
+  flex-basis: 100%;
+}
+.role-workspace {
+  display: grid;
+  grid-template-columns: minmax(235px, 270px) minmax(0, 1fr);
+  gap: 16px;
+}
+.role-pitch {
+  position: relative;
+  min-height: 218px;
+  background: repeating-linear-gradient(0deg, #1b3c33 0 10%, #21453b 10% 20%);
+  border: 1px solid #557c6c;
+  border-radius: 4px;
+}
+.role-pitch button {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  min-width: 34px;
+  padding: 3px 4px;
+  font-size: 10px;
+  line-height: 1.1;
+  border-color: #739e8c;
+  background: #203931;
+}
+.role-pitch button:hover {
+  background: #315d51;
+}
+.role-pitch [aria-pressed="true"] {
+  color: #102523;
+  background: var(--mint);
+  border-color: #b6efdf;
+}
+.compare-people {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.compare-people > div {
+  flex: 1 0 150px;
+  border: 1px solid var(--soft);
+  border-left: 3px solid var(--mint);
+  border-radius: 4px;
+  background: var(--panel);
+  padding: 9px 12px;
+}
+.compare-people > div:first-child {
+  border-left-color: var(--blue);
+}
+.compare-actions {
+  padding: 8px 12px;
+}
+.quality-matrix {
+  display: grid;
+  gap: 12px;
+  margin: 0;
+}
+.phase-quality {
+  border-top: 2px solid var(--mint);
+}
+.phase-quality.oop {
+  border-top-color: var(--blue);
+}
+.phase-quality h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  background: var(--deep);
+}
+.phase-quality h3 span {
+  color: var(--sub);
+  font:
+    600 12px "Consolas",
+    monospace;
+}
+.phase-quality th:not(:first-child),
+.phase-quality td:not(:first-child) {
+  text-align: right;
+}
+.role-value {
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+.delta {
+  display: inline-block;
+  min-width: 52px;
+  margin-left: 7px;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 1px 4px;
+  color: var(--sub);
+  font-size: 11px;
+  text-align: center;
+}
+.delta.gain {
+  color: var(--mint);
+  border-color: #4b786a;
+}
+.delta.loss {
+  color: var(--rose);
+  border-color: #805564;
+}
+.quality-note {
+  display: flex;
+  align-items: center;
+  gap: 8px 16px;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  color: var(--sub);
+  font-size: 12px;
+  margin-top: 8px;
+}
+.dossier .quality-matrix {
+  margin-top: 12px;
+}
+.column-editor {
+  margin-bottom: 12px;
+  max-height: 52vh;
+  overflow: auto;
+}
+.column-editor > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 10px;
+  border-bottom: 1px solid var(--soft);
+  padding: 3px;
+}
+.column-editor label {
+  flex: 1 1 220px;
+}
+.column-editor button {
+  text-align: left;
+  justify-content: start;
+  font-size: 11px;
+  padding: 4px;
+}
+#modal:has([data-change="exportScope"]) .table-wrap {
+  margin-top: 10px;
+  max-height: 45vh;
+}
+#modal:has([data-change="exportScope"]) .context {
+  margin: 8px 0;
+}
+@media (max-width: 899px) {
+  .role-workspace {
+    grid-template-columns: 1fr;
+  }
+  .role-pitch {
+    max-width: 440px;
+    width: 100%;
+  }
+}
+
+.role-workspace > .role-fields {
+  grid-column: 1 / -1;
+  padding: 8px 10px;
+  background: var(--deep);
+  border: 1px solid var(--soft);
+}
+.role-workspace > .role-fields > strong {
+  flex: 0 0 auto;
+  align-self: end;
+  padding: 6px 12px 6px 0;
+}
+.player-table th .sort {
+  white-space: normal;
+  justify-content: flex-end;
+  max-width: 146px;
+}
+.preview-compare > * + * {
+  margin-top: 12px;
+}
+.preview-compare .role-workspace {
+  gap: 12px;
+}
+.preview-compare .phase-quality td {
+  height: 34px;
+}
+.preview-compare .phase-quality h3 {
+  padding-block: 6px;
+}

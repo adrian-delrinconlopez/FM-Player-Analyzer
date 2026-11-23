@@ -173,7 +173,7 @@ function dialog(title, body) {
   if (!modal.open) {
     const data = document.activeElement?.dataset;
     const key = data?.act ? "act" : data?.change ? "change" : null;
-    modalFocus = key ? { route, selector: '[data-' + key + '="' + CSS.escape(data[key]) + '"]' } : null;
+    modalFocus = key ? { route, selector: "[data-" + key + '="' + CSS.escape(data[key]) + '"]' } : null;
   }
   $("#modalBody").innerHTML =
     `<div class="panel-head"><h2>${esc(title)}</h2>${btn("Cerrar", "close", "plain", "close")}</div>${body}`;
@@ -183,11 +183,22 @@ function closeDialog() {
   if ($("#modal").open) $("#modal").close();
 }
 const crest = `<svg class="crest" viewBox="0 0 48 56" aria-hidden="true"><path fill="#efd5a7" d="M3 5l21-4 21 4v25c0 9-12 19-21 24C15 49 3 39 3 30z"/><path fill="#202933" d="M6 8l18-4 18 4v21c0 9-10 17-18 22C16 46 6 38 6 29z"/><path fill="#eeae63" d="M10 12h4v21l-4-5zm8 0h4v31l-4-5zm8 0h4v26l-4 5zm8 0h4v16l-4 5z"/><path fill="#fff1d0" d="M9 10l15 8 15-8-5 9-10 5-10-5z"/></svg>`;
+const visualDirections = {
+  original: "Original",
+  fm: "A · Football Manager",
+  pro: "B · Scouting profesional",
+};
+let visualDirection = "original";
+changes.visualDirection = (el) => {
+  visualDirection = el.value;
+  render();
+};
 function render() {
   const active = document.activeElement;
   const key = active?.dataset.change ? "change" : active?.dataset.act ? "act" : null;
   const focusKey = key ? active.dataset[key] : null;
   const s = state();
+  document.body.dataset.direction = visualDirection;
   document.body.classList.toggle("compact", s.compact);
   document.body.classList.toggle("menu-open", menuOpen);
   const destinations = menuGroups.flatMap(([, items]) => items.map(([id]) => id));
@@ -213,7 +224,7 @@ function render() {
         "",
       )}</nav><div class="manager"><span class="avatar">${career === "Faro" ? "MV" : "MA"}</span><span><b>Mánager ${career === "Faro" ? "Vega" : "Alba"}</b><small>Carrera ${career}</small></span></div>`;
   $("#top").innerHTML =
-    `<div class="top-left">${btn("Menú", "menu", "mobile", "menu")}<span class="crumb">${route.name === "home" ? "Centro de análisis" : club() + " · " + today()}</span>${icon("next", 12)}<b>${labels[route.name]}</b></div><div class="tools">${btn("Buscar", "search", "search", "search")}${views.ai ? btn("Asistente", "go:ai", "assistant", "ai") : ""}<span class="demo"><i></i>Partida de demostración</span></div>`;
+    `<div class="top-left">${btn("Menú", "menu", "mobile", "menu")}<span class="crumb">${route.name === "home" ? "Centro de análisis" : club() + " · " + today()}</span>${icon("next", 12)}<b>${labels[route.name]}</b></div><div class="tools">${btn("Buscar", "search", "search", "search")}${views.ai ? btn("Asistente", "go:ai", "assistant", "ai") : ""}${select("Dirección visual", "visualDirection", Object.entries(visualDirections), visualDirection)}<span class="demo"><i></i>Partida de demostración</span></div>`;
   const brumaEmpty =
     career === "Bruma" &&
     !["home", "db", "squad", "player", "watch", "saves", "settings", "ai"].includes(route.name);
@@ -227,7 +238,9 @@ function render() {
     content = brumaEmpty
       ? heading(labels[route.name]) + empty("Bruma aún no tiene observaciones para esta tarea.")
       : views[route.name]();
-  $("#content").innerHTML =
+  const main = $("#content");
+  main.className = "preview-" + route.name;
+  main.innerHTML =
     (trail.length ? btn("Volver", "back", "back", "back") : "") +
     (s.source !== "Disponible"
       ? `<div class="banner">${s.source} · Último corte simulado, ${today()} ${btn("Gestionar", "go:saves", "link")}</div>`

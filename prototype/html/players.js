@@ -23,10 +23,6 @@ function filters() {
     sort: "id",
     desc: false,
     page: 0,
-    columns:
-      route.name === "squad"
-        ? ["age", "fit", "end", "salary"]
-        : ["age", "fit", "dribbling", "value", "salary"],
   });
 }
 const initialRows = () =>
@@ -74,58 +70,120 @@ function listRows() {
         (!f.dribbling || (limit != null && limit >= +f.dribbling))
       );
     });
-  const val = (p) =>
-    f.sort === "fit"
-      ? score(p)
-      : f.sort === "dribbling"
-        ? Array.isArray(attr(p, "dribbling"))
-          ? attr(p, "dribbling")[0]
-          : attr(p, "dribbling")
-        : p[f.sort];
+  const sort = f.sort === "name" || authorizedColumns().includes(f.sort) ? f.sort : "id";
+  const config = evaluationConfig();
+  const val = (p) => {
+    const value = columnValue(p, sort, config);
+    return Array.isArray(value) ? value[0] : (value?.estimate ?? value);
+  };
   return rows.sort((a, b) => {
     const x = val(a),
       y = val(b);
-    if (x == null || y == null) return Number(x == null) - Number(y == null);
+    if (x == null || y == null) return Number(x == null) - Number(y == null) || a.id - b.id;
     return (typeof x === "string" ? x.localeCompare(y, "es") : x - y) * (f.desc ? -1 : 1) || a.id - b.id;
   });
 }
 const columnNames = {
   age: "Edad",
-  fit: "Encaje /100",
+  pos: "Posiciones",
+  group: "Vinculación",
+  fit: "Encaje de táctica /100",
   dribbling: "Regate /20",
   value: "Valor de mercado",
   salary: "Sueldo semanal",
   end: "Vencimiento",
   pass: "Pase /20",
+  CA: "CA",
+  PA: "PA",
 };
-function cell(p, col) {
-  return (
-    {
-      age: p.age + " años",
-      fit: score(p) == null ? "Sin nota" : fmt(score(p)),
-      dribbling: attrText(attr(p, "dribbling")),
-      pass: attrText(attr(p, "passing")),
-      value: money(p.value),
-      salary: wage(p),
-      end: p.end?.split("-").reverse().join("/") || unknown,
-      ...special(p),
-    }[col] ?? unknown
-  );
+const tableDefaults = {
+  squad: ["pos", "age", "currentIP", "currentOOP", "end", "salary", "CA", "PA"],
+  db: ["pos", "age", "currentIP", "dribbling", "value", "salary", "CA", "PA"],
+  scout: ["age", "currentIP", "currentOOP", "dribbling", "value", "salary", "CA", "PA"],
+  watch: ["pos", "age", "currentIP", "value", "salary", "CA", "PA"],
+  youth: ["group", "age", "currentIP", "futureIP", "dribbling", "CA", "PA"],
+};
+const preferenceKey = "fm27.columns.v2";
+const allColumnKeys = [...Object.keys(columnNames), ...Object.keys(qualityColumns)];
+let tablePreferences;
+try {
+  tablePreferences = JSON.parse(localStorage.getItem(preferenceKey)) || {};
+} catch {
+  tablePreferences = {};
+}
+if (typeof tablePreferences !== "object" || Array.isArray(tablePreferences)) tablePreferences = {};
+const tablePreferenceId = () => career + ":" + route.name;
+function preferredColumns() {
+  const stored = tablePreferences[tablePreferenceId()];
+  return Array.isArray(stored)
+    ? [...new Set(stored.filter((k) => allColumnKeys.includes(k)))]
+    : tableDefaults[route.name];
+}
+function storeColumns(columns) {
+  tablePreferences[tablePreferenceId()] = columns;
+  try {
+    localStorage.setItem(preferenceKey, JSON.stringify(tablePreferences));
+  } catch {
+    /* Retener en esta sesión. */
+  }
+}
+function clearTablePreferences() {
+  tablePreferences = {};
+  try {
+    localStorage.removeItem(preferenceKey);
+  } catch {
+    /* El navegador puede bloquear file:. */
+  }
+}
+function columnAllowed(key) {
+  if (key === "CA" || key === "PA") return career === "Faro" && state().permissions[key];
+  return qualityColumns[key]?.kind !== "future" || projectionAllowed();
 }
 function authorizedColumns() {
-  return [...filters().columns, ...Object.keys(state().permissions).filter((k) => state().permissions[k])];
+  return preferredColumns().filter(columnAllowed);
 }
+function columnLabel(key, config, excel = false) {
+  const quality = qualityColumns[key];
+  if (quality) return quality.label + " · " + config[quality.phase] + " (%)";
+  return (
+    (excel
+      ? { age: "Edad (años)", value: "Valor de mercado (EUR)", salary: "Sueldo semanal (EUR/semana)" }[key]
+      : null) || columnNames[key]
+  );
+}
+function columnValue(p, key, config) {
+  const quality = qualityColumns[key];
+  if (quality) return evaluateRole(p, config, quality.phase)[quality.kind];
+  if (key === "CA" || key === "PA") return special(p)[key] ?? null;
+  if (key === "pos") return p.pos.join(" / ");
+  if (key === "fit") return score(p);
+  if (key === "pass") return attr(p, "passing");
+  if (key === "dribbling") return attr(p, "dribbling");
+  return p[key] ?? null;
+}
+function cell(p, key, config) {
+  const value = columnValue(p, key, config);
+  if (qualityColumns[key]) return qualityText(value);
+  if (key === "age") return value + " años";
+  if (key === "value") return money(value);
+  if (key === "salary") return wage(p);
+  if (key === "end") return value?.split("-").reverse().join("/") || unknown;
+  if (key === "fit") return value == null ? "Sin nota" : fmt(value);
+  return attrText(value);
+}
+const pageSize = 16;
 const idOptions = (pool) => pool.map((p) => [p.id, p.name + " · " + p.pos[0]]);
 function listView() {
   const f = filters(),
     rows = listRows(),
     picked = selected(),
     cols = authorizedColumns(),
-    n = 16;
+    config = evaluationConfig(),
+    n = pageSize;
   f.page = Math.min(f.page, Math.max(0, Math.ceil(rows.length / n) - 1));
   const scouting = route.name === "scout";
   const context = route.context,
-    columns = cols.map((c) => columnNames[c] || c);
+    columns = cols.map((c) => columnLabel(c, config));
   const posOptions = [...new Set(initialRows().flatMap((p) => p.pos))].sort();
   const roleOptions = [
     ...new Set(posOptions.flatMap((pos) => ["IP", "OOP"].map((phase) => role(pos, phase)))),
@@ -159,7 +217,7 @@ function listView() {
       `<input type="checkbox" aria-label="Seleccionar ${esc(p.name)}" data-change="pick:${p.id}" ${picked.includes(p.id) ? "checked" : ""}>`,
       personBtn(p),
       chip(rowStatus(p), lightStatus(p)),
-      ...cols.map((c) => (c === "fit" && score(p) != null ? chip(cell(p, c), "green") : esc(cell(p, c)))),
+      ...cols.map((c) => esc(cell(p, c, config))),
       scouting && context
         ? btn("Comparar", "contextPair:" + p.id, "link", "compare")
         : btn(state().watch.includes(p.id) ? "Quitar" : "Seguir", "follow:" + p.id, "link", "watch"),
@@ -179,9 +237,9 @@ function listView() {
     (context
       ? `<div class="context"><b>Refuerzo para ${context.pos}</b> · ${person(context.id).name} · ${context.form} · ${role(context.pos, "IP")} / ${role(context.pos, "OOP")}</div>`
       : "") +
-    `<section class="panel player-table">${listTools}${controls}${advanced}<div class="split table-tools"><span><b>${rows.length}</b> jugadores · ${picked.length} seleccionados</span><div class="actions">${picked.length >= 2 ? btn("Comparar selección", "compareSelected", "primary", "compare") : ""}${picked.length ? btn("Seguir selección", "followSelection") : ""}${btn("Exportar", "export", "plain", "list")}</div></div>
- ${rows.length ? tbl(["", sortable("Jugador", "name"), "Estado", ...cols.map((c, i) => (["age", "fit", "value", "salary", "end", "dribbling"].includes(c) ? sortable(columns[i], c) : columns[i])), "Acción"], data) : empty(route.name === "watch" ? "La lista está vacía. Selecciona Seguir en una ficha o en Ojeo." : undefined)}
- <div class="panel-foot"><span>Valoración de ejemplo · Perfil Faro r1 · 50 % IP</span><div class="actions">${f.page ? btn("Anterior", "page:-1") : ""}<span>Página ${f.page + 1} / ${Math.max(1, Math.ceil(rows.length / n))}</span>${(f.page + 1) * n < rows.length ? btn("Siguiente", "page:1") : ""}</div></div></section>`
+    `<section class="panel player-table">${listTools}${controls}${advanced}${evaluationControls(config)}<div class="split table-tools"><span><b>${rows.length}</b> jugadores · ${picked.length} seleccionados</span><div class="actions">${picked.length >= 2 ? btn("Comparar selección", "compareSelected", "primary", "compare") : ""}${picked.length ? btn("Seguir selección", "followSelection") : ""}${btn("Exportar a Excel", "export", "", "list")}</div></div>
+ ${rows.length ? tbl(["", sortable("Jugador", "name"), "Estado", ...cols.map((c, i) => sortable(columns[i], c)), "Acción"], data) : empty(route.name === "watch" ? "La lista está vacía. Selecciona Seguir en una ficha o en Ojeo." : undefined)}
+ <div class="panel-foot"><span>Valoraciones demostrativas · ${config.pos} · ${evaluationProfiles[config.profile]} ${!projectionAllowed() ? "· La proyección requiere CA y PA" : ""}</span><div class="actions">${f.page ? btn("Anterior", "page:-1") : ""}<span>Página ${f.page + 1} / ${Math.max(1, Math.ceil(rows.length / n))}</span>${(f.page + 1) * n < rows.length ? btn("Siguiente", "page:1") : ""}</div></div></section>`
   );
 }
 Object.keys(listNames).forEach((k) => (views[k] = listView));
@@ -219,26 +277,132 @@ Object.assign(changes, {
     render();
   },
   column: (key, el) => {
-    let f = filters();
-    f.columns = el.checked ? [...f.columns, key] : f.columns.filter((k) => k !== key);
+    const columns = preferredColumns();
+    storeColumns(el.checked ? [...columns, key] : columns.filter((k) => k !== key));
     render();
+    columnsDialog();
+    $("#modal [data-change='column:" + key + "']")?.focus();
   },
-  exportFormat: (el) => exportPreview(el.value),
+  exportScope: (el) => exportPreview(el.value),
 });
-function exportPreview(format = "Excel (.xlsx)") {
-  const ids = selected(),
-    rows = listRows().filter((p) => !ids.length || ids.includes(p.id)),
-    cols = authorizedColumns();
+function columnsDialog() {
+  const visible = authorizedColumns(),
+    config = evaluationConfig();
+  const entries = [...visible, ...allColumnKeys.filter((k) => columnAllowed(k) && !visible.includes(k))];
   dialog(
-    "Vista previa de exportación",
-    select("Formato simulado", "exportFormat", ["Excel (.xlsx)", "CSV"], format) +
+    "Columnas de " + listNames[route.name],
+    `<div class="column-editor">${entries
+      .map((key) => {
+        const index = visible.indexOf(key),
+          label = columnLabel(key, config);
+        return `<div><label class="check"><input type="checkbox" data-change="column:${key}" ${index >= 0 ? "checked" : ""}>${esc(label)}</label>
+    ${index > 0 ? btn("Subir " + label, "moveColumn:" + key + ":-1", "plain") : ""}
+    ${index >= 0 && index < visible.length - 1 ? btn("Bajar " + label, "moveColumn:" + key + ":1", "plain") : ""}</div>`;
+      })
+      .join("")}</div>${btn("Restaurar columnas", "resetColumns")}`,
+  );
+}
+actions.moveColumn = (key, step) => {
+  const columns = [...preferredColumns()],
+    visible = authorizedColumns();
+  const target = visible[visible.indexOf(key) + Number(step)];
+  if (!target) return;
+  const i = columns.indexOf(key),
+    j = columns.indexOf(target);
+  [columns[i], columns[j]] = [columns[j], columns[i]];
+  storeColumns(columns);
+  render();
+  columnsDialog();
+  (
+    $("#modal [data-act='moveColumn:" + key + ":" + step + "']") ??
+    $("#modal [data-change='column:" + key + "']")
+  )?.focus();
+};
+actions.resetColumns = () => {
+  storeColumns([...tableDefaults[route.name]]);
+  render();
+  columnsDialog();
+};
+
+function exportRows(scope) {
+  const rows = listRows();
+  if (scope === "page") return rows.slice(filters().page * pageSize, (filters().page + 1) * pageSize);
+  if (scope === "selection") return rows.filter((p) => selected().includes(p.id));
+  return rows;
+}
+function exportPreview(scope = "all") {
+  const cols = authorizedColumns(),
+    config = evaluationConfig(),
+    rows = exportRows(scope);
+  const options = [
+    ["all", "Todos los resultados filtrados"],
+    ["page", "Página visible"],
+  ];
+  if (selected().length) options.push(["selection", "Selección dentro del filtro"]);
+  dialog(
+    "Exportar a Excel",
+    select("Filas que se exportarán", "exportScope", options, scope) +
       `<p class="context">${rows.length} filas · Orden y columnas de la vista · Datos ficticios</p>` +
+      btn("Descargar XLSX", "downloadList:" + scope, "primary") +
       tbl(
-        ["Jugador", "Estado", ...cols.map((c) => columnNames[c] || c)],
-        rows.map((p) => [p.name, rowStatus(p), ...cols.map((c) => esc(cell(p, c)))]),
+        ["Jugador", "Estado", ...cols.map((c) => columnLabel(c, config))],
+        rows.map((p) => [esc(p.name), rowStatus(p), ...cols.map((c) => esc(cell(p, c, config)))]),
       ),
   );
 }
+function excelValue(p, key, config) {
+  const value = columnValue(p, key, config);
+  if (qualityColumns[key]) return percentCell(value);
+  if (value == null) return null;
+  if (Array.isArray(value) || typeof value === "object") return attrText(value);
+  if (key === "end") return { value: new Date(value + "T00:00:00Z"), format: "dd/mm/yyyy" };
+  return value;
+}
+actions.downloadList = (scope) => {
+  const cols = authorizedColumns(),
+    config = evaluationConfig(),
+    f = filters();
+  const rows = exportRows(scope);
+  const applied = [
+    ["Búsqueda", f.q],
+    ["Posición", f.pos],
+    ["Rol", f.role],
+    ["Disponibilidad", f.status],
+    ["Edad máxima", f.age],
+    ["Valor máximo (M€)", f.value],
+    ["Regate mínimo", f.dribbling],
+    ...["CA", "PA"].filter(columnAllowed).map((k) => [k + " mínima", f[k]]),
+  ]
+    .filter(([, value]) => value != null && value !== "")
+    .map(([key, value]) => key + " = " + value);
+  if (f.dribbling) applied.push(f.possible ? "Incluir posibles" : "Sólo seguros");
+  const sort = f.sort === "name" || cols.includes(f.sort) ? f.sort : "id";
+  exportExcel(
+    listNames[route.name],
+    ["Jugador", "Estado", ...cols.map((c) => columnLabel(c, config, true))],
+    rows.map((p) => [p.name, rowStatus(p), ...cols.map((c) => excelValue(p, c, config))]),
+    [
+      [
+        "Ámbito",
+        { all: "Resultados filtrados", page: "Página " + (f.page + 1), selection: "Selección filtrada" }[
+          scope
+        ],
+      ],
+      ["Filtros", applied.join(" · ") || "Sin filtros"],
+      [
+        "Orden",
+        sort === "id"
+          ? "UID ascendente"
+          : (sort === "name" ? "Jugador" : columnLabel(sort, config)) +
+            (f.desc ? " descendente" : " ascendente"),
+      ],
+      ...evaluationMetadata(
+        config,
+        cols.some((c) => qualityColumns[c]?.kind === "future"),
+      ),
+    ],
+  );
+};
 function follow(id) {
   const s = state();
   if (route.name === "watch" && route.list != null) {
@@ -297,16 +461,7 @@ Object.assign(actions, {
     delete state().filters[listKey()];
     render();
   },
-  columns: () =>
-    dialog(
-      "Columnas visibles",
-      Object.entries(columnNames)
-        .map(
-          ([k, v]) =>
-            `<label class="check"><input type="checkbox" data-change="column:${k}" ${filters().columns.includes(k) ? "checked" : ""}>${v}</label>`,
-        )
-        .join(""),
-    ),
+  columns: columnsDialog,
   saveFilter: () => {
     state().saved[listKey()] = structuredClone(filters());
     tell("Búsqueda guardada en " + career);
@@ -345,8 +500,13 @@ Object.assign(actions, {
     tell("Selección añadida a seguimiento");
     render();
   },
-  compareSelected: () => go("compare", { ids: [...selected()] }),
-  contextPair: (id) => go("compare", { ids: [route.context.id, +id], context: route.context }),
+  compareSelected: () => go("compare", { ids: [...selected()], evaluation: { ...evaluationConfig() } }),
+  contextPair: (id) =>
+    go("compare", {
+      ids: [route.context.id, +id],
+      context: route.context,
+      evaluation: { ...evaluationConfig() },
+    }),
   compareFrom: (id) => {
     dialog(
       "Comparar con",
@@ -365,7 +525,7 @@ Object.assign(actions, {
   },
 });
 changes.second = (el) => {
-  if (+el.value) go("compare", { ids: [route.reference, +el.value] });
+  if (+el.value) go("compare", { ids: [route.reference, +el.value], evaluation: { ...evaluationConfig() } });
 };
 function attributes(p) {
   const groups = ["Técnica", "Mental", "Física", "Portería"];
@@ -386,9 +546,7 @@ function attributes(p) {
     .join("")}</div>`;
 }
 function fitPanel(p) {
-  const phase = route.role?.endsWith("OOP") ? "OOP" : "IP",
-    also = p.pos.flatMap((pos) => ["IP", "OOP"].map((ph) => role(pos, ph)));
-  const rating = phase === "IP" ? p.ip : p.oop;
+  const config = evaluationConfig();
   const known = Object.keys(p.attrs).length;
   const orderedBands = terms
     .filter(([k]) => p.attrs[k] != null)
@@ -407,17 +565,19 @@ function fitPanel(p) {
     )
     .join("");
 
-  return `<div class="columns">${panel(
-    "Encaje por rol",
-    select("Rol analizado", "profileRole", [...new Set(also)], route.role || also[0]) +
-      `<div class="rating"><strong>${fmt(rating)}</strong> /100</div>${phaseBars(p)}` +
-      pair("Valoración de ejemplo", phase === "IP" ? "Con posesión" : "Sin posesión") +
-      pair("Perfil de muestra", "Faro · r1") +
+  return `<div class="columns dossier">${panel(
+    "Calidad por posición y rol",
+    evaluationControls(config) +
+      roleQualityTable([p], config) +
+      pair(
+        "Familiaridad actual en " + config.pos,
+        positionalFamiliarity(p, config.pos) == null ? unknown : positionalFamiliarity(p, config.pos) + "/20",
+      ) +
       pair("Atributos con evidencia", known + " de 47") +
-      pair("Rol de fase", "Denominación pendiente"),
+      `<p class="note">Valoraciones demostrativas · FM27 · Códigos de rol de referencia.</p>`,
   )}
  ${panel(
-   "Lectura del jugador",
+   visualDirection === "pro" ? "Evidencia de ojeo" : "Lectura del jugador",
    evidence +
      pair(
        "Mayor mínimo observado",
@@ -439,10 +599,6 @@ function fitPanel(p) {
      `<p class="note">Nota predefinida para el puesto. Los intervalos conservan ambos extremos.</p>`,
  )}</div>`;
 }
-changes.profileRole = (el) => {
-  route.role = el.value;
-  render();
-};
 function playerView() {
   const p = person(route.id),
     tab = route.tab || "Resumen",
@@ -479,83 +635,144 @@ function playerView() {
   );
 }
 views.player = playerView;
-function phaseBars(p) {
-  return (
-    '<div class="phase-bars">' +
-    [
-      ["IP", p.ip],
-      ["OOP", p.oop],
-    ]
-      .map(
-        ([phase, v]) =>
-          `<div><span>${phase}</span><div class="scale">${v == null ? "" : `<i style="width:${v}%"></i>`}</div><b>${fmt(v)}</b></div>`,
-      )
-      .join("") +
-    "</div>"
-  );
+function roleQualityTable(players, config) {
+  const projections = projectionAllowed();
+  const rates = ["IP", "OOP"]
+    .map((phase) => {
+      const ratings = players.map((p) => evaluateRole(p, config, phase));
+      const rateRow = (kind, label) => {
+        const values = ratings.map((r) => r[kind]);
+        return [
+          label,
+          ...ratings.map((result, i) => {
+            const value = values[i];
+            const delta = value == null ? null : values[0] == null ? null : value - values[0];
+            const label = kind === "future" && result.reason ? result.reason : qualityText(value);
+            return `<span class="role-value">${label}</span>${
+              i && delta != null
+                ? `<span class="delta ${delta > 0 ? "gain" : delta < 0 ? "loss" : ""}">${phaseDifference(value, values[0])}</span>`
+                : ""
+            }`;
+          }),
+        ];
+      };
+      return `<section class="phase-quality ${phase.toLowerCase()}"><h3>${phases[phase]} <span>${config[phase]}</span></h3>
+    ${tbl(
+      ["Indicador", ...players.map((p) => esc(p.name))],
+      [rateRow("current", "Actual"), ...(projections ? [rateRow("future", "Proyección")] : [])],
+    )}</section>`;
+    })
+    .join("");
+  return `<div class="quality-matrix">${rates}</div><div class="quality-note">
+  <span>${players.length > 1 ? "Δ frente al referente en puntos porcentuales (pp). " : ""}${projections ? "Proyección con familiaridad hipotética 20/20." : "Proyección indisponible · requiere habilitar CA y PA."}</span>
+  ${btn("Supuestos de la proyección", "projection", "link")}</div>`;
 }
 function compareView() {
-  const ps = route.ids.map(person),
-    ref = ps[0],
-    rows = [
-      ["Posiciones", (p) => p.pos.join(" / ")],
-      ["Encaje /100", (p) => fmt(score(p))],
-      ["Con posesión /100", (p) => fmt(p.ip)],
-      ["Sin posesión /100", (p) => fmt(p.oop)],
-      ["Regate /20", (p) => attrText(attr(p, "dribbling"))],
-      ["Pase /20", (p) => attrText(attr(p, "passing"))],
-      ["Edad", (p) => p.age],
-      ["Valor de mercado de ejemplo", (p) => money(p.value)],
-      ["Sueldo vigente", wage],
-      ...Object.keys(state().permissions)
-        .filter((k) => state().permissions[k])
-        .map((k) => [k + " ficticia", (p) => special(p)[k] ?? unknown]),
-    ];
-  if (route.cohort)
-    rows.unshift(
-      [metricsDef[route.cohort.metric][0], (p) => fmt(statValue(p, route.cohort.metric))],
-      [
-        "Percentil · N=" + route.cohort.ids.length,
-        (p) => fmt(percentile(p, route.cohort.ids.map(person), route.cohort.metric)),
-      ],
-    );
+  const players = route.ids.map(person),
+    reference = players[0],
+    config = evaluationConfig();
   const cohort = route.cohort;
-  function cardValues(p, i) {
-    if (cohort) {
-      const rank = percentile(p, cohort.ids.map(person), cohort.metric);
-      return `<div class="rating"><strong>${fmt(statValue(p, cohort.metric))}</strong></div><small>${metricsDef[cohort.metric][0]} · ${statSeason(p)}</small>${pair("Minutos", p.stats.minutes)}${pair("Percentil", rank == null ? "N insuficiente" : fmt(rank))}`;
-    }
-    const value = score(p),
-      reference = score(ref);
-    return `<div class="rating"><strong>${value == null ? "Sin nota" : fmt(value)}</strong>${value == null ? "" : " /100"}</div><small>Valoración de ejemplo</small>${phaseBars(p)}${i && reference != null && value != null ? chip(sign(value - reference) + " puntos", value >= reference ? "green" : "gold") : ""}`;
-  }
-  const layout = ps
-    .map(
-      (p, i) =>
-        `<div class="card compare-card"><div class="eyebrow">${i === 0 ? "Referente" : "Comparado " + i}</div>${personBtn(p)}${cardValues(p, i)}</div>`,
-    )
-    .join("");
+  const rows = cohort
+    ? performanceIndicators(cohort)
+    : [
+        ["Posiciones", (p) => p.pos.join(" / ")],
+        [
+          "Familiaridad actual en " + config.pos,
+          (p) => {
+            const value = positionalFamiliarity(p, config.pos);
+            return value == null ? unknown : value + "/20";
+          },
+        ],
+        ["Regate /20", (p) => attrText(attr(p, "dribbling"))],
+        ["Pase /20", (p) => attrText(attr(p, "passing"))],
+        ["Edad", (p) => p.age],
+        ["Valor de mercado de ejemplo", (p) => money(p.value)],
+        ["Sueldo vigente", wage],
+        ...["CA", "PA"].filter(columnAllowed).map((k) => [k + " ficticia", (p) => special(p)[k] ?? unknown]),
+      ];
+  const challenger = players[1];
+  const samePosition = reference.pos.some((pos) => challenger.pos.includes(pos));
+  const canSimulate = market.includes(challenger) && own().includes(reference) && samePosition;
+  const tactical =
+    route.context && canSimulate && score(reference) != null && score(challenger) != null
+      ? `<div class="context"><b>Escenario táctico ${route.context.form}</b> · ${route.context.pos} ·
+      Índice del XI de ejemplo al 50 % por fase: ${fmt(score(reference))} → ${fmt(score(challenger))}/100
+      (${sign(score(challenger) - score(reference))} puntos). ${btn("Simular refuerzo", "simulate:" + reference.id + ":" + challenger.id, "link", "market")}</div>`
+      : "";
   return (
     heading(
       "Comparador de jugadores",
-      route.cohort
-        ? statSeason(ref) + " · Población fija de " + route.cohort.ids.length
-        : "Perfil Faro r1 · 50 % con posesión · " + today(),
+      cohort
+        ? statSeason(reference) + " · Población fija de " + cohort.ids.length
+        : "Valoraciones demostrativas · " + today(),
+      btn("Exportar a Excel", "exportComparison", "", "list"),
     ) +
-    `<div class="comparison">${layout}</div><div class="toolbar">${select("Referente", "reference", idOptions(ps), ref.id)}${ps.length < 5 ? select("Añadir jugador", "compareAdd", [[0, "Seleccionar…"], ...idOptions(people().filter((p) => !route.ids.includes(p.id) && (!route.cohort || route.cohort.ids.includes(p.id))))], 0) : ""}${ps.length > 2 ? select("Retirar jugador", "compareRemove", [[0, "Seleccionar…"], ...idOptions(ps)], 0) : ""}
- ${market.includes(ps[1]) && own().includes(ref) && ps[1].pos.some((pos) => ref.pos.includes(pos)) ? btn("Simular refuerzo", "simulate:" + ref.id + ":" + ps[1].id, "primary", "market") : ""}</div>` +
+    `<div class="compare-people">${players
+      .map((p, i) => `<div><small>${i ? "Comparado" : "Referente"}</small>${personBtn(p)}</div>`)
+      .join("")}</div>
+    <div class="toolbar compare-actions">${select("Referente", "reference", idOptions(players), reference.id)}
+    ${players.length < 5 ? select("Añadir jugador", "compareAdd", [[0, "Seleccionar…"], ...idOptions(people().filter((p) => !route.ids.includes(p.id) && (!cohort || cohort.ids.includes(p.id))))], 0) : ""}
+    ${players.length > 2 ? select("Retirar jugador", "compareRemove", [[0, "Seleccionar…"], ...idOptions(players)], 0) : ""}
+    ${canSimulate && !tactical ? btn("Simular refuerzo", "simulate:" + reference.id + ":" + challenger.id, "", "market") : ""}</div>` +
+    tactical +
+    (cohort
+      ? ""
+      : panel(
+          "Evaluación de rol",
+          `<div class="role-workspace">${evaluationControls(config, true)}<div>${roleQualityTable(players, config)}</div></div>`,
+        )) +
     panel(
-      "Evidencia comparable",
+      cohort ? "Rendimiento y observaciones" : "Evidencia comparable",
       tbl(
-        ["Indicador", ...ps.map((p) => p.name)],
-        rows.map(([k, fn]) => [k, ...ps.map(fn)]),
+        ["Indicador", ...players.map((p) => esc(p.name))],
+        rows.map(([key, value]) => [key, ...players.map((p) => esc(cohort ? fmt(value(p)) : value(p)))]),
       ) +
-        (ref.id === 10 && route.ids.includes(21)
+        (reference.id === 10 && route.ids.includes(21)
           ? '<p class="note">Sol frente a Leo · Regate entre +1 y +3 puntos sobre 20.</p>'
           : ""),
     )
   );
 }
+actions.exportComparison = () => {
+  const players = route.ids.map(person),
+    config = evaluationConfig();
+  const cohort = route.cohort;
+  if (cohort) {
+    exportExcel(
+      "Comparación observada",
+      ["Indicador", ...players.map((p) => p.name)],
+      performanceIndicators(cohort).map(([name, value]) => [name, ...players.map(value)]),
+      [
+        ["Temporada y competición", statSeason(players[0])],
+        ["N de la cohorte", cohort.ids.length],
+      ],
+    );
+    return;
+  }
+  const authorized = projectionAllowed();
+  const headers = ["Indicador", players[0].name];
+  for (const p of players.slice(1)) headers.push(p.name, "Δ " + p.name + " (pp)");
+  const rows = Object.entries(qualityColumns)
+    .filter(([key]) => columnAllowed(key))
+    .map(([key, { phase, kind }]) => {
+      const ratings = players.map((p) => evaluateRole(p, config, phase)[kind]);
+      const reference = ratings[0];
+      return [
+        columnLabel(key, config),
+        percentCell(reference),
+        ...ratings
+          .slice(1)
+          .flatMap((value) => [
+            percentCell(value),
+            ppCell(value == null || reference == null ? null : value - reference),
+          ]),
+      ];
+    });
+  exportExcel("Evaluación de rol", headers, rows, [
+    ...evaluationMetadata(config, authorized),
+    ["Diferencias", "Jugador comparado menos referente, expresadas en puntos porcentuales."],
+  ]);
+};
 views.compare = compareView;
 Object.assign(changes, {
   reference: (el) => {

@@ -41,21 +41,79 @@ views.home = () => {
   const hero = `<section class="hero"><div class="hero-data">${crest}<div><div class="hero-season">Temporada ${career === "Faro" ? "2027 / 28" : "2028"} · Carrera ${career}</div><h1>${club()}</h1><p>${icon("calendar", 15)} ${today()} <span>·</span> Informe del club</p></div></div><div class="hero-foot">${chip("Datos ficticios", "glass")}</div></section>`;
   if (career === "Bruma") return hero + panel("Plantilla vinculada", personBtn(team[0]));
   const aml = person(lineup().ids[9]);
+  const metrics = `<div class="metrics">${metric("Plantilla vinculada", team.length, "Primer equipo, cantera y cesión", "squad")}${metric("Disponibles", fit + "<em> / " + team.length + "</em>", "1 lesionado · 1 cedida", "shield", "mint")}${metric("Presupuesto", "6,0 <em>M€</em>", "Para escenarios de compra", "wallet")}${metric("Sistema activo", s.formation, "Dos fases · 50 % con posesión", "tactics")}</div>`;
+  const lineupPanel = panel(
+    "Once de referencia",
+    pitch(s.formation, s.phase, "openSlot") +
+      `<div class="panel-foot"><span><i class="dot"></i> ${s.phase === "IP" ? "Con posesión" : "Sin posesión"}</span>${btn("Abrir pizarra", "go:tactics", "link", "arrow")}</div>`,
+    chip(s.formation),
+    "fieldpanel",
+  );
+  const priorities = panel(
+    "Prioridades deportivas",
+    attention(
+      "alert",
+      "gold",
+      "Revisar la banda izquierda",
+      aml.name + " · " + fmt(score(aml)) + "/100 · Sin relevo",
+      "openSlot:9",
+    ) +
+      attention(
+        "calendar",
+        "blue",
+        "Contrato en último año",
+        "Leo Nube · vence el 30 jun 2028",
+        "contract:10",
+      ) +
+      attention("shield", "rose", "Baja en la defensa", "Dani Lago · hasta el 30 sep 2027", "player:13") +
+      `<div class="insight"><div class="eyebrow">${icon("youth", 16)} Evolución destacada</div>
+    <div class="split"><div><b>Leo Nube</b><small>Regate · cierres 2026 / 2027</small></div><strong class="mint">11 → 13</strong></div>
+    ${btn("Ver evolución", "evolve:10", "link", "arrow")}</div>`,
+    "",
+    "priorities",
+  );
+  const distribution = panel(
+    "Distribución por línea",
+    ["Portería", "Defensa", "Medio", "Ataque"]
+      .map((k) => {
+        const n = team.filter((p) => family(p.pos[0]) === k).length;
+        return `<div class="barrow"><span>${k}</span><div><i style="width:${(n / team.length) * 100}%"></i></div><b>${n}</b></div>`;
+      })
+      .join(""),
+    "",
+    "distribution",
+  );
+  const observed = panel(
+    "Jugadores observados",
+    market.map((p) => `<div class="split row">${personBtn(p)}${chip(money(p.value))}</div>`).join(""),
+    btn("Ojeo", "go:scout", "link", "arrow"),
+    "observed",
+  );
+
+  if (visualDirection === "fm") {
+    const shortcuts = [
+      ["squad", "Plantilla"],
+      ["tactics", "Táctica"],
+      ["scout", "Ojeo"],
+      ["youth", "Desarrollo"],
+    ];
+    return (
+      hero +
+      `<div class="club-shortcuts" role="navigation" aria-label="Accesos del club">${shortcuts.map(([id, label]) => btn(label, "go:" + id, "plain", id)).join("")}</div>` +
+      metrics +
+      `<div class="overview-fm">${lineupPanel}${priorities}${observed}${distribution}</div>`
+    );
+  }
+  if (visualDirection === "pro") {
+    return (
+      hero + metrics + `<div class="overview-pro">${priorities}${lineupPanel}${observed}${distribution}</div>`
+    );
+  }
   return (
     hero +
-    `<div class="metrics">${metric("Plantilla vinculada", team.length, "Primer equipo, cantera y cesión", "squad")}${metric("Disponibles", fit + "<em> / " + team.length + "</em>", "1 lesionado · 1 cedida", "shield", "mint")}${metric("Presupuesto", "6,0 <em>M€</em>", "Para escenarios de compra", "wallet")}${metric("Sistema activo", s.formation, "Dos fases · 50 % con posesión", "tactics")}</div>
- <div class="dashboard-grid">${panel("Once de referencia", pitch(s.formation, s.phase, "openSlot") + `<div class="panel-foot"><span><i class="dot"></i> ${s.phase === "IP" ? "Con posesión" : "Sin posesión"}</span>${btn("Abrir pizarra", "go:tactics", "link", "arrow")}</div>`, chip(s.formation), "fieldpanel")}
- ${panel("Prioridades deportivas", attention("alert", "gold", "Revisar la banda izquierda", aml.name + " · " + fmt(score(aml)) + "/100 · Sin relevo", "openSlot:9") + attention("calendar", "blue", "Contrato en último año", "Leo Nube · vence el 30 jun 2028", "contract:10") + attention("shield", "rose", "Baja en la defensa", "Dani Lago · hasta el 30 sep 2027", "player:13") + `<div class="insight"><div class="eyebrow">${icon("youth", 16)} Evolución destacada</div><div class="split"><div><b>Leo Nube</b><small>Regate · cierres 2026 / 2027</small></div><strong class="mint">11 → 13</strong></div>${btn("Ver evolución", "evolve:10", "link", "arrow")}</div>`, chip("3 avisos", "gold"))}</div>
- <div class="dashboard-grid">${panel(
-   "Distribución por línea",
-   ["Portería", "Defensa", "Medio", "Ataque"]
-     .map((k) => {
-       const n = team.filter((p) => family(p.pos[0]) === k).length;
-       return `<div class="barrow"><span>${k}</span><div><i style="width:${(n / team.length) * 100}%"></i></div><b>${n}</b></div>`;
-     })
-     .join(""),
- )}
- ${panel("Jugadores observados", market.map((p) => `<div class="split row">${personBtn(p)}${chip(money(p.value))}</div>`).join(""), btn("Ojeo", "go:scout", "link", "arrow"))}</div>`
+    metrics +
+    `<div class="dashboard-grid">${lineupPanel}${priorities}</div>
+    <div class="dashboard-grid">${distribution}${observed}</div>`
   );
 };
 actions.openSlot = (i) => {

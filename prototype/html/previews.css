@@ -1,0 +1,572 @@
+/* A · el club como portal operativo. */
+body[data-direction="fm"] {
+  --panel: #1c1c30;
+  --deep: #151626;
+  --soft: #373851;
+  --line: #535471;
+  --mint: #eed38d;
+  --blue: #bac9ff;
+  --sub: #c0c2d7;
+  background: #171727;
+  border-bottom: 1px solid #353752;
+}
+body[data-direction="fm"] .hero {
+  background: #262d55;
+  border: 0;
+  border-left: 5px solid #e5b962;
+  border-radius: 2px;
+  min-height: 102px;
+  padding: 10px 20px;
+}
+body[data-direction="fm"] .hero h1 {
+  font-size: clamp(29px, 3vw, 43px);
+}
+body[data-direction="fm"] .hero-season {
+  color: #dfd1a3;
+}
+body[data-direction="fm"] .hero .crest {
+  width: 44px;
+  height: 51px;
+}
+body[data-direction="fm"] .club-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 5px 10px;
+  background: #252c4e;
+  border-bottom: 2px solid #565b89;
+}
+body[data-direction="fm"] .club-shortcuts button {
+  color: #f3f4ff;
+}
+body[data-direction="fm"] .metrics {
+  gap: 1px;
+  background: #414366;
+  border-block: 1px solid #414366;
+}
+body[data-direction="fm"] .metric {
+  border: 0;
+  padding: 8px 12px;
+  border-radius: 0;
+}
+body[data-direction="fm"] .metric strong {
+  font-size: 23px;
+}
+body[data-direction="fm"] .overview-fm {
+  display: grid;
+  grid-template-columns: minmax(0, 1.28fr) minmax(0, 1.03fr) minmax(0, 0.86fr);
+  gap: 10px;
+  align-items: start;
+}
+body[data-direction="fm"] .fieldpanel,
+body[data-direction="fm"] .priorities {
+  grid-row: span 2;
+}
+body[data-direction="fm"] .overview-fm .pitch {
+  height: clamp(260px, 29vh, 335px);
+}
+body[data-direction="fm"] .panel,
+body[data-direction="fm"] .identity {
+  border-radius: 2px;
+  border-color: #43445d;
+  padding: 12px;
+}
+body[data-direction="fm"] .panel-head {
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 10px;
+  padding-bottom: 7px;
+}
+body[data-direction="fm"] .panel-head h2 {
+  color: #e5e7ff;
+  font-size: 15px;
+}
+body[data-direction="fm"] .attention {
+  padding-block: 8px;
+}
+body[data-direction="fm"] .insight {
+  background: #2d2c45;
+  border-color: #514962;
+}
+body[data-direction="fm"] .identity {
+  background: #262d55;
+  border-left: 5px solid #e5b962;
+  padding: 14px 18px;
+}
+body[data-direction="fm"] .identity .avatar {
+  border-radius: 5px;
+  background: #141a37;
+  color: #f0d491;
+  border-color: #7784ad;
+}
+body[data-direction="fm"] .identity p {
+  color: #d9deed;
+}
+body[data-direction="fm"] .tabs {
+  background: #242947;
+  padding: 3px 8px 0;
+  gap: 8px;
+}
+body[data-direction="fm"] .evaluation-controls {
+  padding: 8px;
+}
+body[data-direction="fm"] .dossier {
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  gap: 10px;
+}
+body[data-direction="fm"] :is(td, .pair) {
+  padding-block: 5px;
+}
+body[data-direction="fm"] td {
+  height: 35px;
+}
+body[data-direction="fm"] th {
+  background: #2e324e;
+}
+body[data-direction="fm"] .attribute {
+  padding: 3px 0;
+}
+body[data-direction="fm"] .primary {
+  color: #27212a;
+}
+
+/* B · el informe como superficie continua. */
+body[data-direction="pro"] {
+  color-scheme: light;
+  --text: #152a2c;
+  --sub: #465b5d;
+  --mint: #155f53;
+  --blue: #305f8d;
+  --rose: #8c3044;
+  --gold: #745019;
+  --panel: #f8f8f3;
+  --deep: #eef2ec;
+  --line: #aabbb6;
+  --soft: #d1dcd6;
+  color: var(--text);
+  background: #f8f8f3;
+}
+body[data-direction="pro"] :is(input, select) {
+  background: #fff;
+  color: #132f32;
+  border-color: #77918a;
+}
+body[data-direction="pro"] button {
+  background: #fff;
+  color: #144139;
+  border-color: #839a92;
+}
+body[data-direction="pro"] :is(.plain, .link, .back, .person, .attention, .tabs button) {
+  background: transparent;
+}
+body[data-direction="pro"]
+  :is(button, .metric, .panel, .chip, .identity, .hero, .insight, .toolbar, .evaluation-controls) {
+  border-radius: 0;
+  box-shadow: none;
+}
+body[data-direction="pro"] button:hover {
+  background: #e2ece6;
+}
+body[data-direction="pro"] .tabs {
+  gap: 0;
+  border-color: #a6b9b2;
+}
+body[data-direction="pro"] .tabs button.active {
+  border-bottom-color: #146555;
+}
+body[data-direction="pro"] :is(.panel, .metric, .identity) {
+  background: none;
+  border: none;
+}
+body[data-direction="pro"] .panel {
+  padding: 10px 0 12px;
+  border-top: 2px solid #376357;
+}
+body[data-direction="pro"] .panel-head {
+  margin-bottom: 10px;
+}
+body[data-direction="pro"] .panel-head h2 {
+  font-size: 20px;
+  font-weight: 500;
+  font-family: Georgia, serif;
+  letter-spacing: -0.3px;
+}
+body[data-direction="pro"] .hero {
+  background: none;
+  border: 0;
+  border-bottom: 3px solid #275649;
+  padding: 5px 0 13px;
+  min-height: 90px;
+}
+body[data-direction="pro"] .hero .crest {
+  filter: none;
+  width: 43px;
+  height: 51px;
+}
+body[data-direction="pro"] .hero .hero-season,
+body[data-direction="pro"] .hero p,
+body[data-direction="pro"] .hero h1 {
+  color: #21443f;
+}
+body[data-direction="pro"] :is(.hero h1, .identity h1) {
+  font:
+    500 clamp(33px, 3.6vw, 52px) / 1.05 Georgia,
+    serif;
+  letter-spacing: -1px;
+}
+body[data-direction="pro"] .hero .chip {
+  color: #295148;
+  border-color: #96ada2;
+  background: #e8eee9;
+}
+body[data-direction="pro"] .metrics {
+  gap: 0;
+  padding: 0;
+  border-block: 1px solid var(--line);
+}
+body[data-direction="pro"] .metric {
+  border-right: 1px solid var(--soft);
+  padding: 8px 12px;
+}
+body[data-direction="pro"] .metric:last-child {
+  border: 0;
+}
+body[data-direction="pro"] .metric .icon {
+  display: none;
+}
+body[data-direction="pro"] .metric strong {
+  font-size: 27px;
+  letter-spacing: -0.5px;
+}
+body[data-direction="pro"] .overview-pro {
+  display: grid;
+  grid-template-columns: minmax(0, 1.17fr) minmax(0, 1fr);
+  gap: 16px 24px;
+}
+body[data-direction="pro"] .overview-pro .pitch {
+  height: clamp(260px, 30vh, 330px);
+}
+body[data-direction="pro"] .attention {
+  border: 0;
+  border-bottom: 1px solid var(--soft);
+  padding: 8px 4px;
+}
+body[data-direction="pro"] .insight {
+  padding: 8px 0 0;
+  background: none;
+  border: 0;
+}
+body[data-direction="pro"] .identity {
+  border-block: 1px solid var(--line);
+  padding: 13px 0;
+}
+body[data-direction="pro"] .identity > .avatar {
+  border-radius: 0;
+  background: #e2ece5;
+  color: #254d42;
+  border-color: #a6bdb2;
+  height: 60px;
+  width: 60px;
+}
+body[data-direction="pro"] .dossier {
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 24px;
+}
+body[data-direction="pro"] .primary {
+  color: white;
+  background: #235f54;
+  border-color: #235f54;
+}
+body[data-direction="pro"] .primary:hover {
+  background: #17423b;
+}
+body[data-direction="pro"] th {
+  background: #e8eee8;
+  color: #344c46;
+}
+body[data-direction="pro"] tbody tr:hover {
+  background: #e8eee8;
+}
+body[data-direction="pro"] .scale {
+  background: #dde5df;
+}
+body[data-direction="pro"] .iconbox {
+  color: #36534a;
+  background: #e6ece5;
+}
+body[data-direction="pro"] .chip {
+  background: #e9efea;
+  color: #23433c;
+  border-color: #9eada5;
+}
+body[data-direction="pro"] .phase-quality h3 {
+  background: #edf1ec;
+}
+body[data-direction="pro"] .quality-note {
+  color: #465b5d;
+}
+@media (max-width: 1280px) {
+  body[data-direction="fm"] .overview-fm {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  body[data-direction="fm"] .fieldpanel,
+  body[data-direction="fm"] .priorities {
+    grid-row: auto;
+  }
+}
+@media (max-width: 899px) {
+  :is(body[data-direction="pro"], body[data-direction="fm"]) :is(.overview-pro, .overview-fm, .dossier) {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 500px) {
+  .preview-tools label {
+    grid-template-columns: 1fr;
+  }
+}
+.tools label:has([data-change="visualDirection"]) {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+.tools [data-change="visualDirection"] {
+  min-height: 32px;
+}
+
+/* Marco del portal · navegación compacta, contexto y acciones en la misma barra. */
+body[data-direction="fm"] :is(#top, .brand) {
+  background: #252d53;
+  border-color: #555e83;
+}
+body[data-direction="fm"] #top {
+  box-shadow: inset 0 -2px #d7b56b;
+}
+body[data-direction="fm"] #rail {
+  background: #18192d;
+  border-color: #444665;
+}
+body[data-direction="fm"] .manager {
+  border-color: #444665;
+  background: #21223b;
+}
+body[data-direction="fm"] .brandmark {
+  background: #eed38d;
+  border-radius: 2px;
+}
+body[data-direction="fm"] .nav {
+  border-radius: 1px;
+}
+body[data-direction="fm"] .nav:hover {
+  background: #303350;
+}
+body[data-direction="fm"] .nav.current {
+  background: #2f365b;
+  color: #fff2c7;
+  box-shadow: inset 3px 0 #eed38d;
+}
+body[data-direction="fm"] .tools :is(button, select) {
+  background: #1c2345;
+  border-color: #687396;
+  color: #f4f4ff;
+}
+body[data-direction="fm"] dialog {
+  border-color: #72769a;
+  border-radius: 2px;
+}
+
+/* Marco del informe · índice lateral, cabecera de expediente y superficies neutras. */
+body[data-direction="pro"] #rail {
+  background: #ecf0e9;
+  border-color: #a9bcb4;
+}
+body[data-direction="pro"] .brand {
+  border-bottom: 2px solid #668c7e;
+  color: #22453d;
+}
+body[data-direction="pro"] .brand b {
+  font-family: Georgia, serif;
+  font-size: 22px;
+}
+body[data-direction="pro"] .brand em {
+  color: #365d51;
+}
+body[data-direction="pro"] .brandmark {
+  background: #275d51;
+  border-radius: 0;
+}
+body[data-direction="pro"] .brandmark i {
+  background: #f8f8f3;
+}
+body[data-direction="pro"] .navgroup > small {
+  color: #486459;
+  letter-spacing: 1px;
+}
+body[data-direction="pro"] .navgroup > small {
+  padding-block: 11px 4px;
+}
+body[data-direction="pro"] .navgroup + .navgroup {
+  border-top: 1px solid #cfdbd2;
+  margin-top: 6px;
+}
+body[data-direction="pro"] .navgroup > .nav {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #294c43;
+}
+body[data-direction="pro"] .navgroup > .nav:hover {
+  background: #dfeae2;
+}
+body[data-direction="pro"] .navgroup > .nav.current {
+  color: #143c31;
+  background: #dce9df;
+  box-shadow: inset 3px 0 #2b6858;
+}
+body[data-direction="pro"] .manager {
+  border-top: 1px solid #abbeb3;
+  background: #f3f5ef;
+  color: #204439;
+}
+body[data-direction="pro"] #top {
+  background: #f3f5ef;
+  border-bottom: 1px solid #a9bcb4;
+}
+body[data-direction="pro"] .top-left b {
+  font:
+    600 17px Georgia,
+    serif;
+}
+body[data-direction="pro"] .demo i {
+  background: #367968;
+}
+body[data-direction="pro"] :is(.hero, .heading, .identity) {
+  margin-bottom: 4px;
+}
+body[data-direction="pro"] .heading h1 {
+  font:
+    500 clamp(25px, 3vw, 38px) / 1.08 Georgia,
+    serif;
+}
+body[data-direction="pro"] dialog {
+  border: 1px solid #6f9084;
+  border-radius: 2px;
+}
+body[data-direction="pro"] .context {
+  background: #e5eee7;
+}
+body[data-direction="pro"] .banner {
+  background: #faf1db;
+  color: #5b410f;
+}
+body[data-direction="pro"] :is(.assistant, .answer, .insight) {
+  background: #e8efe7;
+  color: #244c42;
+  border-color: #a0b6aa;
+}
+body[data-direction="pro"] .answer .eyebrow {
+  color: #286152;
+}
+body[data-direction="pro"] .row {
+  color: var(--text);
+}
+body[data-direction="pro"] .comparison .card {
+  background: var(--panel);
+}
+body[data-direction="pro"] .table-wrap tr:has(input:checked) {
+  background: #d9eae0;
+}
+body[data-direction="pro"] .chart {
+  background: #eef2eb;
+}
+body[data-direction="pro"] .gridlines path {
+  stroke: #abbdb2;
+}
+body[data-direction="pro"] .chart [stroke="#69d5c0"] {
+  stroke: #2c6b5e;
+}
+body[data-direction="pro"] .chart [fill="#69d5c0"] {
+  fill: #327264;
+}
+body[data-direction="pro"] .chart [fill="#f7c572"] {
+  fill: #a26b15;
+}
+body[data-direction="pro"] .pitch {
+  background: repeating-linear-gradient(0deg, #e3ede2 0 10%, #d8e7da 10% 20%);
+  border-color: #749180;
+}
+body[data-direction="pro"] .pitch .markings {
+  color: #7d9988;
+}
+body[data-direction="pro"] .pitch .marker {
+  background: transparent;
+}
+body[data-direction="pro"] .pitch .marker:hover {
+  outline: 2px solid #275649;
+}
+body[data-direction="pro"] .pitch .marker b {
+  background: #fcfdf8;
+  border-color: #678877;
+  color: #183b32;
+  box-shadow: none;
+}
+body[data-direction="pro"] .pitch .marker.wing b {
+  background: #f6e7bd;
+  border-color: #a07d39;
+}
+body[data-direction="pro"] .pitch .marker :is(span, small) {
+  color: #1f3931;
+  background: #f6f9f2;
+}
+body[data-direction="pro"] .role-pitch {
+  background: #dce8de;
+}
+body[data-direction="pro"] .role-pitch .markings {
+  color: #7a9886;
+}
+body[data-direction="pro"] .role-pitch [aria-pressed="true"] {
+  background: #235f54;
+  border-color: #163e35;
+  color: #fff;
+}
+
+@media (min-width: 1200px) {
+  body[data-direction="fm"] #rail {
+    width: 192px;
+  }
+  body[data-direction="fm"] #workspace {
+    margin-left: 192px;
+  }
+  body[data-direction="pro"] #rail {
+    width: 228px;
+  }
+  body[data-direction="pro"] #workspace {
+    margin-left: 228px;
+  }
+}
+@media (max-width: 1040px) {
+  #top .demo {
+    display: none;
+  }
+}
+@media (max-width: 720px) {
+  .tools label:has([data-change="visualDirection"]) {
+    font-size: 0;
+  }
+  .tools [data-change="visualDirection"] {
+    max-width: 160px;
+  }
+}
+@media (max-width: 500px) {
+  #top {
+    gap: 4px;
+  }
+  #top .tools {
+    gap: 4px;
+  }
+  .tools button {
+    padding-inline: 5px;
+  }
+  .tools [data-change="visualDirection"] {
+    max-width: 125px;
+  }
+}
