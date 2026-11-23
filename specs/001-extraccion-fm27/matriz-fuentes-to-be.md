@@ -8,15 +8,16 @@ La v1 y las entregas posteriores siguen el [roadmap aprobado](../../docs/roadmap
 
 **Evidencia local hasta hoy.** La fecha del juego coincidió en dos lecturas externas
 y con lo visible en FM27. El UID visible de un jugador coincidió con la salida del
-plugin de terceros cargado mediante BepInEx. Se fijó un atributo exacto desde la ficha.
-El adaptador propio de jugadores queda pendiente.
+plugin de terceros cargado mediante BepInEx. Un ensayo local de memoria externa
+repitió «Pase», CA y PA para ese UID y coincidió con la ficha y el editor oficial.
+Quedan pendientes el adaptador mantenido y las pruebas de alcance y revocación.
 
 | Requisitos | Qué necesita el producto | Fuente y forma de obtenerlo | Verificación o límite |
 | --- | --- | --- | --- |
-| REQ-DATA-001, REQ-DATA-002, REQ-FM-001, REQ-DATA-004 | UID textual, club, nombre, rol de persona, edad, altura, atributos de campo y portería, posiciones, lados, pierna, estado y origen | Plantilla/ficha/vistas visibles por BepInEx, CSV/HTML de la misma vista como entrada manual. El perfil de memoria describe UID, identidad y atributos. | UID e identidad visible cotejados para un jugador. «Pase» preparado para contraste. Probar portero, jugador de campo, jugador generado, persona con doble rol y cesiones antes de extender. Conservar prefijos y validar tipos por vista e idioma. [Columnas publicadas](https://github.com/ElectroHugin/FM-View-Exporter/blob/2ed5898f6e3b8597b6b8ec5401f41d16b961cdfd/docs/columns/fm27.csv) · [Layout publicado](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/layout.toml) |
+| REQ-DATA-001, REQ-DATA-002, REQ-FM-001, REQ-DATA-004 | UID textual, club, nombre, rol de persona, edad, altura, atributos de campo y portería, posiciones, lados, pierna, estado y origen | Plantilla/ficha/vistas visibles por BepInEx, CSV/HTML de la misma vista como entrada manual. El perfil de memoria describe UID, identidad y atributos. | UID e identidad cotejados para un jugador. «Pase» coincide en dos lecturas externas. Probar portero, jugador generado, persona con doble rol y cesiones antes de extender. Conservar prefijos y validar tipos por vista e idioma. [Columnas publicadas](https://github.com/ElectroHugin/FM-View-Exporter/blob/2ed5898f6e3b8597b6b8ec5401f41d16b961cdfd/docs/columns/fm27.csv) · [Layout publicado](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/layout.toml) |
 | REQ-FM-002, REQ-FM-004, REQ-SAVE-002 | Build, idioma, fecha, carrera, rama, perspectiva, recarga, lote y compatibilidad | Manifiesto Steam, UI y fecha de memoria. Perfil de terceros describe un contador de cargas. Asociación expresa de copia y corte al inicio, con UUID de producto para carrera y rama. El lote, sus límites y su huella son locales. | Fecha de memoria repetida y copia confirmada. La hora viene de la UI. Validar detección de dos recargas, cambio de mánager y dos carreras con UID coincidente. |
 | REQ-VIS-001, REQ-FM-005, REQ-SCOUT-001, REQ-SCOUT-003 | Universo conocido, máscaras, informes, listas y filtros | Vistas de búsqueda, ojeo y selección de FM27 como evidencia por mánager. Extraer por vista paginada por UID. Guardar filtros y listas de producto localmente. Para el universo mundial, el perfil externo tiene una tabla de jugadores cargados. | Las vistas y la tabla mundial necesitan reconciliaciones distintas. Validar rango, exacto, desconocido y jugador que queda fuera de la vista. La sección de ensayos detalla ambos procedimientos. |
-| REQ-VIS-002, REQ-VIS-003, REQ-RATING-005 | CA, PA y exactos ocultos autorizados. Proyección puntual de atributos y encaje | Memoria de entidades de jugador documentada. Hay un ejemplo de terceros dentro de BepInEx. Comparación temporal en memoria con permisos específicos. Proyección de potencial calculada localmente por PoC B. | CA/PA y exactos ocultos sin acreditar. La proyección además requiere los dos permisos, modelo validado y escenario declarado. |
+| REQ-VIS-002, REQ-VIS-003, REQ-RATING-005 | CA, PA y exactos ocultos autorizados. Proyección puntual de atributos y encaje | Memoria de entidades de jugador documentada. Hay un ejemplo de terceros dentro de BepInEx. Comparación temporal en memoria con permisos específicos. Proyección de potencial calculada localmente por PoC B. | CA y PA cotejados con el editor oficial para un jugador propio. PA codificado y exactos ocultos pendientes. La proyección además requiere los dos permisos, modelo validado y escenario declarado. |
 | REQ-DATA-003, REQ-SCOUT-002, REQ-MARKET-001, REQ-MARKET-002, REQ-MARKET-003 | Valor FM, precio observado, moneda, sueldo, contrato, cuotas de cesión, presupuesto, gastos y movimientos | Vistas de ficha, contrato, fichajes, cesiones y finanzas propias. Candidatos de memoria para contrato, cláusulas y cesión. Importes adoptados, tipos de cambio aplicados y simulaciones son inputs o resultados locales. | Conservar texto, rango, unidad y periodo. Fijar tipo de importe y perspectiva. Validar moneda y periodicidad, distinguir precio pedido / oferta / operación efectiva y presupuesto total / disponible antes de calcular. [Contratos](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/docs/recon/fm27-contracts.md) · [Cesiones](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/docs/recon/fm27-loans.md) |
 | REQ-ROLE-001, REQ-ROLE-002, REQ-ROLE-003, REQ-RATING-001, REQ-RATING-002, REQ-RATING-003, REQ-RATING-004, REQ-RATING-006, REQ-PROFILE-001, REQ-PROFILE-002 | Catálogo, atributos y familiaridad observada, pesos, curvas, DWRS y escenario a 20 | Catálogo cotejado en UI. Memoria contiene candidatos a escalas de posición. Pesos, perfiles, Classic, DWRS y escenario a 20 se versionan y calculan en Analyzer. | Contrastar semántica y escala de familiaridad por posición y lado. Categoría visible y número en memoria requieren evidencia de equivalencia. Validar fórmulas con oráculos y cobertura de atributos. |
 | REQ-TAC-001, REQ-TAC-002, REQ-TAC-003, REQ-TAC-004 | Táctica, fases, puestos, roles, instrucciones, fijaciones y XI | Definición inicial local según catálogo. Pantalla táctica para cotejo. Táctica activa y roles IP/OOP documentados por terceros en memoria. Asignación y simulación deterministas en Analyzer. | El TO-BE inicial admite táctica local. Para leer la del juego, fijar mánager, equipo, fase, selección, puestos e instrucciones y probar cambios. [Investigación de táctica](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/docs/recon/fm27-tactics-and-value.md) |
@@ -42,8 +43,9 @@ documenta una revisión de BepInEx distinta. Sirve de referencia técnica de ter
 [Layout de jugadores](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/layout.toml) ·
 [FM27 Ability Numbers](https://github.com/da3gal/fm27-ability-numbers)
 
-Para E-04, fijar un UID autorizado y una referencia independiente del mismo corte, por ejemplo
-un editor oficial si el operador ya dispone de él y muestra el número exacto en esa instalación.
+Para E-04, fijar un UID autorizado y una referencia independiente del mismo corte. La
+comparación local ya usó «Calidad actual» y «Calidad potencial» del editor oficial del juego
+para un jugador propio, con dos coincidencias por campo.
 Solicitar consentimiento expreso tras advertencia. Leer CA y PA por separado y repetir cada lectura.
 Las estrellas de la ficha se conservan como estrellas y el contraste espera números en la misma
 escala. El informe guarda coincidencias y motivos sin los valores. Si dos herramientas comparten
@@ -73,16 +75,17 @@ por bloques acotados y con cancelación al cambiar contexto. Reconciliar UID ún
 total con una referencia independiente del mismo universo, incluyendo agentes libres,
 generados y personas con doble rol si aparecen. La vista de ojeo conocido tiene su propio
 alcance. Si falta una referencia comparable, dejar indeterminada la cobertura o acreditar
-el subconjunto comprobable. Ampliar el universo mantiene los permisos de campo.
+el subconjunto comprobable. El editor oficial del club ofrece «Mostrar todos los jugadores
+en la búsqueda». En la copia de prueba ya estaba activo y se puede evaluar como referencia
+candidata para el universo mundial. Ampliar el universo mantiene los permisos de campo.
 [Perfil de Steam 26620374](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/steam-26620374.toml) ·
 [Escenarios y criterios](spec.md)
 
 ### Primer atributo de SK-01
 
 La referencia tiene un UID confirmado en pantalla, «Pase» y un corte fijado antes del ensayo.
-La memoria externa tiene una definición publicada del campo, pero su lector de referencia
-arma su índice por UID después de recorrer registros de jugadores. Queda por encontrar un
-selector acotado a la ficha o plantilla autorizada, y verificar UID y corte antes de leer.
+El ensayo externo encontró un selector por las claves de club y los miembros del primer
+equipo. Verificó el vínculo, UID y corte y obtuvo dos coincidencias de «Pase» con la ficha.
 En BepInEx, el primer candidato es el texto de la ficha o la celda «Pase» de una fila ya
 identificada por «Unique ID». T015–T017 reúnen las dos lecturas por vía y evalúan si procede
 ampliar a A-01. [Lector de referencia](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/crates/fmlibre-core/src/players.rs) · [Tareas](tasks.md)

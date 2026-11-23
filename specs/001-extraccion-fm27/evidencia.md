@@ -80,3 +80,40 @@ siguen abiertas para contrastar dos lecturas de «Pase» por vía y elegir si am
 La compilación Release volvió a terminar con cero advertencias y errores y pasaron
 las 41 pruebas sintéticas. El inventario de fuentes para las entregas completas
 se mantiene en la [matriz TO-BE](matriz-fuentes-to-be.md).
+
+## Contraste de CA, PA y Pase en un jugador del primer equipo
+
+El propietario autorizó el 23 de noviembre de 2026 dos lecturas de CA y dos de PA para
+José Gayà en la copia del Valencia, tras la advertencia de que muestran la capacidad
+exacta fuera del ojeo habitual. En Steam 26620374, corte **2026-08-01 21:45**, ambos campos
+coincidieron por separado con las columnas CA y CP de la plantilla. El **Editor del
+juego → Atributos del jugador → Atributos clave** mostró los mismos valores en
+«Calidad actual» y «Calidad potencial». Se cotejaron esos campos, con escala 1–200, y
+se cerró el editor tras consultar la ficha. El programa conservó únicamente el
+resultado agregado. [Editor oficial de FM27](https://www.footballmanager.com/es/fm27/funcionalidades/fm27-motor-de-partidos-2d-editor-del-juego-y-mejoras-mas-profundas)
+
+El ensayo externo en C# usó la huella del perfil Steam. Consultó claves del índice de
+clubes hasta el ID del Valencia y verificó la relación club/equipo y el UID entre los
+miembros del primer equipo. Comprobó instancia, metadatos de la copia, fecha, contador
+de cargas y vínculo del jugador con el equipo mediante `CaptureSession`.
+`CaptureAuthorization` comprobó CA y PA por separado. El contraste leyó **13.833 bytes
+en 12 ms**, incluidos los metadatos y comprobaciones de contexto, con derechos de
+consulta y lectura. Con permisos base y el mismo selector, dos lecturas de «Pase»
+coincidieron con la ficha, con **13.475 bytes en 15 ms**.
+[Perfil de la build](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/steam-26620374.toml) ·
+[Disposición de campos](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/layout.toml)
+
+El código del ensayo y el resumen agregado se conservan en
+`%LOCALAPPDATA%/FM27Analyzer/SK-01/viabilidad/ability-probe` y
+`%LOCALAPPDATA%/FM27Analyzer/SK-01/viabilidad/ca-pa-20261123-151319.json`. Para repetirlo,
+compilar `AbilityProbe.csproj` con .NET 10, confirmar copia y corte en FM27 y pasar PID,
+ticks UTC de arranque y ruta de la copia. El control de «Pase» usa el argumento `pase` y
+la referencia visible por entrada estándar. El contraste de CA/PA usa entrada estándar
+para las dos referencias del editor, con el consentimiento específico de la sesión.
+El resultado cubre un jugador propio en una sesión. Quedan pendientes el adaptador
+de producto, la revocación contrastada en juego, el PA codificado, las lecturas de
+BepInEx y la ampliación a otros ámbitos. Las tareas de esos ensayos siguen abiertas.
+
+En el Editor del juego del club, «Mostrar todos los jugadores en la búsqueda» ya estaba
+activado. Es una referencia candidata para A-02. El total de esa búsqueda requiere
+cotejo con el universo cargado y un contraste aparte para el ojeo conocido.
