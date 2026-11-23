@@ -11,6 +11,11 @@ y con lo visible en FM27. El UID visible de un jugador coincidió con la salida 
 plugin de terceros cargado mediante BepInEx. Un ensayo local de memoria externa
 repitió «Pase», CA y PA para ese UID y coincidió con la ficha y el editor oficial.
 Quedan pendientes el adaptador mantenido y las pruebas de alcance y revocación.
+La ampliación halló 19.917 UID únicos en memoria y cotejó los 15 UID de la muestra
+visual. Dos jugadores externos, uno ojeado y otro sin informe, coincidieron en
+CA, PA y los atributos ensayados. El portero sin informe permitió contrastar
+exactos bajo máscara, dos atributos ocultos, familiaridad de portería, formación
+en el club propietario y fechas separadas de contrato y cesión.
 
 | Requisitos | Qué necesita el producto | Fuente y forma de obtenerlo | Verificación o límite |
 | --- | --- | --- | --- |
@@ -60,9 +65,12 @@ BepInEx, conservar identidad, orden de paginación y celdas exactas, en rango o 
 Si hay solapes, reconciliar por UID y contexto, y registrar en qué vista se acreditó cada campo.
 
 Para probar cobertura, comparar el total visible con los UID únicos y revisar omisiones y
-duplicados. Para probar conocimiento, contrastar plantilla, conocido, ojeado parcial, desconocido
-y fuera de ámbito. En una combinación de vías, la evidencia de pantalla determina qué se puede
-consultar y con qué precisión. Hay descripciones externas del conocimiento que usan archivos
+duplicados. La prueba de pantalla obtuvo 356 resultados con «Sólo jugadores ojeados» sin
+los criterios anteriores ni filtro de interés. Es la referencia para capturar y deduplicar
+esa vista. El siguiente contraste debe incluir también jugadores conocidos que la vista de
+ojeados puede dejar fuera. El lector externo todavía recibe el rango y «Se necesita ojeo»
+desde la referencia de pantalla. En una combinación de vías, esa evidencia determina qué se
+puede consultar y con qué precisión. Hay descripciones externas del conocimiento que usan archivos
 `.fm`; DP-04 excluye esa fuente para SK-01. [Exportación de vistas](https://github.com/ElectroHugin/FM-View-Exporter/blob/2ed5898f6e3b8597b6b8ec5401f41d16b961cdfd/README.md) ·
 [Ejemplo documental de otro mecanismo](https://github.com/Napas/fm-mcp#fog-of-war)
 
@@ -75,9 +83,13 @@ por bloques acotados y con cancelación al cambiar contexto. Reconciliar UID ún
 total con una referencia independiente del mismo universo, incluyendo agentes libres,
 generados y personas con doble rol si aparecen. La vista de ojeo conocido tiene su propio
 alcance. Si falta una referencia comparable, dejar indeterminada la cobertura o acreditar
-el subconjunto comprobable. El editor oficial del club ofrece «Mostrar todos los jugadores
-en la búsqueda». En la copia de prueba ya estaba activo y se puede evaluar como referencia
-candidata para el universo mundial. Ampliar el universo mantiene los permisos de campo.
+el subconjunto comprobable. «Mostrar todos los jugadores en la búsqueda» estaba activo en
+la copia. Sin filtros seleccionados, la pantalla mostró 19.836 resultados, con un límite
+de 10.000 filas y UID repetidos observados. El conjunto externo de 19.917 UID se repitió
+íntegro y contiene 15 de 15 UID de referencia. La cobertura global independiente queda
+indeterminada. Probar particiones compatibles que eviten el límite de pantalla y verificar
+la unión y sus discrepancias antes de acreditar un total. Ampliar el universo mantiene
+los permisos de campo.
 [Perfil de Steam 26620374](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/steam-26620374.toml) ·
 [Escenarios y criterios](spec.md)
 
@@ -105,6 +117,17 @@ obtenido en FM27 y el tratamiento aprobado para los huecos.
 | 2 | Ojeados, mundo y campos especiales | Contrastar exacto, rango, desconocido y exclusión en ojeo. Acreditar la referencia independiente para el universo mundial, o delimitar su cobertura. Ensayar CA y PA por separado y exactos ocultos con sus permisos y revocación. Registrar si hay una fuente viable para familiaridad numérica y para el modelo de proyección. |
 | 3 | Datos de las entregas posteriores | Ampliar el banco con un caso por familia crítica: contrato y cesión con moneda y periodicidad, táctica IP/OOP, formación y regla de inscripción de una competición, empleado por función, entrenamiento/juveniles y estadísticas con minutos por competición/temporada. Para cada caso, cotejar pantalla y lectura o cerrar una alternativa. Usar dos cortes para históricos y desarrollo. |
 | 4 | Decisiones de alcance | Revisar la matriz con cobertura, huecos, degradación, coste y dependencia de la build. Enlazar cada decisión a sus requisitos. Las familias que se derivan de datos o dependen de configuración local cierran con un contrato de entrada y un oráculo reproducible. |
+
+### Contrastes posteriores a la muestra mundial
+
+| Familia | Evidencia disponible | Contraste que queda por realizar |
+| --- | --- | --- |
+| Mercado, contratos y cesiones | Fechas de contrato y fin de cesión cotejadas. La ficha de búsqueda usa intervalos con moneda y periodo. El editor muestra sueldo exacto y separa cláusulas. | Fijar fecha y unidad para el sueldo de contrato, salario a cargo del cesionario, cláusula y precio solicitado. Comparar tipos y redondeos. |
+| Formación e inscripción | Coincidencia en la relación con el club propietario y la regla de 15 a 21 años. | Añadir segunda nacionalidad, exenciones y reglas de la competición en la misma temporada. Repetir con un caso límite de edad y con cambio de club. |
+| Táctica y familiaridad | Portería cotejada en la escala 0–20 del editor. Las dos formaciones aparecen en la plantilla. | Probar un jugador de campo con dos posiciones y lados diferentes. Cotejar ocho o más puestos y roles por fase, cambios de táctica y el equipo al que pertenecen. |
+| Empleados y entrenamiento | La colección mundial distingue 30 personas con doble rol. Hay perfiles públicos de empleados y entrenamiento. | Cotejar un empleado con función, vínculo y atributo visible, y un jugador con dos cortes y carga de entrenamiento. |
+| Estadística e históricos | Las fichas de la muestra muestran temporada, apariciones y episodios de cesión. La copia y la fecha son verificables. | Tomar dos cortes de una competición con minutos, numeradores y denominadores. Cotejar un traspasado y dos equipos antes de validar agregaciones o evolución. |
+| Gráficos, configuración y ChatGPT | El UID ya se coteja en pantalla. | Probar asociación del UID con recursos locales. Validar preferencias, exportación y herramientas derivadas con fixtures y una proyección autorizada. |
 
 Esta secuencia conserva los criterios de SK-01. Los ensayos nuevos de familias posteriores
 se concretarán cuando la evidencia indique qué vía puede reutilizarse y qué familia

@@ -117,3 +117,58 @@ BepInEx y la ampliación a otros ámbitos. Las tareas de esos ensayos siguen abi
 En el Editor del juego del club, «Mostrar todos los jugadores en la búsqueda» ya estaba
 activado. Es una referencia candidata para A-02. El total de esa búsqueda requiere
 cotejo con el universo cargado y un contraste aparte para el ojeo conocido.
+
+## Ojeados, jugadores sin informe y universo cargado
+
+El 23 de noviembre de 2026 el propietario autorizó expresamente el ensayo mundial,
+los exactos bajo máscara, los atributos ocultos y CA/PA. Se usó la misma copia local,
+Steam 26620374, versión en pantalla 27.1.0.2505117 y corte de juego
+2026-08-01 21:45. Se añadieron y cotejaron los UID en la búsqueda de FM27.
+Los criterios de búsqueda anteriores se repusieron tras medir los recuentos.
+
+| Fuente y alcance | Resultado | Interpretación |
+| --- | --- | --- |
+| FM27, búsqueda con los tres criterios previos y el interés original | 29 con «Sólo jugadores ojeados» y 461 con el conmutador desactivado | Dos recuentos de la interfaz para los mismos criterios |
+| FM27, sin los tres criterios y sin filtro de interés | 356 con «Sólo jugadores ojeados» y 19.836 con el conmutador desactivado | La búsqueda amplia muestra hasta 10.000 filas. Se vieron UID repetidos en esa vista. El total de resultados requiere reconciliación antes de usarlo como denominador de UID. |
+| Tabla de jugadores de la carrera en memoria | 19.917 entradas y 19.917 UID únicos en dos recorridos con conjuntos idénticos | 19.887 de clase jugador y 30 de clase jugador y empleado. Cero UID nulos, repetidos o de clases sin clasificar en esta tabla. |
+| Muestra independiente de la interfaz | 15 de 15 UID distintos encontrados en memoria | Incluye ojeados, el caso sin informe y filas de la búsqueda amplia. Evidencia parcial por identidad. |
+
+La diferencia entre los dos recuentos amplios es de 81. El resultado de A-02 queda
+indeterminado para el total mundial independiente. El total de la búsqueda y el
+inventario en memoria usan unidades de recuento que aún deben reconciliarse. Falta
+obtener el conjunto de UID de todas las filas o por particiones comparables.
+
+| Caso de contraste | Coincidencias en dos lecturas externas |
+| --- | --- |
+| Jugador ojeado con informe | CA, PA, Pase, Anticipación, Aceleración, altura y fin del contrato principal. Los atributos visibles se cotejaron en la ficha del mánager y CA/PA en las columnas de la búsqueda. |
+| Portero sin informe | CA, PA, valores exactos de Pase, Anticipación, Aceleración y Reflejos, Consistencia, Profesionalidad y familiaridad de portería. Se cotejaron con el editor oficial. También coincidieron altura, fin del contrato principal y fin de cesión con la ficha, y la formación en el club propietario bajo la regla de 15 a 21 años con «Formado en». |
+| Referencia BepInEx existente | FM ActionLink volvió a registrar el UID del portero. Coincidió con la columna `Unique ID`. La lectura automatizada de las celdas de ojeo y de los atributos por BepInEx sigue pendiente. |
+
+La ficha del portero mostraba un rango de Pase y personalidad como «Se necesita
+ojeo». Se suministraron esos estados de la pantalla al control de política. Al revocar
+los permisos especiales en el ensayo, el control canceló la publicación pendiente,
+bloqueó CA/PA y los exactos ocultos y conservó el rango y el desconocimiento con
+ámbito mundial. El control con permisos base excluyó el caso clasificado como sólo
+mundial en la muestra. El lector de memoria aporta el valor exacto y la interfaz
+aporta el conocimiento. Sigue pendiente derivar el inventario completo de ojeo
+y detectar automáticamente su revisión por mánager.
+
+El ensayo en C#/.NET 10 verificó la huella PE, PID, hora de arranque, metadatos de la
+copia, fecha, contador de cargas y límites de la colección. Consultó la tabla
+documentada por tipo y UID. La lectura de campos se acotó a los dos UID fijados y se
+revalidó contra la política de sesión. En la última ejecución leyó 805.424 bytes en
+223 ms y el proceso de ensayo alcanzó 40.972.288 bytes de memoria residente.
+Los límites fueron 250.000 entradas, 10 MB leídos y 12 s. Se usaron los derechos
+de consulta y lectura de Windows. [Perfil Steam 26620374](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/steam-26620374.toml) ·
+[Relaciones y formación](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/docs/recon/fm27-nationality.md)
+
+El código del banco y el resumen agregado están en
+`%LOCALAPPDATA%/FM27Analyzer/SK-01/viabilidad/world-probe` y
+`%LOCALAPPDATA%/FM27Analyzer/SK-01/viabilidad/mundo-ojeo-20261123-192018.json`.
+Se compila `WorldProbe.csproj` en Release con .NET 10. Recibe PID, ticks UTC del
+arranque y ruta de la copia. La referencia se pasa por entrada estándar como un
+objeto con `UiUids` y `Players`. Sus campos constan en los tipos `References` y
+`Screen`. El JSON del ensayo guarda recuentos y coincidencias, sin valores especiales.
+Las 42 pruebas del repositorio pasaron en Release, incluido el caso nuevo de
+cancelación ante datos de contexto inválidos. Los ensayos formales y su integración
+en el contrato de informes siguen abiertos.
