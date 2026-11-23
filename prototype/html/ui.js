@@ -170,7 +170,11 @@ function tell(msg) {
 }
 function dialog(title, body) {
   const modal = $("#modal");
-  if (!modal.open) modalFocus = bookmark().action;
+  if (!modal.open) {
+    const data = document.activeElement?.dataset;
+    const key = data?.act ? "act" : data?.change ? "change" : null;
+    modalFocus = key ? { route, selector: '[data-' + key + '="' + CSS.escape(data[key]) + '"]' } : null;
+  }
   $("#modalBody").innerHTML =
     `<div class="panel-head"><h2>${esc(title)}</h2>${btn("Cerrar", "close", "plain", "close")}</div>${body}`;
   if (!modal.open) modal.showModal();
@@ -266,9 +270,11 @@ document.addEventListener("keydown", (e) => {
   }
 });
 $("#modal").addEventListener("close", () => {
+  // El evento de cierre anterior puede llegar después de volver a abrir con Intro.
+  if ($("#modal").open) return;
   $("#modalBody").replaceChildren();
-  if (modalFocus)
-    document.querySelector('[data-act="' + CSS.escape(modalFocus) + '"]')?.focus({ preventScroll: true });
+  if (modalFocus?.route === route)
+    document.querySelector(modalFocus.selector)?.focus({ preventScroll: true });
   modalFocus = null;
 });
 Object.assign(actions, {
