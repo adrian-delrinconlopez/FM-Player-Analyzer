@@ -110,7 +110,38 @@ valor con FM27 y guardar el resultado agregado en `SK-01/bepinex.json`.
 Para un control negativo, repetir con la vista sin la tabla de jugadores o
 usar `-ExpectedDate '2000-01-01'` en la misma copia y verificar el bloqueo.
 
-### Contraste de vías y A-01
+### Sonda externa T016 y comparación T017
+
+En Windows x64, compilar Release y ejecutar el filtro `CaptureGuardTests`.
+Conservar la referencia de T014 en `SK-01/viabilidad/referencia.json`.
+Confirmar en pantalla la copia, el mánager del Valencia, el corte
+1/8/2026 21:45, el UID y el estado exacto visible de «Pase». Ajustar
+`$sk01Copy` a la ubicación local de la copia. La sonda usa sólo su
+tamaño y última modificación.
+
+```powershell
+$sk01Game = Get-Process -Name fm
+$sk01Copy = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'Sports Interactive/Football Manager 27/games/SK-01 Valencia 2026-08-01.fm'
+$sk01Dll = 'src/FM27Analyzer.Extraction.Poc/bin/Release/net10.0/FM27Analyzer.Extraction.Poc.dll'
+$sk01Start = $sk01Game.StartTime.ToUniversalTime().Ticks
+dotnet $sk01Dll probe-external --confirm-sk01 $sk01Game.Id $sk01Start $sk01Copy
+dotnet $sk01Dll probe-external --confirm-sk01 $sk01Game.Id ($sk01Start + 1) $sk01Copy
+```
+
+La primera orden produce un JSON de contraste con dos observaciones y
+termina con código 0 si coinciden con la referencia. La segunda debe
+terminar con código 2 y sólo un diagnóstico de instancia distinta. El
+código 1 indica discrepancia. El presupuesto de lectura es 96 KiB y dos
+segundos para localizar y leer el único campo verificado.
+
+Sin cambiar de vista ni corte, repetir las dos peticiones de la sonda
+BepInEx. Verificar build, inicio de proceso, contador de cargas, fecha,
+UID, campo, valor y estado frente a la referencia. Conservar la
+procedencia por observación. Archivar el resultado externo y el control
+negativo en `SK-01/lectura-externa.json` y la comparación y vía elegida en
+`SK-01/decision-via.json`, ambos con acceso privado del usuario.
+
+### A-01
 
 Anotar la revisión y los pasos o el comando exactos de cada vía. Hacer dos
 lecturas por vía viable del mismo campo visible, los mismos UID y el mismo

@@ -101,6 +101,11 @@ public sealed class BatchExchange
         return session.Read(() => LoadBatch(file, access, ceiling));
     }
 
+    internal ComparisonReference ReadReference(string file) => ReadReference(file, ceiling.MaxBytes);
+
+    private ComparisonReference ReadReference(string file, int maxBytes) =>
+        Decode<ComparisonReference>(ReadBytes(file, maxBytes));
+
     private ObservationBatch LoadBatch(string file, CaptureAuthorization access, CaptureLimits limits)
     {
         var bytes = ReadBytes(file, limits.MaxBytes);
@@ -142,7 +147,7 @@ public sealed class BatchExchange
             batches = session.Read(() => manifest.Batches.Select(n => LoadBatch(n, access, manifest.Limits)).ToImmutableArray());
             if (manifest.Reference is not null)
             {
-                reference = session.Read(() => Decode<ComparisonReference>(ReadBytes(manifest.Reference, manifest.Limits.MaxBytes)));
+                reference = session.Read(() => ReadReference(manifest.Reference, manifest.Limits.MaxBytes));
                 if (referenceAccess is null || referenceAccess.Context != reference.Context || reference.Context != manifest.Context
                     || reference.FixedUtc == default || reference.FixedUtc.Offset != TimeSpan.Zero
                     || string.IsNullOrWhiteSpace(reference.IndependentSource) || reference.Expected.IsDefaultOrEmpty

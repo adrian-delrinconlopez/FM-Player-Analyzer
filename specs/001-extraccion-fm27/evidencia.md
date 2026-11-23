@@ -212,3 +212,45 @@ advertencias y errores y pasaron las 42 pruebas de Release. T016 requiere
 incorporar y repetir el contraste externo mediante su adaptador de la PoC.
 T017 decidirá qué vía ampliar a la muestra de al menos 30 UID de A-01.
 [Guía para repetir T015](quickstart.md#sonda-bepinex-t015) · [Tareas](tasks.md)
+
+## T016 y T017 · Comparación de vías en la misma sesión
+
+Se incorporó la sonda externa acotada a la consola .NET 10. El punto de
+entrada `probe-external --confirm-sk01` exige la referencia previa del
+primer equipo y la confirmación de copia, perspectiva y corte. La
+sonda verificó la imagen cargada de la build Steam 26620374, el proceso,
+la fecha, el contador de cargas y la relación UID, equipo y club antes
+de usar la proyección del campo. Usó derechos mínimos de consulta y
+lectura y un presupuesto de 96 KiB y dos segundos. El control con un
+instante de arranque distinto se bloqueó con código 2 y sólo un
+diagnóstico. [Derechos de acceso a procesos](https://learn.microsoft.com/en-us/windows/win32/procthread/process-security-and-access-rights) ·
+[Perfil Steam 26620374](https://raw.githubusercontent.com/tozmoz/FMLibreEditor/v0.5.3/profiles/fm27/steam-26620374.toml)
+
+| Vía | Observación y estado | Evidencia de visibilidad | Medida |
+| --- | --- | --- | --- |
+| FM27, ficha y Primer equipo | UID 67178177, «Pase» 13, exacto en escala 1–20 | Pantalla del mánager del Valencia en SK-01 | Referencia independiente |
+| Memoria externa | Dos observaciones de 13 para el mismo UID, exacto visible | Confirmación previa del operador en FM27. El dato se lee con el perfil de memoria. | 12,1 ms para localización, comprobaciones y lecturas antes de publicar. 13.431 bytes leídos y 38.113.280 bytes de memoria residente pico del proceso externo. |
+| BepInEx | Dos observaciones de 13 para el mismo UID, exacto visible | Texto de celdas «Unique ID» y «Pase» en la tabla de UI Toolkit de FM27 | 10,4 y 11,1 ms de recorrido en dos peticiones. |
+
+Las dos vías observaron la misma instancia, contador de cargas 1 y fecha
+1/8/2026, con hora 21:45 confirmada en pantalla. La copia conservó
+43.957.632 bytes y la misma fecha de modificación. Se midió el proceso de
+FM27 en reposo y antes y después de cada par. El intervalo de referencia
+duró 2,03 s. El conjunto residente del juego varió de 3.288.088.576 a
+3.288.285.184 bytes en reposo. Se mantuvo en 3.288.285.184 bytes durante
+la lectura externa y la medida final del par BepInEx fue 3.289.915.392
+bytes. Las ventanas son distintas y el muestreo de FM27 no mide el pico
+atribuible al plugin ni el tiempo de fotograma. Los tiempos internos
+miden operaciones distintas.
+
+T017 selecciona BepInEx para ampliar A-01. En esta prueba la tabla
+proporciona a la vez el valor exacto y su visibilidad. Para la vía
+externa se acreditó el valor, con visibilidad contrastada por separado.
+Quedan por probar en BepInEx los rangos, el desconocimiento, la exclusión
+y el recorrido de varias páginas. Continúa abierta la elección por
+familia para el producto y para los campos con permisos especiales.
+
+La evidencia privada se conserva como `SK-01/lectura-externa.json` y
+`SK-01/decision-via.json` bajo `%LOCALAPPDATA%/FM27Analyzer`. Release
+compiló sin advertencias ni errores. Pasaron los 14 controles de sesión
+y las 42 pruebas de la batería. [Reproducción de T016 y T017](quickstart.md#sonda-externa-t016-y-comparación-t017)

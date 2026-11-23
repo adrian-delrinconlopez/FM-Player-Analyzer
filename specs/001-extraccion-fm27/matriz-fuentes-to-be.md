@@ -103,7 +103,11 @@ equipo. Verificó el vínculo, UID y corte y obtuvo dos coincidencias de «Pase�
 T015 acreditó dos lecturas de la celda «Pase» y su «Unique ID» mediante BepInEx.
 En la tabla de plantilla se pudo obtener exactamente el texto mostrado. Este
 resultado permite ensayar la misma técnica para los estados visibles del ojeo.
-T016 y T017 incorporan la vía externa y formalizan la comparación para A-01.
+T016 repitió el contraste externo en la misma instancia que dos nuevas
+peticiones BepInEx. T017 eligió BepInEx para A-01 por la evidencia de
+visibilidad de la tabla. La vía externa acreditó el mismo valor con
+una referencia de visibilidad independiente. Falta ampliar BepInEx a los
+estados de ojeo y medir el coste comparable del proceso.
 [Contraste BepInEx](evidencia.md#t015--lectura-de-un-atributo-visible-mediante-bepinex) ·
 [Lector de referencia](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/crates/fmlibre-core/src/players.rs) · [Tareas](tasks.md)
 
@@ -118,7 +122,7 @@ obtenido en FM27 y el tratamiento aprobado para los huecos.
 
 | Orden | Qué falta decidir | Prueba mínima y evidencia de salida |
 | --- | --- | --- |
-| 1 | Vía inicial y contexto fiable | Terminar T016–T017 y A-01. Comparar campo visible, UID, permiso, exactitud, tiempo y memoria por vía. Ejecutar A-03 con recarga, cambio de perspectiva y dos carreras con UID coincidente. |
+| 1 | Vía inicial y contexto fiable | Ampliar BepInEx a A-01 con la muestra de T018 y medir su coste en FM27. Ejecutar A-03 con recarga, cambio de perspectiva y dos carreras con UID coincidente. |
 | 2 | Ojeados, mundo y campos especiales | Contrastar exacto, rango, desconocido y exclusión en ojeo. Acreditar la referencia independiente para el universo mundial, o delimitar su cobertura. Ensayar CA y PA por separado y exactos ocultos con sus permisos y revocación. Registrar si hay una fuente viable para familiaridad numérica y para el modelo de proyección. |
 | 3 | Datos de las entregas posteriores | Ampliar el banco con un caso por familia crítica: contrato y cesión con moneda y periodicidad, táctica IP/OOP, formación y regla de inscripción de una competición, empleado por función, entrenamiento/juveniles y estadísticas con minutos por competición/temporada. Para cada caso, cotejar pantalla y lectura o cerrar una alternativa. Usar dos cortes para históricos y desarrollo. |
 | 4 | Decisiones de alcance | Revisar la matriz con cobertura, huecos, degradación, coste y dependencia de la build. Enlazar cada decisión a sus requisitos. Las familias que se derivan de datos o dependen de configuración local cierran con un contrato de entrada y un oráculo reproducible. |
