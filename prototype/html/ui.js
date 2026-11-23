@@ -28,7 +28,7 @@ const input=(label,action,value,type="text",limits="")=>`<label>${esc(label)}<in
 const panel=(title,body,tail="",cls="")=>`<section class="panel ${cls}"><div class="panel-head"><h2>${title}</h2>${tail}</div>${body}</section>`;
 const heading=(title,subtitle="",action="")=>`<div class="heading"><div><h1>${esc(title)}</h1>${subtitle?`<p>${esc(subtitle)}</p>`:""}</div>${action}</div>`;
 const pair=(k,v)=>`<div class="pair"><span>${esc(k)}</span><strong>${esc(v)}</strong></div>`;
-const portrait=p=>`<span aria-hidden="true" class="avatar color${p.id%4}">${p.name.split(" ").slice(0,2).map(x=>x[0]).join("")}</span>`;
+const portrait=p=>state().graphics&&career==="Faro"&&p.id===1 ? '<span class="avatar portrait-demo" role="img" aria-label="Retrato ficticio de Noa Mar"></span>' : `<span aria-hidden="true" class="avatar color${p.id%4}">${p.name.split(" ").slice(0,2).map(x=>x[0]).join("")}</span>`;
 const personBtn=p=>`<button class="person" data-act="player:${p.id}">${portrait(p)}<span><b>${esc(p.name)}</b><small>${esc(p.club)} · ${p.pos.join(" / ")}</small></span></button>`;
 const tabs=(items,current,action)=>`<div class="tabs">${items.map(x=>btn(x,action+":"+x,x===current?"active":"")).join("")}</div>`;
 const tbl=(heads,rows)=>`<div class="table-wrap"><table><thead><tr>${heads.map(x=>`<th scope="col">${x}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map(x=>`<td>${x}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
@@ -90,7 +90,7 @@ $("#modal").addEventListener("close",()=>{if(modalFocus)document.querySelector('
 Object.assign(actions,{go:id=>go(id),back,close:closeDialog,menu:()=>{menuOpen=!menuOpen;render();},
  player:id=>{if(person(id))go("player",{id:Number(id),tab:"Resumen"});},
  search:()=>{dialog("Buscar en "+career,'<label>Jugador o destino<input id="query" autocomplete="off" placeholder="Nombre, posición o pantalla"></label><div id="hits"></div>');
- const update=()=>{const q=$("#query").value.trim().toLocaleLowerCase("es");const destinations=Object.keys(labels).filter(k=>views[k]&&!["compare","player"].includes(k)&&labels[k].toLowerCase().includes(q)).slice(0,5);
+ const update=()=>{const q=$("#query").value.trim().toLocaleLowerCase("es");const destinations=Object.keys(labels).filter(k=>views[k]&&!["compare","player","train"].includes(k)&&labels[k].toLowerCase().includes(q)).slice(0,5);
  $("#hits").innerHTML=destinations.map(k=>btn(labels[k],"go:"+k,"hit",k)).join("")+people().filter(p=>state().source!=="Sin datos" && (p.name+" "+p.pos.join(" ")).toLowerCase().includes(q)).slice(0,12).map(personBtn).join("")||empty("Sin coincidencias.");};
  $("#query").oninput=update;update();$("#query").focus();}
 });
