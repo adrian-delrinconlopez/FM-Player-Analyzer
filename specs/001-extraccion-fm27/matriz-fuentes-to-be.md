@@ -1,6 +1,6 @@
 # Fuentes y cobertura del TO-BE · FM27
 
-Inventario del 23 de noviembre de 2026. Abarca los 70 requisitos del [catálogo
+Inventario actualizado el 24 de noviembre de 2026. Abarca los 70 requisitos del [catálogo
 funcional](../../docs/to-be/02-catalogo-funcional.md), incluidas las entregas posteriores a v1.
 La acreditación de la captura se refiere a Windows 11 x64, Steam 26620374 y al corte
 documentado en [evidencia de SK-01](evidencia.md). Las vías de la tabla son candidatas.
@@ -17,14 +17,14 @@ La ampliación halló 19.917 UID únicos en memoria y cotejó los 15 UID de la m
 visual. Dos jugadores externos, uno ojeado y otro sin informe, coincidieron en
 CA, PA y los atributos ensayados. El portero sin informe permitió contrastar
 exactos bajo máscara, dos atributos ocultos, familiaridad de portería, formación
-en el club propietario y fechas separadas de contrato y cesión.
+en el club propietario y fechas separadas de contrato y cesión. A-01 cotejó dos lotes de 30 UID. BepInEx recorrió después los 356 resultados de la vista de ojeados y repitió el contenido tras una recarga.
 
 | Requisitos | Qué necesita el producto | Fuente y forma de obtenerlo | Verificación o límite |
 | --- | --- | --- | --- |
-| REQ-DATA-001, REQ-DATA-002, REQ-FM-001, REQ-DATA-004 | UID textual, club, nombre, rol de persona, edad, altura, atributos de campo y portería, posiciones, lados, pierna, estado y origen | Plantilla/ficha/vistas visibles por BepInEx, CSV/HTML de la misma vista como entrada manual. El perfil de memoria describe UID, identidad y atributos. | UID e identidad cotejados para un jugador. «Pase» coincide en dos lecturas externas. Probar portero, jugador generado, persona con doble rol y cesiones antes de extender. Conservar prefijos y validar tipos por vista e idioma. [Columnas publicadas](https://github.com/ElectroHugin/FM-View-Exporter/blob/2ed5898f6e3b8597b6b8ec5401f41d16b961cdfd/docs/columns/fm27.csv) · [Layout publicado](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/layout.toml) |
-| REQ-FM-002, REQ-FM-004, REQ-SAVE-002 | Build, idioma, fecha, carrera, rama, perspectiva, recarga, lote y compatibilidad | Manifiesto Steam, UI y fecha de memoria. Perfil de terceros describe un contador de cargas. Asociación expresa de copia y corte al inicio, con UUID de producto para carrera y rama. El lote, sus límites y su huella son locales. | Fecha de memoria repetida y copia confirmada. La hora viene de la UI. Validar detección de dos recargas, cambio de mánager y dos carreras con UID coincidente. |
-| REQ-VIS-001, REQ-FM-005, REQ-SCOUT-001, REQ-SCOUT-003 | Universo conocido, máscaras, informes, listas y filtros | Vistas de búsqueda, ojeo y selección de FM27 como evidencia por mánager. Extraer por vista paginada por UID. Guardar filtros y listas de producto localmente. Para el universo mundial, el perfil externo tiene una tabla de jugadores cargados. | Las vistas y la tabla mundial necesitan reconciliaciones distintas. Validar rango, exacto, desconocido y jugador que queda fuera de la vista. La sección de ensayos detalla ambos procedimientos. |
-| REQ-VIS-002, REQ-VIS-003, REQ-RATING-005 | CA, PA y exactos ocultos autorizados. Proyección puntual de atributos y encaje | Memoria de entidades de jugador documentada. Hay un ejemplo de terceros dentro de BepInEx. Comparación temporal en memoria con permisos específicos. Proyección de potencial calculada localmente por PoC B. | CA y PA cotejados con el editor oficial para un jugador propio. PA codificado y exactos ocultos pendientes. La proyección además requiere los dos permisos, modelo validado y escenario declarado. |
+| REQ-DATA-001, REQ-DATA-002, REQ-FM-001, REQ-DATA-004 | UID textual, club, nombre, rol de persona, edad, altura, atributos de campo y portería, posiciones, lados, pierna, estado y origen | Plantilla/ficha/vistas visibles por BepInEx, CSV/HTML de la misma vista como entrada manual. El perfil de memoria describe UID, identidad y atributos. | A-01 cotejó 30 UID, dos posiciones y Reflejos de un portero. Probar el resto de atributos, edad, altura, pierna, jugador generado, doble rol y variantes de cesión. Conservar prefijos y validar tipos por vista e idioma. [Columnas publicadas](https://github.com/ElectroHugin/FM-View-Exporter/blob/2ed5898f6e3b8597b6b8ec5401f41d16b961cdfd/docs/columns/fm27.csv) · [Layout publicado](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/layout.toml) |
+| REQ-FM-002, REQ-FM-004, REQ-SAVE-002 | Build, idioma, fecha, carrera, rama, perspectiva, recarga, lote y compatibilidad | Manifiesto Steam, UI y fecha de memoria. Perfil de terceros describe un contador de cargas. Asociación expresa de copia y corte al inicio, con UUID de producto para carrera y rama. El lote, sus límites y su huella son locales. | Fecha de memoria repetida y copia confirmada. La hora viene de la UI. Recarga de la misma copia detectada en el mismo proceso con contador 1 → 2. Pendientes el cambio de mánager y dos carreras con UID coincidente. |
+| REQ-VIS-001, REQ-FM-005, REQ-SCOUT-001, REQ-SCOUT-003 | Universo conocido, máscaras, informes, listas y filtros | Vistas de búsqueda, ojeo y selección de FM27 como evidencia por mánager. Extraer por vista paginada por UID. Guardar filtros y listas de producto localmente. Para el universo mundial, el perfil externo tiene una tabla de jugadores cargados. | A-01 cotejó exacto, rango, desconocido y exclusión. Censo de 356 UID en la vista de ojeados. Pendientes informes completos, otras vistas de conocimiento y reconciliación mundial. |
+| REQ-VIS-002, REQ-VIS-003, REQ-RATING-005 | CA, PA y exactos ocultos autorizados. Proyección puntual de atributos y encaje | Memoria de entidades de jugador documentada. Hay un ejemplo de terceros dentro de BepInEx. Comparación temporal en memoria con permisos específicos. Proyección de potencial calculada localmente por PoC B. | CA y PA cotejados en un jugador propio y dos externos. Exactos ocultos comprobados en la muestra del portero externo. Pendientes PA codificado, ampliación por campo y revocación de acceso. La proyección además requiere los dos permisos, modelo validado y escenario declarado. |
 | REQ-DATA-003, REQ-SCOUT-002, REQ-MARKET-001, REQ-MARKET-002, REQ-MARKET-003 | Valor FM, precio observado, moneda, sueldo, contrato, cuotas de cesión, presupuesto, gastos y movimientos | Vistas de ficha, contrato, fichajes, cesiones y finanzas propias. Candidatos de memoria para contrato, cláusulas y cesión. Importes adoptados, tipos de cambio aplicados y simulaciones son inputs o resultados locales. | Conservar texto, rango, unidad y periodo. Fijar tipo de importe y perspectiva. Validar moneda y periodicidad, distinguir precio pedido / oferta / operación efectiva y presupuesto total / disponible antes de calcular. [Contratos](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/docs/recon/fm27-contracts.md) · [Cesiones](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/docs/recon/fm27-loans.md) |
 | REQ-ROLE-001, REQ-ROLE-002, REQ-ROLE-003, REQ-RATING-001, REQ-RATING-002, REQ-RATING-003, REQ-RATING-004, REQ-RATING-006, REQ-PROFILE-001, REQ-PROFILE-002 | Catálogo, atributos y familiaridad observada, pesos, curvas, DWRS y escenario a 20 | Catálogo cotejado en UI. Memoria contiene candidatos a escalas de posición. Pesos, perfiles, Classic, DWRS y escenario a 20 se versionan y calculan en Analyzer. | Contrastar semántica y escala de familiaridad por posición y lado. Categoría visible y número en memoria requieren evidencia de equivalencia. Validar fórmulas con oráculos y cobertura de atributos. |
 | REQ-TAC-001, REQ-TAC-002, REQ-TAC-003, REQ-TAC-004 | Táctica, fases, puestos, roles, instrucciones, fijaciones y XI | Definición inicial local según catálogo. Pantalla táctica para cotejo. Táctica activa y roles IP/OOP documentados por terceros en memoria. Asignación y simulación deterministas en Analyzer. | El TO-BE inicial admite táctica local. Para leer la del juego, fijar mánager, equipo, fase, selección, puestos e instrucciones y probar cambios. [Investigación de táctica](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/docs/recon/fm27-tactics-and-value.md) |
@@ -67,9 +67,9 @@ BepInEx, conservar identidad, orden de paginación y celdas exactas, en rango o 
 Si hay solapes, reconciliar por UID y contexto, y registrar en qué vista se acreditó cada campo.
 
 Para probar cobertura, comparar el total visible con los UID únicos y revisar omisiones y
-duplicados. La prueba de pantalla obtuvo 356 resultados con «Sólo jugadores ojeados» sin
-los criterios anteriores ni filtro de interés. Es la referencia para capturar y deduplicar
-esa vista. El siguiente contraste debe incluir también jugadores conocidos que la vista de
+duplicados. FM27 mostró 356 resultados con «Sólo jugadores ojeados» sin
+los criterios anteriores ni filtro de interés. BepInEx capturó los 356 UID y el estado de Pase en
+esa vista en tres pasadas, con el mismo contenido y orden después de recargar la copia. El siguiente contraste debe incluir jugadores conocidos que la vista de
 ojeados puede dejar fuera. El lector externo todavía recibe el rango y «Se necesita ojeo»
 desde la referencia de pantalla. En una combinación de vías, esa evidencia determina qué se
 puede consultar y con qué precisión. Hay descripciones externas del conocimiento que usan archivos
@@ -106,8 +106,8 @@ resultado permite ensayar la misma técnica para los estados visibles del ojeo.
 T016 repitió el contraste externo en la misma instancia que dos nuevas
 peticiones BepInEx. T017 eligió BepInEx para A-01 por la evidencia de
 visibilidad de la tabla. La vía externa acreditó el mismo valor con
-una referencia de visibilidad independiente. Falta ampliar BepInEx a los
-estados de ojeo y medir el coste comparable del proceso.
+una referencia de visibilidad independiente. A-01 mostró exactos, rangos y desconocidos y el censo confirmó el alcance de la vista de ojeados para Pase. Falta extender el contraste a otros
+campos y medir el coste comparable del proceso.
 [Contraste BepInEx](evidencia.md#t015--lectura-de-un-atributo-visible-mediante-bepinex) ·
 [Lector de referencia](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/crates/fmlibre-core/src/players.rs) · [Tareas](tasks.md)
 
@@ -122,8 +122,8 @@ obtenido en FM27 y el tratamiento aprobado para los huecos.
 
 | Orden | Qué falta decidir | Prueba mínima y evidencia de salida |
 | --- | --- | --- |
-| 1 | Vía inicial y contexto fiable | A-01 acreditada con 30 UID y 34 observaciones en dos capturas mediante BepInEx. Falta medir el coste por fotograma y ejecutar A-03 con recarga, cambio de perspectiva y dos carreras con UID coincidente. |
-| 2 | Ojeados, mundo y campos especiales | Contrastar exacto, rango, desconocido y exclusión en ojeo. Acreditar la referencia independiente para el universo mundial, o delimitar su cobertura. Ensayar CA y PA por separado y exactos ocultos con sus permisos y revocación. Registrar si hay una fuente viable para familiaridad numérica y para el modelo de proyección. |
+| 1 | Vía inicial y contexto fiable | A-01 acreditada con 30 UID y 34 observaciones en dos capturas mediante BepInEx. Recarga de la misma copia comprobada. Falta medir el coste por fotograma y completar A-03 con cambio de perspectiva y dos carreras con UID coincidente. |
+| 2 | Ojeados, mundo y campos especiales | A-01 cotejó los estados de ojeo y el censo cubrió UID y Pase de la vista. Falta cubrir el resto de datos de ojeo y conocimiento, reconciliar el universo mundial y probar revocación de CA, PA y exactos ocultos. Registrar si hay una fuente viable para familiaridad numérica y para el modelo de proyección. |
 | 3 | Datos de las entregas posteriores | Ampliar el banco con un caso por familia crítica: contrato y cesión con moneda y periodicidad, táctica IP/OOP, formación y regla de inscripción de una competición, empleado por función, entrenamiento/juveniles y estadísticas con minutos por competición/temporada. Para cada caso, cotejar pantalla y lectura o cerrar una alternativa. Usar dos cortes para históricos y desarrollo. |
 | 4 | Decisiones de alcance | Revisar la matriz con cobertura, huecos, degradación, coste y dependencia de la build. Enlazar cada decisión a sus requisitos. Las familias que se derivan de datos o dependen de configuración local cierran con un contrato de entrada y un oráculo reproducible. |
 
@@ -131,9 +131,9 @@ obtenido en FM27 y el tratamiento aprobado para los huecos.
 
 | Familia | Evidencia disponible | Contraste que queda por realizar |
 | --- | --- | --- |
-| Mercado, contratos y cesiones | Fechas de contrato y fin de cesión cotejadas. La ficha de búsqueda usa intervalos con moneda y periodo. El editor muestra sueldo exacto y separa cláusulas. | Fijar fecha y unidad para el sueldo de contrato, salario a cargo del cesionario, cláusula y precio solicitado. Comparar tipos y redondeos. |
+| Mercado, contratos y cesiones | Fechas de contrato y fin de cesión cotejadas. La ficha de búsqueda usa intervalos con moneda y periodo. El editor muestra sueldo exacto y separa cláusulas. Portal y Contratación coinciden en dos presupuestos disponibles. | Fijar fecha y unidad para el sueldo de contrato, salario a cargo del cesionario, cláusula y precio solicitado. Comparar tipos y redondeos. |
 | Formación e inscripción | Coincidencia en la relación con el club propietario y la regla de 15 a 21 años. | Añadir segunda nacionalidad, exenciones y reglas de la competición en la misma temporada. Repetir con un caso límite de edad y con cambio de club. |
-| Táctica y familiaridad | Portería cotejada en la escala 0–20 del editor. Las dos formaciones aparecen en la plantilla. | Probar un jugador de campo con dos posiciones y lados diferentes. Cotejar ocho o más puestos y roles por fase, cambios de táctica y el equipo al que pertenecen. |
+| Táctica y familiaridad | Portería cotejada en la escala 0–20 del editor. La táctica activa proporciona una referencia visual de 11 puestos por fase y su XI. | Probar un jugador de campo con dos posiciones y lados diferentes. Cotejar una captura de puestos y roles por cada fase frente a la referencia, cambios de táctica y el vínculo al equipo. |
 | Empleados y entrenamiento | La colección mundial distingue 30 personas con doble rol. Hay perfiles públicos de empleados y entrenamiento. | Cotejar un empleado con función, vínculo y atributo visible, y un jugador con dos cortes y carga de entrenamiento. |
 | Estadística e históricos | Las fichas de la muestra muestran temporada, apariciones y episodios de cesión. La copia y la fecha son verificables. | Tomar dos cortes de una competición con minutos, numeradores y denominadores. Cotejar un traspasado y dos equipos antes de validar agregaciones o evolución. |
 | Gráficos, configuración y ChatGPT | El UID ya se coteja en pantalla. | Probar asociación del UID con recursos locales. Validar preferencias, exportación y herramientas derivadas con fixtures y una proyección autorizada. |
@@ -142,3 +142,14 @@ Esta secuencia conserva los criterios de SK-01. Los ensayos nuevos de familias p
 se concretarán cuando la evidencia indique qué vía puede reutilizarse y qué familia
 necesita un contraste propio. [Plan de SK-01](plan.md) ·
 [Cuestiones abiertas del producto](../../docs/OPEN-QUESTIONS.md)
+
+### Referencias de código abierto para preparar los contrastes
+
+| Familia | Hallazgo documental y uso en el ensayo local |
+| --- | --- |
+| Tablas de FM27 | FM View Exporter describe el recorrido de tablas virtualizadas y la restauración de la posición inicial. El censo propio aplica ese recorrido a UID y Pase. [FM View Exporter](https://github.com/ElectroHugin/FM-View-Exporter/blob/2ed5898f6e3b8597b6b8ec5401f41d16b961cdfd/README.md) |
+| Táctica | FMLibreEditor describe dos bloques de 11 puestos con máscaras y roles por fase. El perfil incluye la build local y parte del análisis detallado es de una build anterior. Usar el XI y los dos diagramas como referencia de la captura. Las instrucciones requieren su propio cotejo. [Layout](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/layout.toml) · [Investigación táctica](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/docs/recon/fm27-tactics-and-value.md) |
+| Contratos y cesiones | FMLibreEditor documenta sueldos de contrato en GBP por semana y distingue tipos de cláusula. Comparar tras normalizar moneda y periodo y conservar el importe original. Probar cuotas de cesión, precio solicitado y redondeo por separado. [Contratos](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/docs/recon/fm27-contracts.md) · [Cesiones](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/docs/recon/fm27-loans.md) |
+| Nacionalidad, formación e inscripción | FMLibreEditor distingue segunda nacionalidad, formación en el país, formación en el club y una exención británica antigua. Son referencias para cotejar relaciones. Los permisos de trabajo y la elegibilidad actual requieren una comprobación por competición y temporada. [Nacionalidades y formación](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/docs/recon/fm27-nationality.md) |
+| Empleados | FMSuperScout documenta que distingue función actual de función preferida en FM27 y coteja 23 perfiles. Usar ambos campos en una muestra local y comprobar las variantes de analista. [FMSuperScout v1.7.1](https://github.com/mavarobli/FMSuperScout/releases/tag/v1.7.1) |
+| Estadísticas y reglas | fmsave documenta que la retención de estadísticas varía y que la identificación de una fase sin partidos puede ser más limitada. Su análisis de guardados sirve para elegir casos de prueba. DP-04 mantiene la captura de SK-01 fuera de los archivos `.fm`. [Documentación de fmsave](https://github.com/rhiever/fmsave/blob/main/docs/guides/what-a-save-holds.md) |

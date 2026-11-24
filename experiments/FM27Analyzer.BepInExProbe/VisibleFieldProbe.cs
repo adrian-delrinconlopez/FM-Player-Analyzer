@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 
 namespace FM27Analyzer.BepInExProbe;
 
-[BepInPlugin("fm27analyzer.sk01.visible-field", "FM27 Analyzer SK-01", "0.2.0")]
+[BepInPlugin("fm27analyzer.sk01.visible-field", "FM27 Analyzer SK-01", "0.3.0")]
 [BepInProcess("fm.exe")]
 public sealed class VisibleFieldProbe : BasePlugin
 {
@@ -26,9 +26,15 @@ public sealed class ProbeComponent(IntPtr pointer) : MonoBehaviour(pointer)
     private static readonly JsonSerializerOptions Json = new() { PropertyNameCaseInsensitive = true };
     private Guid lastRequest;
     private long nextPoll;
+    private ScoutedCensus? census;
 
     public void Update()
     {
+        if (census is not null)
+        {
+            if (census.Tick()) census = null;
+            return;
+        }
         long now = Environment.TickCount64;
         if (now < nextPoll) return;
         nextPoll = now + 500;
@@ -41,11 +47,40 @@ public sealed class ProbeComponent(IntPtr pointer) : MonoBehaviour(pointer)
             var request = JsonSerializer.Deserialize<ProbeRequest>(input, Json);
             if (request is null || request.Id == Guid.Empty || request.Id == lastRequest) return;
             lastRequest = request.Id;
-            Capture(request);
+            if (request.ScoutedCount is int count)
+                StartCensus(request, count);
+            else
+                Capture(request);
         }
         catch (Exception ex) when (ex is IOException or JsonException or UnauthorizedAccessException)
         {
             // El operador puede renovar la petición local. El juego sigue su curso.
+        }
+    }
+
+    private void StartCensus(ProbeRequest request, int count)
+    {
+        if (!request.Confirmed || request.View != "ojeados" || request.Targets is not null || request.Uid is not null
+            || request.ProcessStartUtcTicks != ProcessStarted.Ticks || count is < 1 or > 500
+            || request.ExpiresUtc <= DateTimeOffset.UtcNow || request.ExpiresUtc > DateTimeOffset.UtcNow.AddMinutes(2)
+            || !DateOnly.TryParseExact(request.Date, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out var date))
+            return;
+        var context = new CaptureContext("FM27", "26620374", "Steam", "es", request.Id, request.Id,
+            request.Copy, null, true, request.Branch, request.Perspective, request.Club, date, request.Cut, new CapturePolicy(1));
+        try
+        {
+            using var game = Process.GetCurrentProcess();
+            long module = GameCut.FindModule(game);
+            var cut = GameCut.Read(module);
+            census = new ScoutedCensus(count, context, () =>
+                File.Exists(RequestPath) && DateTimeOffset.UtcNow < request.ExpiresUtc
+                && cut.Loads > 0 && cut.Date == date && GameCut.Read(module) == cut ? context : null,
+                ProcessStarted.Ticks, cut.Loads,
+                (result, commit) => Store(request.Id, result, commit));
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or InvalidDataException or System.ComponentModel.Win32Exception)
+        {
+            Store(request.Id, new { Reason = "No se pudo vincular el censo al corte." }, publish => publish());
         }
     }
 
@@ -109,7 +144,7 @@ public sealed class ProbeComponent(IntPtr pointer) : MonoBehaviour(pointer)
         ["best-position"] = "Mejor pos.", ["position"] = "Posición", ["club"] = "Club"
     };
 
-    private static bool ValidUid(string? uid) => uid is { Length: > 0 and <= 12 } && uid.All(c => c is >= '0' and <= '9');
+    internal static bool ValidUid(string? uid) => uid is { Length: > 0 and <= 12 } && uid.All(c => c is >= '0' and <= '9');
 
     private static bool ValidTargets(ProbeRequest request) =>
         request.View is "plantilla" or "ojeados" && request.Targets is { Length: > 0 and <= 30 } targets
@@ -191,9 +226,9 @@ public sealed class ProbeComponent(IntPtr pointer) : MonoBehaviour(pointer)
         }
     }
 
-    private static bool IsUnknown(string raw) => raw is "-" or "–" or "—" or "Se necesita ojeo";
+    internal static bool IsUnknown(string raw) => raw is "-" or "–" or "—" or "Se necesita ojeo";
 
-    private static bool MatchesPrecision(string raw, string knowledge)
+    internal static bool MatchesPrecision(string raw, string knowledge)
     {
         if (knowledge == "unknown") return IsUnknown(raw);
         var parts = raw.Split(new[] { '-', '–' }, StringSplitOptions.TrimEntries);
@@ -223,7 +258,7 @@ public sealed class ProbeComponent(IntPtr pointer) : MonoBehaviour(pointer)
 
     private sealed record ProbeRequest(Guid Id, long ProcessStartUtcTicks, DateTimeOffset ExpiresUtc, bool Confirmed,
         string? Uid, string Copy, string Branch, string Perspective, string Club, string Date, string Cut,
-        string? View, PageTarget[]? Targets);
+        string? View, PageTarget[]? Targets, int? ScoutedCount);
 
     private sealed record PageTarget(string Uid, Dictionary<string, string> Fields);
     private sealed record PageRow(string Uid, Dictionary<string, string> Fields);

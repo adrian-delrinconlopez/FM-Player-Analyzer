@@ -213,6 +213,51 @@ coste observado dentro de FM27 si aplica, con la misma técnica de medida y lín
 base. Usar el mismo hardware, revisión, corte, alcance y método de referencia
 al comparar vías. Anotar cancelaciones y resultados parciales.
 
+### Censo de la vista de ojeados
+
+Compilar la solución en configuración `Laboratorio` con .NET SDK
+10.0.404 y la ruta de la instalación de FM27. La sonda usa `net6.0`
+con el runtime de BepInEx. Cargar el DLL de la sonda 0.3.0 en la
+instalación de laboratorio y abrir la copia SK-01.
+
+```powershell
+dotnet build FM27Analyzer.slnx -c Laboratorio "-p:FM27GameRoot=$fm27Root" -warnaserror
+dotnet test FM27Analyzer.slnx -c Laboratorio --no-build
+```
+
+En el corte del Valencia CF de 1/8/2026 a las 21:45, abrir «Base de
+datos de jugadores» con las columnas «Unique ID», «Pase», «Club» y
+«Posición». En la vista «Copia de Contrato» activar «Sólo jugadores
+ojeados». Desactivar los criterios de búsqueda activos y poner «Interés
+del jugador» en «No considerado». Comprobar el total en pantalla y
+mantener el mismo filtro y orden mientras corre la sonda. En este ensayo
+FM27 anunció 356 resultados.
+
+```powershell
+$censusProbe = 'experiments/FM27Analyzer.BepInExProbe/Request-ScoutedCensus.ps1'
+& $censusProbe -ExpectedCount 356 -ConfirmScoutedView
+& $censusProbe -ExpectedCount 356 -ConfirmScoutedView
+# Control negativo mientras FM27 sigue mostrando 356 filas.
+& $censusProbe -ExpectedCount 355 -ConfirmScoutedView
+```
+
+El control negativo debe generar sólo un motivo de bloqueo. Recargar la
+misma copia sin cerrar FM27. Volver a aplicar la configuración de la
+vista, comprobar el mismo corte y lanzar una tercera petición de 356.
+Cotejar UID y Pase de las diez filas ojeadas de T018 y comprobar la
+ausencia del control excluido en cada pasada. Para las tres respuestas de
+356, comparar el contenido ordenado de `Rows` y comprobar que
+`ProcessStartUtcTicks` coincide y `Loads` aumenta tras la recarga.
+Reponer los criterios originales y comprobar los metadatos del guardado.
+
+Los archivos de respuesta están en
+`%LOCALAPPDATA%/FM27Analyzer/SK-01/viabilidad`. El ensayo se limita a
+500 filas y cancela a los 30 segundos dentro del juego. La confirmación
+del operador fija copia, perspectiva y filtro. La sonda comprueba
+fecha, contador de carga, vista, total y solapamiento de filas. Un cambio
+de filtro que conserve el mismo total y las filas de solapamiento
+puede escapar a la detección. [Evidencia del censo](evidencia.md#censo-de-ojeados-y-recarga)
+
 ## Resultados esperados
 
 | Caso | Estímulo | Aceptación y registro |

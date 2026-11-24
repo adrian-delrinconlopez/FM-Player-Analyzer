@@ -342,3 +342,65 @@ E-04 a E-09 figuran como omitidos en ese informe hasta integrar la
 evidencia de sus tareas. T021 queda abierta para completar los grupos
 de atributos, posiciones con familiaridad y acreditación de alcance
 más allá de la selección fijada. [Reproducción de A-01](quickstart.md#a-01)
+
+## Censo de ojeados y recarga
+
+El 24 de noviembre de 2026 se recorrió la tabla de ojeados de la copia
+SK-01 con la sonda BepInEx 0.3.0 en Steam 26620374. Se mantuvieron el
+Valencia CF y el corte de 1/8/2026 a las 21:45. Se confirmó el nombre
+de la copia en el diálogo «Guardar partida como» y se canceló el diálogo
+sin guardar. La copia conservó sus 43.957.632 bytes y su fecha de
+modificación UTC `2026-11-23T13:51:14.0444918Z`.
+
+| Pasada | Total mostrado y UID únicos leídos | Pase exacto / intervalo / desconocido | Páginas | Cargas | Tiempo total / lectura acumulada |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Tres criterios e interés original | 29 / 29 | 26 / 3 / 0 | 2 | 1 | 0,41 s / 8,72 ms |
+| Sólo ojeados, primera | 356 / 356 | 242 / 114 / 0 | 29 | 1 | 7,68 s / 53,19 ms |
+| Sólo ojeados, segunda | 356 / 356 | 242 / 114 / 0 | 29 | 1 | 5,01 s / 39,78 ms |
+| Sólo ojeados, tras recargar la copia | 356 / 356 | 242 / 114 / 0 | 29 | 2 | 6,72 s / 56,78 ms |
+
+Las cuatro pasadas coincidieron con los diez casos de la referencia
+visual T018 y excluyeron el UID de control. Las tres pasadas de 356
+coincidieron en los UID, su orden, el texto de Pase y el estado de cada
+celda. Se conservó el inicio de proceso y se registró el cambio del
+contador de cargas. Pedir 355 filas cuando FM27 anunciaba 356 produjo
+«No se pudo comprobar el total anunciado por FM27», sin publicar filas.
+Se restauraron los tres criterios, el interés original y el conmutador
+de ojeados desactivado. FM27 volvió a mostrar los 461 resultados iniciales.
+
+La sonda lee únicamente UID y Pase y desplaza temporalmente la tabla
+virtualizada. Los tiempos de lectura son acumulados y queda pendiente
+medir el impacto por fotograma. El registro de BepInEx avisó de que
+Il2CppInterop omitió el registro de un método privado con parámetro
+gestionado. Las cuatro capturas y el control negativo funcionaron. La
+confirmación manual de filtro y perspectiva limita el ensayo a esa
+vista. Quedan pendientes otras vías de conocimiento del mánager, los
+demás campos y la cancelación real al cambiar de carrera o permisos
+durante una captura.
+
+Los agregados y las huellas de las respuestas están en
+`%LOCALAPPDATA%/FM27Analyzer/SK-01/viabilidad/ojeados-20261124.json`,
+SHA-256 `EF1C8701DA596199B642C95E15D8618F558DD3E11F0A3C838CF837E9EA18B989`.
+Compilaron Release y Laboratorio con cero errores y advertencias. Pasaron
+50 pruebas MSTest en cada configuración. El resultado complementa A-01
+y aporta evidencia parcial a E-07. T021 y T026 siguen abiertas.
+[Reproducción del censo](quickstart.md#censo-de-la-vista-de-ojeados)
+
+### Referencia visual de táctica y finanzas
+
+En el mismo corte, «Tácticas → Dibujo táctico» mostró 11 puestos con
+roles por cada fase de la táctica activa `VALENCIA-4231`. Se observaron
+cuatro cambios de puesto entre «Con posesión» y «Sin posesión». Los dos
+mediapuntas de banda pasaban a medios de banda y uno de los dos
+centrocampistas centrales, a mediapunta central. Javi Guerra cambiaba
+de ME (C) a MC y los laterales conservaban el lado con rol distinto.
+La tabla combinada mostró el rol en ambas fases y el XI. Es una
+referencia visual para cotejar una captura futura de puestos y roles por
+fase. Falta vincular las filas de la lectura por UID.
+
+Portal y Contratación coincidieron en el presupuesto disponible de
+fichajes de 3,97 M € y el disponible de sueldos de 392 mil € por mes.
+En el Portal, el gasto de fichajes de la temporada era 6,57 M € y el de
+sueldos, 5,11 M € por mes. La interfaz permite distinguir saldo
+disponible, gasto y periodo. Queda por cotejar una captura de esos
+importes y su escala con una fuente independiente.
