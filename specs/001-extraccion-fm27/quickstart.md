@@ -312,6 +312,41 @@ manifiesto manteniendo sus permisos privados y usar `aislamiento.json`
 en la propiedad `isolation` de una copia de `run.json`. Ejecutar `verify`
 con esa copia. [Resultados del ensayo](evidencia.md#t024t026--recuperación-y-cambio-real-de-carrera)
 
+### Contrastes adicionales y cierre
+
+Para repetir E-04 y E-05 en el banco del Valencia, fijar en pantalla
+las referencias de CA y PA del mismo jugador con permiso previo y
+advertencia. Confirmar copia, proceso, carga y fecha. Compilar
+`%LOCALAPPDATA%/FM27Analyzer/SK-01/viabilidad/capability-probe/WorldProbe.csproj`
+y pasar PID, ticks UTC de inicio y ruta de la copia como argumentos.
+Enviar por entrada estándar un único JSON con `UiUids` de la
+referencia fijada, `Ability` con `Uid`, `Ca` y `Pa`, y
+`ExpectedLoads`. Mantener esa entrada en memoria. El resultado
+se limita a clases, recuentos y estado de los campos y permisos.
+
+E-05 requiere inventarios del mismo corte y ámbito. Para declarar un
+universo completo, contrastar el total independiente y el conjunto de
+UID si existe. El censo de ojeados y la muestra de plantilla aportan
+una referencia de subconjunto. E-06 usa la ficha para verificar el
+intervalo y el editor oficial como referencia del exacto, con
+autorización independiente. Registrar si se usan resultados reales
+anteriores, con su informe original y fecha.
+
+```powershell
+$run = Join-Path $env:LOCALAPPDATA 'FM27Analyzer/SK-01/ensayo-a01'
+$project = 'src/FM27Analyzer.Extraction.Poc/FM27Analyzer.Extraction.Poc.csproj'
+dotnet build FM27Analyzer.slnx -c Release -warnaserror
+dotnet test FM27Analyzer.slnx -c Release --no-build
+dotnet build FM27Analyzer.slnx -c Laboratorio "-p:FM27GameRoot=$fm27Root" -warnaserror
+dotnet test FM27Analyzer.slnx -c Laboratorio --no-build
+dotnet run --project $project -c Release --no-build -- verify --run (Join-Path $run 'run.json') --out (Join-Path $run 'informe-comun.json')
+dotnet run --project $project -c Release --no-build -- verify --run (Join-Path $run 'control-bloqueado.json') --out (Join-Path $run 'control-bloqueado-revalidado-20261124.json')
+```
+
+Comparar el informe común con la evidencia por escenario y clase.
+Comprobar que el modo bloqueado mantiene A-01 sin acreditar.
+[Resultados y huellas](evidencia.md#t027t034--capacidades-adicionales-e-informe-común)
+
 ## Resultados esperados
 
 | Caso | Estímulo | Aceptación y registro |

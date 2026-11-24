@@ -503,3 +503,61 @@ vacío. El ensayo del Valencia leyó 797.500 bytes en 190 ms. Se guardaron
 los agregados en `SK-01/viabilidad/mundo-cruce-ojeados-20261124.json`
 con SHA-256 `50EA457B2E462D1356ADEE42E6B6E20BE8E9CE8786D23946C2CA5586A3A22BA3`
 y en `SK-01/viabilidad/aislamiento-solihull-memoria.json`.
+
+## T027–T034 · Capacidades adicionales e informe común
+
+El 24 de noviembre de 2026 el banco privado se vinculó a la misma
+instancia de FM27 Steam 26620374 y a la carga 5 del Valencia, en
+2026-08-01 21:45. El lector externo verificó el PID, el inicio de
+proceso, la huella PE, el corte, el contador de cargas, los límites de
+la tabla y los metadatos de la copia antes de emitir resultados. El
+repositorio conserva el cotejo y la producción de métricas en C#.
+
+| Escenario | Referencia y vía | Resultado y límite |
+| --- | --- | --- |
+| E-04 · CA | Columnas de plantilla comprobadas con el editor oficial, mismo UID, corte y carga. Memoria externa. | Dos lecturas concordantes en un jugador propio, escala 1–200. Al revocar el permiso en el banco se canceló un resultado en curso y se rechazaron nuevas consultas. |
+| E-04 · PA | Misma referencia, campo independiente. Memoria externa. | Dos lecturas concordantes en el mismo jugador, escala 1–200. La revisión revocada impidió una nueva consulta. El PA codificado y las demás compilaciones quedan sin acreditar. |
+| E-05 · Identidades de plantilla y ojeo | Censo BepInEx de 356 ojeados y referencia visual de 20 jugadores de plantilla. Memoria externa. | **376 de 376** UID conciliados. Es cobertura parcial de identidades con un subconjunto verificable. |
+| E-05 · Universo cargado | Tabla de jugadores en memoria. Comparación previa con las 19.836 filas anunciadas en la búsqueda. | Dos lecturas idénticas de 19.917 UID, 19.887 jugadores y 30 personas con doble rol. Diferencia de 81 entre recuentos de poblaciones aún sin reconciliar. Referencia mundial indeterminada y cobertura de atributos evaluada por separado. |
+| E-06 · Atributos bajo máscara y ocultos | Editor oficial y ficha del portero sin informe del ensayo del 23/11. Memoria externa, evidencia histórica del mismo corte y build. | Dos coincidencias por campo en Pase, Anticipación, Aceleración, Reflejos, Consistencia y Profesionalidad. El banco revocó el exacto y mantuvo intervalo y desconocimiento. |
+
+Los valores especiales se compararon en memoria y los archivos
+conservan coincidencias, métricas y motivos. El cambio de política se
+aplicó en la sonda al releer el proceso real. La observación directa de
+una pérdida de conocimiento originada en FM27 durante una captura
+sigue omitida en E-09. La repetición visual del ensayo E-06 quedó
+bloqueada por el entorno de control de ventanas, que resolvía Node
+18.12.1 con requisito mínimo 22.22.0. Se incorporó la evidencia real
+anterior y se identificó su fecha por separado.
+
+El informe común usa el manifiesto `ensayo-a01/run.json` y las
+referencias privadas `aislamiento.json` y
+`capacidades-adicionales.json`. Se archivó el manifiesto original
+como `run-a01-sin-anexos.json`. El contraste común volvió a acreditar
+A-01 y reunió los nueve escenarios por clase. E-08 y E-09 reales
+figuran como omitidos con su causa. E-05 declara la identidad parcial
+y la cobertura global indeterminada. Pasaron 74 pruebas en Release y
+Laboratorio, con cero advertencias y errores, y se repitió el control
+bloqueado. [Comandos y criterios](quickstart.md#contrastes-adicionales-y-cierre)
+
+| Artefacto privado bajo `%LOCALAPPDATA%/FM27Analyzer/SK-01` | SHA-256 |
+| --- | --- |
+| `viabilidad/capacidades-en-vivo-20261124.json` | `C92F6F91FD1E87724EA8167045F7EE5114A78F6C505FEFEBDEE9F872FE983A2C` |
+| `capacidades-adicionales.json` | `19C74F0B85A3E2BF73826C29EF850649E455310504DBD24B08AA8BC2ACAE20BE` |
+| `ensayo-a01/informe-comun.json` | `A19B8825F9700C0659CA7C70C53791FA05866DFAD7837B08558CB2381FD0EBA3` |
+
+### Traspaso técnico
+
+La evidencia disponible permite planificar SK-03 sobre el contrato de
+captura inicial de Steam 26620374 en castellano, con perspectiva y
+corte confirmados manualmente. Los permisos especiales se mantienen
+independientes. El modo mundial completo queda condicionado a una
+referencia conciliada. [Matriz de vías y campos](matriz-fuentes-to-be.md)
+
+T021 sigue abierta para ampliar grupos de atributos y familiaridad de
+jugadores de campo. Para cerrar la validación previa a la aplicación
+definitiva quedan los contrastes reales de esos campos, las familias
+del TO-BE aún pendientes y la PoC B de familiaridad y proyección.
+La aceptación de la UI definitiva y los ensayos de plataforma
+conservan sus propias puertas. [Alcance y dependencias](../../docs/roadmap/06-alcance-v1.md) ·
+[PoC A y PoC B](../../docs/roadmap/07-poc-y-modelo-v1.md)

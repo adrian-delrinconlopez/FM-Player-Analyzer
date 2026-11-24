@@ -89,7 +89,8 @@ el subconjunto comprobable. «Mostrar todos los jugadores en la búsqueda» esta
 la copia. Sin filtros seleccionados, la pantalla mostró 19.836 resultados, con un límite
 de 10.000 filas y UID repetidos observados. El conjunto externo de 19.917 UID se repitió
 íntegro y contiene 376 de 376 UID en el cruce con el censo BepInEx y la muestra de plantilla. En la copia Solihull se repitieron 90.687 UID únicos con un control visual individual. La cobertura global independiente queda
-indeterminada. Probar particiones compatibles que eviten el límite de pantalla y verificar
+indeterminada en el informe E-05. La clasificación de cobertura conserva una métrica
+aparte para el subconjunto de 376 UID. Probar particiones compatibles que eviten el límite de pantalla y verificar
 la unión y sus discrepancias antes de acreditar un total. Ampliar el universo mantiene
 los permisos de campo.
 [Perfil de Steam 26620374](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/steam-26620374.toml) ·
