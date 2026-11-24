@@ -436,3 +436,70 @@ prueba. La recarga real documentada arriba aporta evidencia de un
 cambio de contador en la misma carrera. La alternancia de dos carreras,
 la revocación en FM27 y la recuperación de T025 siguen pendientes del
 resto de A-03.
+
+## T024–T026 · Recuperación y cambio real de carrera
+
+El 24 de noviembre de 2026, FM27 Steam 26620374 convirtió dos
+guardados de FM26 con su función de carga. `Solihull-Inverted` se abrió
+desde la nube y `Rebuild Valencia` desde el directorio local de FM26.
+Se guardaron como `SK-01 Solihull 2027-08-21` y `SK-01 Valencia 2025-07-07`
+en la lista local de FM27. Las sondas consultaron el juego cargado.
+La copia inicial del Valencia mantuvo 43.957.632 bytes y su fecha de
+modificación. Al terminar se dejó abierta en su corte y se verificaron
+los 461 resultados de la búsqueda original.
+
+| Carga en el mismo proceso | Copia y perspectiva | Comprobación |
+| ---: | --- | --- |
+| 2 | Valencia CF, 1/8/2026 21:45 | Referencia inicial y censo de ojeados. |
+| 3 | Solihull Moors, 21/8/2027 09:00 | Gayà conservaba el UID `67178177` y su club Valencia. La ficha y BepInEx coincidieron en su Pase visible de 11–15. BepInEx y memoria externa rechazaron solicitudes del Valencia 2026. |
+| 4 | Valencia, 7/7/2025 10:00 | Segundo Valencia dirigido, en otra carrera, con el mismo UID en su plantilla. La pantalla y BepInEx coincidieron en Pase 13. La solicitud del Valencia 2026 quedó bloqueada. |
+| 5 | Valencia CF, 1/8/2026 21:45 | Una captura iniciada en la carga 4 se canceló antes de publicar. Una petición del Valencia 2025 también se bloqueó. En una sesión nueva, BepInEx coincidió con Pase 13 y Reflejos 2, y la vía externa volvió a cotejar Pase dos veces. |
+
+Las tres respuestas de BepInEx fuera de contexto omitieron UID y valor.
+En la prueba en curso, la sonda externa registró `READY 2025-07-07 4`
+antes de cargar la otra copia y `RECHECK 2026-08-01 5` justo antes de
+publicar. `CaptureSession` canceló la publicación y el ejecutable de
+prueba terminó con código 2. Se fijó copia y mánager en pantalla en cada
+vinculación. Queda por automatizar esa identificación cuando dos
+carreras coinciden también en su fecha o el mánager cambia sin recarga.
+
+El control sintético de recuperación cubrió reenvío, conflicto de ID,
+build incompatible, partida cerrada, truncado, desconexión y otra vía
+con procedencia propia. Un reenvío idéntico no agrega observaciones. La
+recuperación revalida los permisos, conserva la fecha original y se
+bloquea si el contexto deja de ser verificable. En consola se reenvió
+un lote real y se reintentó con un JSON truncado de forma controlada.
+El reintento recuperó la misma huella y fecha de captura del lote
+original. Los fallos de build, cierre y desconexión se comprobaron con
+fixtures. La revocación de CA/PA se había contrastado con un cambio de
+política simulado sobre lecturas reales. Sigue pendiente comprobar una
+pérdida de conocimiento originada en FM27 durante una captura.
+
+El registro privado `SK-01/aislamiento.json` incorpora E-07 a E-09 por
+clase. `verify` acreditó A-01 con esos seis resultados incorporados a una
+copia del manifiesto. El control bloqueado devolvió A-01 sin acreditar.
+Pasaron **62 pruebas** en Release y Laboratorio, con cero advertencias
+y errores. Las huellas de `aislamiento.json` y del informe son
+`D1A85653668B8486C276684D89E575B97594F11248A1755B3F375BF3536BAFF8` y
+`074817696C64BB3DADC9998B7CF91FAC71D6ECD9850E94F7076F7B4EC6A81F01`.
+El inventario de respuestas y la traza se conservan en
+`SK-01/viabilidad/aislamiento-observado-20261124.json`.
+[Reproducción de aislamiento y recuperación](quickstart.md#aislamiento-y-recuperación)
+
+### Conciliación entre BepInEx y memoria
+
+En el Valencia de 2026, dos recorridos externos recuperaron el mismo
+conjunto de 19.917 UID. Estaban presentes los 356 UID del censo BepInEx
+de ojeados y los 20 UID de plantilla fijados en T018. Las 376 referencias
+eran distintas y se comprobó la identidad por UID. En Solihull, dos
+lecturas externas dieron 90.687 UID distintos y un conjunto idéntico.
+Se comprobó independientemente un UID de esa carrera, el de Gayà.
+Ambas pruebas consultaron sólo identidades. Los recuentos de memoria
+se mantienen como observados en su colección. La cobertura mundial
+sigue indeterminada porque falta una referencia del mismo universo.
+
+El cruce se hizo con el `WorldProbe.dll` del banco privado y `Players`
+vacío. El ensayo del Valencia leyó 797.500 bytes en 190 ms. Se guardaron
+los agregados en `SK-01/viabilidad/mundo-cruce-ojeados-20261124.json`
+con SHA-256 `50EA457B2E462D1356ADEE42E6B6E20BE8E9CE8786D23946C2CA5586A3A22BA3`
+y en `SK-01/viabilidad/aislamiento-solihull-memoria.json`.

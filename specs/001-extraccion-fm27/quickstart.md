@@ -258,6 +258,60 @@ fecha, contador de carga, vista, total y solapamiento de filas. Un cambio
 de filtro que conserve el mismo total y las filas de solapamiento
 puede escapar a la detección. [Evidencia del censo](evidencia.md#censo-de-ojeados-y-recarga)
 
+### Aislamiento y recuperación
+
+Con la sonda 0.3.0 en FM27, confirmar la copia y el corte antes de
+cada petición. La secuencia del ensayo usa `Valencia2026` (1/8/2026,
+21:45), `Solihull` (21/8/2027, 09:00) y `Valencia2025` (7/7/2025,
+10:00) en un mismo proceso. El control positivo usa la plantilla del
+Valencia con las columnas «Unique ID» y «Pase». Desde Solihull se
+accede a la plantilla visitante a través de la ficha de Gayà.
+
+```powershell
+$probe = 'experiments/FM27Analyzer.BepInExProbe/Request-VisibleField.ps1'
+# Con Solihull abierto, primero el control obsoleto y después el actual.
+& $probe -Uid 67178177 -ConfirmSk01Copy -LabCopy Valencia2026
+& $probe -Uid 67178177 -ConfirmSk01Copy -LabCopy Solihull
+# Con Valencia 2025 abierto, repetir Valencia2026 y pedir Valencia2025.
+& $probe -Uid 67178177 -ConfirmSk01Copy -LabCopy Valencia2026
+& $probe -Uid 67178177 -ConfirmSk01Copy -LabCopy Valencia2025
+# Tras volver a Valencia 2026, invertir las peticiones.
+& $probe -Uid 67178177 -ConfirmSk01Copy -LabCopy Valencia2025
+& $probe -Uid 67178177 -ConfirmSk01Copy -LabCopy Valencia2026
+```
+
+Comprobar que el contexto obsoleto aporta motivo sin UID ni valor.
+Las respuestas actuales conservan la referencia visual, el mismo
+inicio de proceso y contadores distintos. Los contadores absolutos
+dependen de las cargas de esa instancia. Repetir la lectura externa
+T016 al volver al corte de 2026. El banco local
+`viabilidad/world-isolation/WorldProbe.csproj` permite sujetar una
+captura externa hasta la siguiente carga. Con Valencia 2025 activo,
+compilarlo y pasar PID, ticks UTC, ruta de su copia y ruta a un archivo
+de señal que aún no exista. Enviar `{"UiUids":[67178177],"Players":[]}`
+por entrada estándar. Al ver `READY`, volver a la copia de 2026 y
+crear el archivo de señal. Tras `RECHECK` se espera código 2 y ausencia
+de resultado de captura.
+
+Para el ensayo de recuperación, con una referencia vinculada de A-01
+y un lote sellado en ese mismo directorio privado:
+
+```powershell
+$run = Join-Path $env:LOCALAPPDATA 'FM27Analyzer/SK-01/ensayo-a01'
+$project = 'src/FM27Analyzer.Extraction.Poc/FM27Analyzer.Extraction.Poc.csproj'
+$truncated = Join-Path $run 'lote-truncado-recuperacion.json'
+[IO.File]::WriteAllText($truncated, '{"content":')
+dotnet run --project $project -c Release --no-build -- check-recovery --reference (Join-Path $run 'referencia-revinculada.json') --batch (Join-Path $run 'lote-1.json') --retry $truncated
+dotnet test FM27Analyzer.slnx -c Release --no-build --filter 'FullyQualifiedName~SampleRecoveryTests|FullyQualifiedName~CaptureSessionTests'
+```
+
+El diagnóstico distingue la primera aceptación, el reenvío y la
+recuperación del mismo cierre y fecha tras rechazar el truncado.
+Para integrar el aislamiento, copiar el registro en el directorio del
+manifiesto manteniendo sus permisos privados y usar `aislamiento.json`
+en la propiedad `isolation` de una copia de `run.json`. Ejecutar `verify`
+con esa copia. [Resultados del ensayo](evidencia.md#t024t026--recuperación-y-cambio-real-de-carrera)
+
 ## Resultados esperados
 
 | Caso | Estímulo | Aceptación y registro |

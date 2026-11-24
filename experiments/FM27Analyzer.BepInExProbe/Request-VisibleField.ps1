@@ -15,13 +15,23 @@ param(
     [switch]$ConfirmSk01Copy,
 
     [ValidatePattern('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')]
-    [string]$ExpectedDate = '2026-08-01'
+    [string]$ExpectedDate,
+
+    [ValidateSet('Valencia2026','Valencia2025','Solihull')]
+    [string]$LabCopy = 'Valencia2026'
 )
 
 $ErrorActionPreference = 'Stop'
 if (!$ConfirmSk01Copy) {
     throw 'Confirma visualmente la copia SK-01 y el corte antes de pedir la lectura.'
 }
+
+$copy, $club, $date, $time = switch ($LabCopy) {
+    'Valencia2026' { 'SK-01 Valencia 2026-08-01', 'Valencia CF', '2026-08-01', '21:45:00' }
+    'Valencia2025' { 'SK-01 Valencia 2025-07-07', 'Valencia CF', '2025-07-07', '10:00:00' }
+    'Solihull' { 'SK-01 Solihull 2027-08-21', 'Solihull Moors', '2027-08-21', '09:00:00' }
+}
+if (!$ExpectedDate) { $ExpectedDate = $date }
 
 $runFolder = Join-Path $env:LOCALAPPDATA 'FM27Analyzer/SK-01/viabilidad'
 if (!(Get-Acl -LiteralPath $runFolder).AreAccessRulesProtected) {
@@ -40,12 +50,12 @@ $request = [ordered]@{
     expiresUtc = [DateTimeOffset]::UtcNow.AddSeconds(15).ToString('o')
     confirmed = $true
     uid = $Uid
-    copy = 'SK-01 Valencia 2026-08-01'
+    copy = $copy
     branch = 'SK-01 copia local'
-    perspective = 'Mánager activo del Valencia CF'
-    club = 'Valencia CF'
+    perspective = "Mánager activo de ${club}"
+    club = $club
     date = $ExpectedDate
-    cut = "${ExpectedDate}T21:45:00"
+    cut = "${ExpectedDate}T${time}"
 }
 if ($PSCmdlet.ParameterSetName -eq 'Page') {
     $request.Remove('uid')

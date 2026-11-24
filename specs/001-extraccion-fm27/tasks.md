@@ -64,12 +64,12 @@ description: "Tareas de implementación y validación de SK-01"
 ### Pruebas
 
 - [X] T023 [P] [US3] Cubrir recarga, revinculación tras cambiar de carrera, rama o mánager, UID coincidente, revocación y pérdida de conocimiento en `tests/FM27Analyzer.Extraction.Tests/CaptureSessionTests.cs` con E-07/09. Comprobar que el contexto posterior y los resultados recuperados respetan el control compartido de T009.
-- [ ] T024 [P] [US3] Cubrir lote idéntico, conflicto de ID, compilación incompatible, partida cerrada, truncado, desconexión y recuperación con una vía independiente en `tests/FM27Analyzer.Extraction.Tests/SampleRecoveryTests.cs` según E-07/08.
+- [X] T024 [P] [US3] Cubrir lote idéntico, conflicto de ID, compilación incompatible, partida cerrada, truncado, desconexión y recuperación con una vía independiente en `tests/FM27Analyzer.Extraction.Tests/SampleRecoveryTests.cs` según E-07/08.
 
 ### Implementación y contraste
 
-- [ ] T025 [US3] Incorporar aceptación idempotente, diagnóstico por capacidad y recuperación de una muestra previa aún autorizada en `src/FM27Analyzer.Extraction.Poc/Capture/SampleRecovery.cs`. Aplicar `Muestra.identificador de lote`, `Muestra.manifiesto de cierre` y `Muestra.contexto` de [data-model.md § Identidad, publicación y repetición](data-model.md#identidad-publicación-y-repetición) y FR-009.
-- [ ] T026 [US3] Integrar T009 y la recuperación T025 en `src/FM27Analyzer.Extraction.Poc/Program.cs`. Registrar E-07 a E-09 por clase de evidencia en `%LOCALAPPDATA%/FM27Analyzer/SK-01/aislamiento.json` para su incorporación al manifiesto. Repetir los casos aplicables con dos copias si hay una vía apta y se ha verificado T008. Si no se puede, registrar la omisión real por separado.
+- [X] T025 [US3] Incorporar aceptación idempotente, diagnóstico por capacidad y recuperación de una muestra previa aún autorizada en `src/FM27Analyzer.Extraction.Poc/Capture/SampleRecovery.cs`. Aplicar `Muestra.identificador de lote`, `Muestra.manifiesto de cierre` y `Muestra.contexto` de [data-model.md § Identidad, publicación y repetición](data-model.md#identidad-publicación-y-repetición) y FR-009.
+- [X] T026 [US3] Integrar T009 y la recuperación T025 en `src/FM27Analyzer.Extraction.Poc/Program.cs`. Registrar E-07 a E-09 por clase de evidencia en `%LOCALAPPDATA%/FM27Analyzer/SK-01/aislamiento.json` para su incorporación al manifiesto. Repetir los casos aplicables con dos copias si hay una vía apta y se ha verificado T008. Si no se puede, registrar la omisión real por separado.
 
 ## Fase 5 · US2 (P2) · Comprobar capacidades de acceso adicionales
 

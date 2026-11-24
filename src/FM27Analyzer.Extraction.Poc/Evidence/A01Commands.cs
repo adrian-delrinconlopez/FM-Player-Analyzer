@@ -36,6 +36,36 @@ internal static class A01Commands
         exchange.Publish(InFolder(output, folder), captured, Access(context, fromReference: false), session);
     });
 
+    internal static int CheckRecovery(string reference, string batch, string retry) => Execute(() =>
+    {
+        var exchange = Open(reference, out var folder, out var input);
+        var observed = exchange.ReadReference(input);
+        var firstName = InFolder(batch, folder);
+        var retryName = InFolder(retry, folder);
+        using var session = new CaptureSession(observed.Context, () => observed.Context, _ => { });
+        var access = Access(observed, fromReference: false);
+        var recovery = new SampleRecovery(session, Ceiling);
+        SampleResult Attempt(string file) => recovery.Attempt("atributos visibles de A-01", access,
+            () => exchange.ReadBatchEnvelope(file, Ceiling, diagnoseTruncation: true));
+        var accepted = Attempt(firstName);
+        if (accepted.Status != SampleStatus.Accepted)
+            throw new InvalidDataException("Falta un lote inicial válido para comprobar la recuperación.");
+        var repeated = Attempt(firstName);
+        var retried = Attempt(retryName);
+        var result = new
+        {
+            accepted.Capability,
+            Accepted = accepted.Status,
+            Repeated = repeated.Status,
+            Retried = retried.Status,
+            retried.Failure,
+            OriginalCapturedUtc = accepted.Sample!.Content.CapturedUtc,
+            ReturnedCapturedUtc = retried.Sample?.Content.CapturedUtc,
+            SameClosure = accepted.Sample.Closure == retried.Sample?.Closure
+        };
+        session.Commit(() => Console.WriteLine(System.Text.Encoding.UTF8.GetString(BatchExchange.Encode(result, Ceiling.MaxBytes))));
+    });
+
     // El cotejo local acepta evidencia histórica del corte fijado. Su contenido no se usa como sesión del juego.
     private static RunInputs ReadContrast(BatchExchange exchange, ComparisonReference reference, string input)
     {

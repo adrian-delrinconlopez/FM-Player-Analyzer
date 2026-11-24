@@ -124,13 +124,33 @@ public sealed class BatchExchange
     private ComparisonReference ReadReference(string file, int maxBytes) =>
         Decode<ComparisonReference>(ReadBytes(file, maxBytes));
 
-    private ObservationBatch LoadBatch(string file, CaptureAuthorization access, CaptureLimits limits)
+    private ObservationBatch LoadBatch(string file, CaptureAuthorization access, CaptureLimits limits) =>
+        BatchValidation.Accept(ReadBatchEnvelope(file, limits), access, limits);
+
+    internal ObservationBatch ReadBatchEnvelope(string file, CaptureLimits limits, bool diagnoseTruncation = false)
     {
         var bytes = ReadBytes(file, limits.MaxBytes);
-        var batch = Decode<ObservationBatch>(bytes);
+        ObservationBatch batch;
+        try { batch = Decode<ObservationBatch>(bytes); }
+        catch (InvalidDataException) when (diagnoseTruncation && IncompleteJson(bytes))
+        {
+            throw new EndOfStreamException("El contenido JSON termina antes del cierre.");
+        }
         if (batch.Content?.Limits is null || bytes.Length > batch.Content.Limits.MaxBytes)
             throw new InvalidDataException("Lote fuera de su presupuesto declarado.");
-        return BatchValidation.Accept(batch, access, limits);
+        return batch;
+    }
+
+    private static bool IncompleteJson(byte[] bytes)
+    {
+        try
+        {
+            var reader = new Utf8JsonReader(bytes, isFinalBlock: false, new JsonReaderState(new JsonReaderOptions { MaxDepth = Json.MaxDepth }));
+            while (reader.Read())
+                if (reader.CurrentDepth == 0 && reader.TokenType != JsonTokenType.StartObject) return false;
+            return reader.BytesConsumed > 0;
+        }
+        catch (JsonException) { return false; }
     }
 
     public RunInputs ReadRun(string file, CaptureSession? session = null, CaptureAuthorization? access = null,

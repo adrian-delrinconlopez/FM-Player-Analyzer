@@ -9,6 +9,8 @@ if (OperatingSystem.IsWindows())
         return A01Commands.Verify(run, report);
     if (args is ["seal-a01", "--reference", var reference, "--content", var content, "--out", var batch])
         return A01Commands.Seal(reference, content, batch);
+    if (args is ["check-recovery", "--reference", var recoveryReference, "--batch", var acceptedBatch, "--retry", var retryBatch])
+        return A01Commands.CheckRecovery(recoveryReference, acceptedBatch, retryBatch);
 }
 
 if (args is ["probe-external", "--confirm-sk01", var pidText, var startText, var copyPath]
