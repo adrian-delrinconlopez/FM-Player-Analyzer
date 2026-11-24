@@ -63,7 +63,7 @@ description: "Tareas de implementación y validación de SK-01"
 
 ### Pruebas
 
-- [ ] T023 [P] [US3] Cubrir recarga, revinculación tras cambiar de carrera, rama o mánager, UID coincidente, revocación y pérdida de conocimiento en `tests/FM27Analyzer.Extraction.Tests/CaptureSessionTests.cs` con E-07/09. Comprobar que el contexto posterior y los resultados recuperados respetan el control compartido de T009.
+- [X] T023 [P] [US3] Cubrir recarga, revinculación tras cambiar de carrera, rama o mánager, UID coincidente, revocación y pérdida de conocimiento en `tests/FM27Analyzer.Extraction.Tests/CaptureSessionTests.cs` con E-07/09. Comprobar que el contexto posterior y los resultados recuperados respetan el control compartido de T009.
 - [ ] T024 [P] [US3] Cubrir lote idéntico, conflicto de ID, compilación incompatible, partida cerrada, truncado, desconexión y recuperación con una vía independiente en `tests/FM27Analyzer.Extraction.Tests/SampleRecoveryTests.cs` según E-07/08.
 
 ### Implementación y contraste

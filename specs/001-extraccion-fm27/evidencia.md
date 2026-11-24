@@ -404,3 +404,35 @@ En el Portal, el gasto de fichajes de la temporada era 6,57 M € y el de
 sueldos, 5,11 M € por mes. La interfaz permite distinguir saldo
 disponible, gasto y periodo. Queda por cotejar una captura de esos
 importes y su escala con una fuente independiente.
+
+## T023 · Aislamiento con datos controlados
+
+Se probaron seis casos de E-07 y E-09 con fixtures MSTest. En los
+cuatro casos de E-07 se mantiene el club y el UID. Una recarga o el
+cambio de carrera, rama o mánager cancela la sesión anterior, impide
+publicar un lote preparado y bloquea la lectura de su lote previo. Con
+la vinculación nueva, el intercambio rechaza ese lote previo y admite
+un lote nuevo que conserva la nueva procedencia.
+
+En los dos casos de E-09 se eleva la revisión durante la lectura. Se
+cancela el trabajo pendiente. La nueva sesión rechaza la comparación de
+CA al revocarla y conserva Pase mientras siga visible. Tras perder
+conocimiento de Pase, la nueva sesión devuelve el estado desconocido
+sin consultar el valor. La comparación de CA sigue disponible en ese
+segundo caso porque conserva su permiso.
+
+```powershell
+dotnet build FM27Analyzer.slnx -c Release -warnaserror
+dotnet test FM27Analyzer.slnx -c Release --no-build --filter FullyQualifiedName~CaptureSessionTests
+dotnet test FM27Analyzer.slnx -c Release --no-build
+dotnet build FM27Analyzer.slnx -c Laboratorio "-p:FM27GameRoot=$fm27Root" -warnaserror
+dotnet test FM27Analyzer.slnx -c Laboratorio --no-build
+```
+
+Pasaron los seis casos dirigidos y 56 de 56 pruebas totales en cada
+configuración. Ambas compilaciones terminaron con cero advertencias y
+errores. El inventario de copias SK-01 encontró una única copia de
+prueba. La recarga real documentada arriba aporta evidencia de un
+cambio de contador en la misma carrera. La alternancia de dos carreras,
+la revocación en FM27 y la recuperación de T025 siguen pendientes del
+resto de A-03.
