@@ -7,9 +7,9 @@ using Microsoft.Win32.SafeHandles;
 
 namespace FM27Analyzer.Extraction.Poc.Capture;
 
-// Viabilidad T016. Únicamente el Pase visible del titular de la referencia fijada.
+// Vincula las pruebas T016 y T021 a la instalación, copia y primer equipo comprobados.
 [SupportedOSPlatform("windows")]
-internal static class ExternalFieldProbe
+internal static partial class ExternalFieldProbe
 {
     private const string Build = "26620374";
     private const string CopyName = "SK-01 Valencia 2026-08-01";
@@ -29,24 +29,29 @@ internal static class ExternalFieldProbe
     private static readonly ObservationState ExactVisible = new(Knowledge.Exact, Availability.Observed, Disclosure.Visible);
     private static readonly CaptureLimits Limits = new(96 * 1024, 1, 2, TimeSpan.FromSeconds(2));
 
-    internal static int Run(int pid, long startTicks, string copyPath)
+    internal static int Run(int pid, long startTicks, string copyPath, ulong? expectedLoad = null, bool comparePositions = false)
     {
         try
         {
-            var reference = new BatchExchange("viabilidad", Limits).ReadReference("referencia.json");
+            var exchange = new BatchExchange("viabilidad", Limits);
+            var reference = exchange.ReadReference(expectedLoad is not null ? "referencia-prioritarios.json" : "referencia.json");
             if (reference.Context is not { IsVerified: true, Build: Build, Distribution: "Steam", CopyReference: CopyName,
                     ManagedClub: ClubName, GameDate: var date, Policy: var policy }
                 || date != Date || policy != Policy || reference.FixedUtc == default
                 || reference.FixedUtc.Offset != TimeSpan.Zero
-                || reference.FixedUtc >= DateTimeOffset.UtcNow || string.IsNullOrWhiteSpace(reference.IndependentSource)
-                || reference.Expected is not [{ Key: var key, CareerOrConfirmedCopy: CopyName,
+                || reference.FixedUtc >= DateTimeOffset.UtcNow || string.IsNullOrWhiteSpace(reference.IndependentSource))
+                throw new InvalidDataException("Falta una referencia independiente vinculada al corte.");
+            if (expectedLoad is not null)
+                ValidatePriorityReference(reference);
+            else if (reference.Expected is not [{ Key: var key, CareerOrConfirmedCopy: CopyName,
                     Club: { Status: ClubStatus.ConfirmedClub, ClubReference: ClubName } }] || key != Player
                 || reference.Observations is not [{ Player: var observedPlayer, Field: var field, Type: FieldType.Numeric,
                     Unit: "1–20", State: var state, Value: { Low: >= 1 and <= 20 and var visiblePase, High: null, Category: null } }]
-                || observedPlayer != Player || field != Passing || state != ExactVisible)
+                || observedPlayer != Player || field != Passing || state != ExactVisible
+                || visiblePase != decimal.Truncate(visiblePase))
                 throw new InvalidDataException("Falta la referencia independiente del Pase exacto visible en el primer equipo.");
-            if (visiblePase != decimal.Truncate(visiblePase))
-                throw new InvalidDataException("La referencia visible de Pase debe ser un entero.");
+
+            var positions = comparePositions ? ReadPositionReference(reference) : null;
 
             var copy = new FileInfo(copyPath);
             if (copy.Name != CopyName + ".fm" || !copy.Exists || copy.Attributes.HasFlag(FileAttributes.ReparsePoint))
@@ -70,7 +75,8 @@ internal static class ExternalFieldProbe
             VerifyBuild(reader, image, module.Size);
             long ui = reader.Pointer(image + UiSlot);
             ulong loads = reader.U64(ui + 0x100);
-            if (loads is 0 or > 10_000) throw new InvalidDataException("Contador de cargas incierto.");
+            if (loads is 0 or > 10_000 || expectedLoad is ulong load && loads != load)
+                throw new InvalidDataException("Contador de cargas distinto del corte confirmado.");
 
             var context = reference.Context with { Instance = Guid.NewGuid(), Session = Guid.NewGuid(), Cut = "2026-08-01T21:45:00" };
             long club = 0, team = 0, player = 0;
@@ -92,6 +98,9 @@ internal static class ExternalFieldProbe
             using var session = new CaptureSession(context, Current, _ => { });
             club = session.Read(() => FindClub(reader, image));
             team = session.Read(() => FindTeam(reader, club));
+            if (expectedLoad is not null)
+                return CheckPriorities(reference, positions, reader, team, startTicks, loads, session, Current);
+
             player = session.Read(() => FindPlayer(reader, team));
             var access = new CaptureAuthorization(context,
                 candidate => candidate == Player ? IdentityScope.Squad : IdentityScope.Unverified,

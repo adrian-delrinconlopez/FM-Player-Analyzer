@@ -347,6 +347,39 @@ Comparar el informe común con la evidencia por escenario y clase.
 Comprobar que el modo bloqueado mantiene A-01 sin acreditar.
 [Resultados y huellas](evidencia.md#t027t034--capacidades-adicionales-e-informe-común)
 
+### Atributos visibles y familiaridad
+
+Fijar en `%LOCALAPPDATA%/FM27Analyzer/SK-01/viabilidad/referencia-prioritarios.json`
+una referencia con el contrato de A-01 para jugadores confirmados en el
+primer equipo del Valencia. Tomar sólo atributos exactos visibles en sus
+fichas. Cada celda usa la escala 1–20 y la misma fuente independiente para
+el valor y su visibilidad. La sonda se limita a Steam 26620374 y a la
+copia y corte SK-01 del Valencia.
+
+```powershell
+$fm = Get-Process -Name fm
+$ticks = $fm.StartTime.ToUniversalTime().Ticks
+$project = 'src/FM27Analyzer.Extraction.Poc/FM27Analyzer.Extraction.Poc.csproj'
+dotnet run --project $project -c Release --no-build -- probe-priority --confirm-sk01 $fm.Id $ticks $copyPath $expectedLoads
+```
+
+Usar la ruta local de la copia y el contador de cargas comprobado
+en la misma instancia. Verificar los resultados y los recuentos por
+grupo. Con permisos base, se esperan cero comprobaciones de
+familiaridad numérica. Pasar una carga distinta debe terminar con
+código 2 y sin resultado.
+
+Para el contraste de la escala numérica, con permiso independiente, usar
+«Editor del juego → Atributos del jugador → Posiciones», en modo
+de consulta. Fijar los códigos de puesto y lado observados y pasar a
+la misma orden, con `--compare-editor-positions`, un objeto JSON por
+stdin que asocie cada UID de la muestra a su mapa de puesto y
+valor. Pasar un valor fuera de 0–20 debe bloquear la petición.
+La salida no contiene los valores del editor. Las etiquetas de la
+ficha se registran por separado como categorías. Para los estados de
+ojeo, usar A-01 y comprobar la ficha y la tabla con el filtro activo.
+[Resultados del contraste](evidencia.md#t021--atributos-visibles-y-familiaridad-por-posición)
+
 ## Resultados esperados
 
 | Caso | Estímulo | Aceptación y registro |

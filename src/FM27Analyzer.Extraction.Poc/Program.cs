@@ -23,6 +23,13 @@ if (args is ["probe-external", "--confirm-sk01", var pidText, var startText, var
     return 2;
 }
 
+if (OperatingSystem.IsWindows() && RuntimeInformation.ProcessArchitecture == Architecture.X64
+    && args is ["probe-priority", "--confirm-sk01", var priorityPid, var priorityStart, var priorityCopy, var priorityLoad, .. var options]
+    && (options.Length == 0 || options is ["--compare-editor-positions"])
+    && int.TryParse(priorityPid, out int capturePid) && long.TryParse(priorityStart, out long captureStart)
+    && ulong.TryParse(priorityLoad, out ulong captureLoad))
+    return ExternalFieldProbe.Run(capturePid, captureStart, priorityCopy, captureLoad, comparePositions: options.Length == 1);
+
 if (args.Length > 0)
 {
     Console.Error.WriteLine(status);

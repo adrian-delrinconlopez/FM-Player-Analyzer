@@ -554,10 +554,74 @@ corte confirmados manualmente. Los permisos especiales se mantienen
 independientes. El modo mundial completo queda condicionado a una
 referencia conciliada. [Matriz de vías y campos](matriz-fuentes-to-be.md)
 
-T021 sigue abierta para ampliar grupos de atributos y familiaridad de
-jugadores de campo. Para cerrar la validación previa a la aplicación
-definitiva quedan los contrastes reales de esos campos, las familias
-del TO-BE aún pendientes y la PoC B de familiaridad y proyección.
 La aceptación de la UI definitiva y los ensayos de plataforma
 conservan sus propias puertas. [Alcance y dependencias](../../docs/roadmap/06-alcance-v1.md) ·
 [PoC A y PoC B](../../docs/roadmap/07-poc-y-modelo-v1.md)
+
+## T021 · Atributos visibles y familiaridad por posición
+
+El 24 de noviembre de 2026, en Steam 26620374, carga 5 del Valencia
+CF a 1/8/2026 21:45, se fijó una referencia independiente con las fichas
+de José Gayà, Arnau Martínez y Stole Dimitrievski. Los tres UID
+pertenecen a la muestra T018. Se confirmó club y UID en la plantilla,
+y se cotejaron los atributos exactos publicados en cada ficha. El
+adaptador externo validó la copia y la estructura de FM27, comprobó
+cada vínculo de equipo antes y después de leer y selló la proyección
+visible con el contrato de captura.
+
+| Grupo | Observaciones | Coincidencias con FM27 en ambas lecturas |
+| --- | ---: | ---: |
+| Técnica | 23 | 23 |
+| Balón parado | 10 | 10 |
+| Mental | 42 | 42 |
+| Físico | 24 | 24 |
+| Portería | 11 | 11 |
+| **Total** | **110** | **110** |
+
+Para familiaridad se usó «Editor del juego → Atributos del jugador →
+Posiciones» en solo lectura. Se cotejaron las 14 posiciones de cada
+jugador de campo y 10 del portero, con **38 de 38** coincidencias en
+dos lecturas. Se verificaron los lados del defensa, carrilero,
+centrocampista y mediapunta con los calificadores del perfil. La
+referencia cubrió valores observados de 1 a 20 dentro de la escala
+declarada de 0 a 20. El puesto adicional del perfil de terceros carece
+de referencia en la pantalla ensayada y queda excluido.
+
+La familiaridad numérica procede del editor y exige permiso de prueba.
+La ficha del mánager aporta una representación posicional y sus
+etiquetas. Se observó, por ejemplo, que la ficha de Arnau no enumera
+todos los puestos para los que el editor muestra un valor. La
+equivalencia entre etiquetas, colores y números sigue sin acreditar.
+En la ejecución con permisos base se repitieron las 110 observaciones y
+se hicieron cero lecturas de la escala posicional. Los controles de
+carga incorrecta y referencia fuera de escala terminaron con código 2
+y sin resultado. La prueba anterior T016 conservó su coincidencia.
+
+Para ojeo se volvió a comprobar el filtro y la ficha de Tomáš Hašler.
+La ficha mostró rangos técnicos, mentales y físicos y el guion de
+desconocimiento. Se mantienen las capturas A-01 de BepInEx como fuente
+de los estados verificados de Pase y Marcaje. Queda por ampliar la
+captura automatizada de las demás celdas del ojeo. No se extrapola a
+otros jugadores, tiendas o compilaciones la validación numérica de
+esta muestra. Se cerró el editor sin cambiar campos, se repuso la
+búsqueda original de 461 resultados y se preservaron los metadatos del
+guardado.
+
+La captura combinada de la muestra leyó 50.673 bytes en 148,4 ms y
+alcanzó un pico residente de 41.664.512 bytes en la sonda. Los números
+del editor entraron por stdin y el informe sólo guardó recuentos por
+posición. Las tres salidas están en `%LOCALAPPDATA%/FM27Analyzer/SK-01/viabilidad`.
+
+| Artefacto | SHA-256 |
+| --- | --- |
+| `referencia-prioritarios.json` | `BF29C809584D0F737CE6E80E8B1EC702B4B552F614AA6C004331EA6232268A06` |
+| `prioritarios-en-vivo-20261124.json` | `D9C5292E8EF63A0357B6719A622A25393335B208B1CA01444A9CAD1785148BC0` |
+| `prioritarios-base-20261124.json` | `611F4E009CAA35994FB63D329F68C21BACFDF928B9B5A7E93B4433B02DA3D6A3` |
+
+T021 aporta una fuente contrastada para los grupos prioritarios y
+para la familiaridad experimental de campo y portería. PoC B conserva
+la validación del uso de esa escala y de la proyección de atributos.
+El inventario mundial y las demás familias del TO-BE conservan los
+límites de su matriz. [Reproducción](quickstart.md#atributos-visibles-y-familiaridad) ·
+[Layout contrastado](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/layout.toml) ·
+[Matriz de fuentes](matriz-fuentes-to-be.md)
