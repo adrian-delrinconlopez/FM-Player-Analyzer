@@ -5,6 +5,9 @@
     <BuildType Name="Laboratorio" />
   </Configurations>
   <Folder Name="/experiments/">
+    <Project Path="experiments/FM27Analyzer.RatingProbe/FM27Analyzer.RatingProbe.csproj">
+      <BuildType Solution="Laboratorio|*" Project="Release" />
+    </Project>
     <Project Path="experiments/FM27Analyzer.BepInExProbe/FM27Analyzer.BepInExProbe.csproj">
       <Build Project="false" />
       <Build Solution="Laboratorio|*" Project="true" />
