@@ -7,7 +7,7 @@
 | B-01 · Equivalencia | **Verificado.** 2.528/2.528 pares Classic y 237/237 notas de Curvas. | REQ-RATING-001/002/003, EQ-006/007/008 |
 | B-02 · Familiaridad | **Contrato verificado.** 128 casos sintéticos y escala contrastada en la muestra T021. Elección de función y equivalencia entre el editor y las etiquetas de la ficha del mánager pendientes en Q-17. | REQ-RATING-006, V1-03 |
 | B-03 · Proyección | **Verificado en el banco sintético.** 80 comparaciones con enumeración exhaustiva, 80 inversiones del orden de entrada y pruebas de frontera y revocación. | REQ-RATING-005, NV-28, V1-04 |
-| B-04 · Partida | **Parcial.** Piloto presente IP/OOP en campo y portería. Referencia de coste candidata localizada. Falta medir y calibrar su respuesta en copias, cerrar el contraste independiente y ejecutar el recorrido de potencial con costes contrastados. | REQ-RATING-005/006, V1-03/04, Q-17 |
+| B-04 · Partida | **Parcial.** Piloto presente IP/OOP y respuesta reproducible de la referencia de coste en campo y portería. Quedan la calibración, el contraste independiente y el recorrido de potencial en partida con costes contrastados. | REQ-RATING-005/006, V1-03/04, Q-17 |
 
 ## B-01 · Equivalencia y cobertura
 
@@ -47,12 +47,36 @@ El piloto recibió los atributos exactos visibles de T021 de una ficha de campo 
 | Portero | IP · GK-IP | 38 | 100 % | 66,0 |
 | Portero | OOP · GK-OOP | 38 | 100 % | 68,5 |
 
-En FM27, **Editor del juego → Atributos del jugador → Atributos clave** mostró «Calidad actual recomendada» junto a dos campos separados de calidad actual y potencial. Se comprobó la ficha autorizada de Gayà en el mismo corte visible de 1/8/2026 a las 21:45. La visita fue de sólo lectura y terminó en la búsqueda inicial de 461 resultados. Esta observación acredita la disponibilidad del indicador en esa instalación. Falta verificar que se recalcule de forma reproducible tras variar atributos, y establecer qué mide en relación con el coste y el desarrollo. Sports Interactive documenta la disponibilidad del editor y de su información contextual. [Editor oficial de FM27](https://www.footballmanager.com/fm27/features/fm27-2d-match-engine-game-editor-and-deeper-world-upgrades)
+En FM27, **Editor del juego → Atributos del jugador → Atributos clave** mostró «Calidad actual recomendada» junto a dos campos separados de calidad actual y potencial. La primera inspección de la ficha autorizada de Gayà fue de sólo lectura en el mismo corte visible de 1/8/2026 a las 21:45. Sports Interactive documenta la disponibilidad del editor y de su información contextual. [Editor oficial de FM27](https://www.footballmanager.com/fm27/features/fm27-2d-match-engine-game-editor-and-deeper-world-upgrades)
+
+### Respuesta de la calidad recomendada
+
+El 24 de noviembre de 2026 se creó con **Guardar partida como → Local** la copia `SK-02 B04 Valencia 2026-08-01` desde `SK-01 Valencia 2026-08-01`. En Steam 26620374, con la interfaz en castellano y el reloj a 1/8/2026 21:45, se variaron dos atributos de José Gayà y dos de Stole Dimitrievski. Se editaron únicamente esas cuatro celdas en la copia de laboratorio. No se avanzó el reloj ni se editaron CA, PA, posiciones, familiaridades o pie. Los campos CA y PA permanecieron constantes a la vista. La calidad recomendada se actualizó al pulsar Intro o salir de la celda.
+
+Los deltas se miden frente a la lectura de base de cada ficha. La tabla contiene valores visibles de atributos y deltas de calidad recomendada.
+
+| Grupo y atributo | Nivel base | Cambio +1 | Δ recomendada | Cambio +3 | Δ recomendada |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Campo · Velocidad | 15 | 16 | +1 | 18 | +5 |
+| Campo · Aceleración | 14 | 15 | +2 | 17 | +7 |
+| Portería · Reflejos | 16 | 17 | +2 | 19 | +6 |
+| Portería · Blocaje | 14 | 15 | +1 | 17 | +5 |
+
+| Combinación +3/+3 | Suma de los deltas individuales | Δ recomendada conjunta | Δ conjunta menos suma |
+| --- | ---: | ---: | ---: |
+| Velocidad y Aceleración | +12 | +13 en ambos órdenes | +1 |
+| Reflejos y Blocaje | +11 | +11 en ambos órdenes | 0 |
+
+Antes del primer +3 se restituyó el atributo principal tras su +1. Para medir el segundo atributo por separado se restituyó el primero mientras el segundo seguía elevado. Después se restauró la base completa y se repitió el +3/+3 empezando por el segundo atributo. Las dos combinaciones y sus lecturas de base fueron reproducibles. Se repusieron los cuatro atributos, se recargó `SK-01 Valencia 2026-08-01` y se volvió a la búsqueda inicial de 461 resultados. La copia SK-01 mantuvo 43.957.632 bytes y fecha UTC `2026-11-23T13:51:14.0444918Z`. La copia SK-02 mantuvo desde su creación 43.960.719 bytes y fecha UTC `2026-11-24T18:10:45.9208025Z`. Las variaciones quedaron en la sesión de laboratorio. El control de archivos consultó sus metadatos.
+
+**Implicación para el presupuesto.** Multiplicar por tres el primer delta falla en tres de los cuatro atributos. Además, sumar los deltas enteros individuales infravalora en un punto la combinación de campo. Ese punto es compatible con redondear una suma aditiva de valores fraccionarios. Por ejemplo, `redondear(−0,35 + 1,80 × ΔVelocidad + 2,50 × ΔAceleración)` reproduce las seis lecturas de campo, incluida la línea base y la combinación. El ejemplo correspondiente para portería es `redondear(−0,20 + 2,00 × ΔReflejos + 1,65 × ΔBlocaje)`. Estos ejemplos sólo prueban compatibilidad matemática con las lecturas enteras. La fórmula interna, la pauta de redondeo y los coeficientes transferibles siguen sin acreditarse.
+
+La prueba convierte el indicador en una referencia candidata repetible para perturbaciones controladas. El indicador de base llegó a diferir de CA en una ficha. El contraste debe medir **delta de calidad recomendada** frente a su propia línea base y conservar la CA observada como ancla del presupuesto. Medir el coste de referencia tampoco acredita que el jugador vaya a desarrollar esos atributos ni cuándo.
 
 ### Protocolo propuesto para Q-17
 
-1. **Ensayo de respuesta.** En una copia de laboratorio, medir la calidad recomendada de una ficha de campo y una de portería en dos lecturas. En ramas desechables del mismo corte variar un atributo en +1 y +3, y después dos atributos a la vez. Mantener CA, PA, puesto, familiaridades y pie constantes. Repetir la lectura desde la línea base entre variaciones. Registrar si el editor actualiza en pantalla y si el redondeo o las interacciones invalidan el coste aditivo. Las variaciones son experimentos en el editor oficial. La captura de Analyzer se mantiene de sólo lectura.
-2. **Separación de muestra.** Propuesta inicial de 48 fichas independientes, 24 de calibración y 24 reservadas para contraste. En cada conjunto, 8 de portería y 16 de campo. Cubrir polivalencia, edades 16–21, 22–28 y 29+, familiaridad natural y secundaria y márgenes bajos (0–10) y altos (>10). Registrar huecos por estrato y repetir el diseño con muestras propias si se declara cobertura en fútbol femenino. Congelar selección, exclusiones y perfil antes de abrir el contraste. Si el indicador responde, medir diferencias de calidad recomendada sobre la misma ficha y anclar el escenario a su CA observada. Si falla como referencia, usar pares comparables del mismo jugador y carrera en dos o más fechas.
+1. **Ensayo de respuesta. Completado para la pareja piloto.** Para repetirlo, abrir la copia local en el mismo corte y seguir las celdas y niveles de la tabla. Leer la base, aplicar +1 al primer atributo, restaurar, aplicar +3 y luego +3 al segundo. Restaurar el primero para leer el segundo aislado, medir también +1, volver a la base y repetir la combinación en orden inverso. Las variaciones usan el editor oficial. La captura de Analyzer se mantiene de sólo lectura.
+2. **Separación de muestra.** Propuesta inicial de 48 fichas independientes, 24 de calibración y 24 reservadas para contraste. En cada conjunto, 8 de portería y 16 de campo. Excluir a las dos fichas exploratorias del contraste reservado. Cubrir polivalencia, edades 16–21, 22–28 y 29+, familiaridad natural y secundaria y márgenes bajos (0–10) y altos (>10). Registrar huecos por estrato y repetir el diseño con muestras propias si se declara cobertura en fútbol femenino. Congelar selección, exclusiones, perturbaciones combinadas y perfil antes de abrir el contraste. Comparar costes enteros por incremento con un candidato que sume costes fraccionarios y redondee el total. Medir diferencias de calidad recomendada sobre la misma ficha y anclar el escenario a su CA observada. Si falla como referencia, usar pares comparables del mismo jugador y carrera en dos o más fechas.
 3. **Puertas propuestas.** Por grupo posicional, al menos el 90 % de las comparaciones previstas con referencia utilizable, error medio absoluto de coste ≤1 unidad de CA y percentil 90 del error absoluto ≤2 unidades de CA frente a la referencia elegida. Verificar que el coste de cada vector publicado respeta el margen. Informar saturación, margen sin gastar y cambios de orden al variar supuestos, frente a cambio cero y escalado proporcional acotado. Conservar los números especiales sólo durante el contraste autorizado y publicar recuentos y métricas agregadas. Estos umbrales quedan sujetos a validación y decisión del propietario antes del contraste reservado.
 4. **Recorrido final.** Ejecutar en partida, para una ficha de campo y una de portería, la valoración actual y el potencial con ambos permisos y roles IP/OOP. Comprobar la ausencia de derivados al revocar cualquiera de los permisos. Publicar los grupos que cumplan los criterios aprobados. La falta de trayectorias comparables limita el horizonte a un techo condicionado, sin fecha ni probabilidad de alcanzarlo.
 
