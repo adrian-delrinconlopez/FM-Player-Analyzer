@@ -1,5 +1,9 @@
 # Registro de cambios de la especificación
 
+## 25 de noviembre de 2026 · Nomenclatura castellana de FM27 para v1
+
+El [catálogo de términos](to-be/catalogo-terminos-fm27.md) incorpora 47 atributos con el grupo y el orden de las fichas de campo y portero y los 79 roles del selector general, observados en FM27 Steam `26620374`. La evidencia se vincula a `REQ-I18N-001`, `REQ-TERM-001` y `NV-24` para la v1. Q-05 conserva el cotejo independiente y las familias pendientes.
+
 ## 25 de noviembre de 2026 · Ratificación de la Constitución 1.0.0
 
 El propietario ratifica expresamente la [Constitución de FM27 Analyzer](../.specify/memory/constitution.md) como versión **1.0.0** (desde la candidata 0.4.0), conservando intactos los principios I–V y las pautas de ingeniería en .NET y Windows, y cerrando el marcador `TODO(RATIFICATION_DATE)`.
