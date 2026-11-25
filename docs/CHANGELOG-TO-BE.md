@@ -4,6 +4,14 @@
 
 El [catálogo de términos](to-be/catalogo-terminos-fm27.md) incorpora 47 atributos con el grupo y el orden de las fichas de campo y portero y los 79 roles del selector general, observados en FM27 Steam `26620374`. La evidencia se vincula a `REQ-I18N-001`, `REQ-TERM-001` y `NV-24` para la v1. Q-05 conserva el cotejo independiente y las familias pendientes.
 
+## 25 de noviembre de 2026 · Cierre de decisiones v1 (DP-18 a DP-21)
+
+El propietario confirma en bloque `DP-18` a `DP-21` en [PRODUCT-DECISIONS](PRODUCT-DECISIONS.md), cerrando `Q-01` (`H-05`), `Q-04` (`H-02`), `Q-06` y `Q-18` (`H-04`) en [OPEN-QUESTIONS](OPEN-QUESTIONS.md): supresión de nota deportiva en Classic parcial y ordenación por precisión interna en ranking de roles; controles independientes y efímeros de CA/PA con revocación sobre derivados e históricos; licencia GNU GPLv3 con inventario de terceros; y contrato v1 del optimizador de XI, fijación simple sin inscripción completa y alcance explícito del ranking por impacto.
+
+## 25 de noviembre de 2026 · Dirección visual A (Estilo FM) y cierre de V-A9
+
+DP-17 registra la elección de la **Dirección A («estilo FM»)** como línea base visual y el cierre de la puerta `V-A9` del prototipo HTML (descartando Dirección B), manteniendo abiertos los ajustes puramente estilísticos sobre la aplicación definitiva en WinUI 3 conforme al Principio V de la Constitución 1.0.0. Actualiza Q-13 y Q-16 en [OPEN-QUESTIONS](OPEN-QUESTIONS.md) y desbloquea la preparación de la UI nativa (`SK-06`/`SK-07`, sujeta a `PC-04`–`PC-06` y `PC-10`).
+
 ## 25 de noviembre de 2026 · Ratificación de la Constitución 1.0.0
 
 El propietario ratifica expresamente la [Constitución de FM27 Analyzer](../.specify/memory/constitution.md) como versión **1.0.0** (desde la candidata 0.4.0), conservando intactos los principios I–V y las pautas de ingeniería en .NET y Windows, y cerrando el marcador `TODO(RATIFICATION_DATE)`.
