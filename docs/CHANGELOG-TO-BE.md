@@ -1,5 +1,9 @@
 # Registro de cambios de la especificación
 
+## 25 de noviembre de 2026 · Ratificación de la Constitución 1.0.0
+
+El propietario ratifica expresamente la [Constitución de FM27 Analyzer](../.specify/memory/constitution.md) como versión **1.0.0** (desde la candidata 0.4.0), conservando intactos los principios I–V y las pautas de ingeniería en .NET y Windows, y cerrando el marcador `TODO(RATIFICATION_DATE)`.
+
 ## 23 de noviembre de 2026 · Alcance funcional v1
 
 DP-15/16 fijan el recorrido v1 desde la captura real hasta la recomendación por impacto en el XI. La [matriz v1](roadmap/06-alcance-v1.md) incorpora proyección, diagnóstico, simulación de refuerzo y XLSX, y difiere los flujos avanzados. REQ-FM-005, REQ-VIS-003 y REQ-RATING-005/006 trazan universo mundial, permisos independientes y escenarios actuales y potenciales. V1-01 a V1-10 fijan las comprobaciones. Los [protocolos A/B](roadmap/07-poc-y-modelo-v1.md) y Q-15/17/18 conservan las decisiones técnicas y matemáticas pendientes. La comprobación de los principios I–V figura en el alcance v1.

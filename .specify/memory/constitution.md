@@ -1,6 +1,6 @@
 # Constitución de FM27 Analyzer
 
-**Versión 0.4.0 · Candidata a ratificación · Revisada el 2026-11-23**
+**Versión 1.0.0 · Ratificada el 2026-11-25 · Última enmienda: 2026-11-25**
 
 FM27 es la única edición admitida. [Decisiones del propietario](../../docs/PRODUCT-DECISIONS.md)
 
@@ -125,4 +125,4 @@ y el [registro de cambios](../../docs/CHANGELOG-TO-BE.md). La primera ratificaci
 la versión 1.0.0. Después, un cambio incompatible incrementa la mayor, un principio nuevo
 o ampliado la menor y una aclaración la de parche.
 
-<!-- TODO(RATIFICATION_DATE): registrar la fecha de la primera ratificación expresa. -->
+**Versión**: 1.0.0 | **Ratificada**: 2026-11-25 | **Última enmienda**: 2026-11-25
