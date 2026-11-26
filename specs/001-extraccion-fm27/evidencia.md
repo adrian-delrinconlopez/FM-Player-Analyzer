@@ -625,3 +625,13 @@ El inventario mundial y las demás familias del TO-BE conservan los
 límites de su matriz. [Reproducción](quickstart.md#atributos-visibles-y-familiaridad) ·
 [Layout contrastado](https://github.com/tozmoz/FMLibreEditor/blob/v0.5.3/profiles/fm27/layout.toml) ·
 [Matriz de fuentes](matriz-fuentes-to-be.md)
+
+## Revisión del propietario y traspaso a SK-03
+
+El 26 de noviembre de 2026, el propietario indicó que completó su comprobación de la consola de acceso y remitió a `specs/`, `src/` y `docs/` como registro. El resultado comunicado queda anotado en SK-01. La ejecución documentada y contrastable sigue siendo la que delimita la acreditación por campo, vía y compilación.
+
+En la misma fecha se repitió desde `d92826e`, con .NET SDK 10.0.404, la verificación de los artefactos de T033. `dotnet build FM27Analyzer.slnx -c Release -warnaserror` terminó sin advertencias ni errores. `dotnet test FM27Analyzer.slnx -c Release --no-build` pasó 74 de 74 pruebas. El informe común volvió a dar `a01: accredited` para los 30 jugadores del Valencia y su ojeo conforme a los filtros de referencia, con la misma huella SHA-256 ya registrada. El control devolvió `a01: unaccredited` por ausencia de lotes. En ambos casos, el código de proceso 0 confirma la generación del informe y el campo `a01` expresa la acreditación. La repetición reutilizó las capturas de Steam 26620374 del 24 de noviembre. [Comandos de reproducción](quickstart.md#contrastes-adicionales-y-cierre)
+
+SK-01 mantiene sus 34 tareas completadas y los límites documentados. E-05 concilia un subconjunto de 376 UID y mantiene indeterminado el universo cargado completo. E-08 y E-09 siguen omitidos en la clase real por los motivos del informe común y cubiertos con datos sintéticos. Cada permiso especial conserva el alcance del campo acreditado. [Matriz de vías y campos](matriz-fuentes-to-be.md)
+
+**Siguiente especificación de producto.** Abrir SK-03 con `$speckit-specify`, usando los casos V1-01 y V1-02 y este contrato de captura acreditado. El incremento verificable es abrir, sincronizar y reabrir dos carreras en SQLite sin cruzar identidades, aplicar lotes idempotentes y conmutar los permisos. Tras revisar la especificación, `$speckit-plan` documenta las dependencias y ensayos de plataforma PC-04/10. Después, `$speckit-tasks` y `$speckit-analyze` preparan y revisan el bloque que se autorice implementar. SK-02 conserva en paralelo el contraste del potencial de Q-17. [Orden y dependencias v1](../../docs/roadmap/06-alcance-v1.md#incrementos-dependencias-y-orden-de-spec-kit)
