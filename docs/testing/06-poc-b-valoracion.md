@@ -82,6 +82,27 @@ La prueba convierte el indicador en una referencia candidata repetible para pert
 
 El piloto usa un único corte por ficha. Los cortes de Solihull y Valencia pertenecen a carreras distintas y no forman una trayectoria. Los costes de B-03 comprueban el repartidor mediante valores sintéticos. Q-17 sigue abierta y B-04 determina si esos costes pueden trasladarse a partidas.
 
+## Contraste externo · Genie Scout 26g
+
+**26 de noviembre de 2026.** Inspección estática de la copia señalada por el propietario en `C:/FM Genie Scout 26g`, versión `1.3.0.1538`. El ejecutable es PE nativo x64, sin directorio CLR, y conserva nombres de tipos, métodos y campos. `rating.dat` tiene 726 bytes y una firma de formato binario. La función de cada parámetro de ese archivo sigue pendiente de contraste. El SHA-256 del ejecutable es `DB82A81004FF8DB91120146B22340E095CF8CFE8545972DBFE005EF8DBA1B6E2`. Se usaron los metadatos PE y desensamblado Capstone 5.0.7 en lectura. La edición 27 se considera una hipótesis de continuidad para las fórmulas. [Capstone](https://www.capstone-engine.org/) · [Versiones de Genie Scout](https://geniescout.com/download/#past-versions)
+
+| Componente | Evidencia directa en la build 1538 |
+| --- | --- |
+| Composición de la nota de rol | De 238 rutinas de composición localizadas, 236 calculan `0,80 × base del rol + 0,20 × nota posicional`. Las otras dos corresponden a la nota actual y potencial de `Centre Forward OOP`, con 0,10 para cada una de dos notas posicionales de delantero. La cifra cuenta variantes por fase, lado y escenario. |
+| Nota posicional y familiaridad | En central, mediapunta central y portero se observó `nota general de la posición × (0,60 + 0,40 × tabla[familiaridad])`. Las tres comparten una tabla creciente de 20 entradas. La familiaridad 20 es neutra en esas rutas. |
+| Reutilización en el potencial | En `Advanced Playmaker IP` de mediapunta central, `Advanced Centre-Back IP` y `Ball-Playing Goalkeeper IP`, las variantes actual y potencial llaman a la misma rutina de base del rol con distintos valores de atributos. También cambian a la nota posicional del escenario. |
+| Pico y atributos proyectados | El método `CalculatePeakPotentialAbility` usa fecha de nacimiento y fecha de juego, ramifica por grupos posicionales, suma a la CA un margen dependiente de la edad y limita el pico por PA en la ruta inspeccionada. Después pasa CA y pico a la rutina que prepara los atributos. Se verificó que tres auxiliares añaden fracciones distintas de `pico − CA` a atributos internos y aplican un tope. Quedan por reconstruir la selección completa por atributo y posición y las demás ramas. |
+
+### Reproducción de las comprobaciones
+
+Leer en el PE la base de imagen preferida, la tabla de secciones y el directorio CLR. Con la base preferida `0x400000`, convertir las direcciones virtuales a desplazamientos de archivo mediante la sección que las contiene. Usar los límites de funciones de `.pdata`. Resolver los nombres de campos por los metadatos del ejecutable y leer como `double` las constantes referenciadas desde instrucciones RIP-relativas. La inspección de la tabla de familiaridad sigue el puntero y lee sus entradas como `float`.
+
+- **Rol.** Seguir las llamadas directas de `0x13804E0` a las rutinas que escriben campos `FRole…Rating` y comprobar los multiplicadores de su composición. Para cotejar la parte presente y potencial, los pares de funciones son `0x13681C0 / 0x1371F80`, `0x136A5D0 / 0x1374390` y `0x136D8E0 / 0x13776A0`. La excepción de delantero está en `0x13701A0 / 0x1379F60`.
+- **Familiaridad.** Comprobar los multiplicadores y el puntero de tabla compartido en `0x1398820`, `0x1398E00` y `0x1398F40`.
+- **Pico.** En `0x132AF70`, comprobar la comparación de pico con PA y la llamada a `0x1330A60` con CA y pico. En esa función, cotejar las entradas y la aritmética de `0x1336500`, `0x1336550` y `0x1336410`.
+
+La comprobación de tres pares de rol, la curva común y los tres auxiliares de proyección pasó. Falta reconstruir la normalización y los pesos efectivos de la base por rol y posición, cerrar el conjunto de reglas del vector futuro y cotejar resultados observables. La inspección fue estática, sobre una sola build de 26g. La comparación numérica con FM27 y la calibración de Q-17 siguen pendientes. El ensayo queda como evidencia externa para SK-02 y Q-19.
+
 ## Reproducción
 
 Desde la raíz del repositorio con SDK .NET 10. La configuración Laboratorio también compila el adaptador BepInEx con sus referencias locales.
