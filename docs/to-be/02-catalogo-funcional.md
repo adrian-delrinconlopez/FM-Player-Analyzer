@@ -53,6 +53,7 @@ La [matriz funcional v1](../roadmap/06-alcance-v1.md) indica las capacidades y c
 
 | ID | Entrega | Requisito observable | Comprobación de aceptación |
 |---|---|---|---|
+| REQ-SQUAD-006 | C · prioridad v2 | Planificar manualmente la profundidad de una formación con posesión desde un campo vacío. Añadir, ordenar y retirar jugadores en cada puesto y consultar la valoración autorizada de ese rol. Para todo jugador del primer equipo, mostrar cuántos puestos concretos ocupa y la mejor prioridad manual. | NV-30 obtiene dos puestos y prioridad 4.º para el caso 4.º/5.º. Reordenar actualiza el resumen; ordenar por una nota conserva la prioridad manual. Se incluye a todo jugador autorizado del primer equipo aunque tenga cero asignaciones. [Contrato](06-plantilla-y-planificacion.md#planificador-de-plantilla) |
 | REQ-SCOPE-001 | F | Compatibilidad exclusiva FM27 y funcionamiento local sin IA. | Un lote FM24 se rechaza antes de persistir. Sin red se completa plantilla → rol → XI. |
 | REQ-SAVE-002 | F | Vincular sincronización a carrera, mánager y fecha de juego, con confirmación de identidad ambigua. | Dos carreras del mismo club con UID 42 conservan dos personas y dos históricos independientes. |
 | REQ-VIS-001 | F | Proyectar conocimiento efectivo antes de cualquier consulta, cálculo, agregado o exportación. | Cambiar sólo valores secretos deja idénticos filas, totales, orden, herramientas y exportaciones autorizadas. |

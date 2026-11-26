@@ -47,6 +47,12 @@ Base de contraste: los 42 contratos de 2.3.1, incluido su [escenario original po
 | [FPA-FUNC-041](../as-is/11-importacion-y-visibilidad.md#fpa-func-041) · Instalar las vistas y tácticas de ejemplo para el juego | REQ-FM-003 | POSPUESTA | Instalación de tres vistas y dos tácticas .fmf depende de derechos y utilidad con la nueva vía de entrada. | Si se habilita, verificar los cinco archivos contra el inventario y huellas del contrato 041. | 024,034 |
 | [FPA-FUNC-042](../as-is/12-configuracion-y-reglas-globales.md#fpa-func-042) · Construir una curva desde veinte puntos | REQ-PROFILE-002 | CONSERVADA | Editar veinte aportaciones de una curva en borrador, con deshacer, rehacer y activación independiente. | Serie 50…69 da base 50 y peso 19; introducir 47 en nivel 10 mantiene el último borrador válido. | 006,007,033 |
 
+## Capacidades nuevas
+
+| Requisito | Tratamiento del antecedente | Comprobación |
+|---|---|---|
+| REQ-SQUAD-006 · Planificador de plantilla | NUEVA. FPA-FUNC-012 aporta el antecedente de profundidad y equipos, que conserva su asignación automática. El plan manual empieza vacío y usa el orden elegido por el mánager. | NV-30 contrasta recuento por plaza, mejor prioridad, jugadores sin puesto, ordenación de consulta y revocación. [Especificación](../../specs/002-planificador-plantilla/spec.md) |
+
 ## Exclusiones transversales
 
 | Alcance anterior | Tratamiento | Consecuencia y verificación |

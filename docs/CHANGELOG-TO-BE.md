@@ -1,5 +1,9 @@
 # Registro de cambios de la especificación
 
+## 26 de noviembre de 2026 · Planificador de plantilla para v2
+
+DP-22 prioriza el plan manual con posesión. REQ-SQUAD-006 define un campo que empieza vacío, el orden por plaza y el resumen de puestos y mejor prioridad del primer equipo. NV-30 comprueba el recorrido y los permisos. Q-19 registra las decisiones sobre estrellas y equivalencia externa. [Especificación](../specs/002-planificador-plantilla/spec.md) · [Matriz de entregas](roadmap/06-alcance-v1.md)
+
 ## 25 de noviembre de 2026 · Nomenclatura castellana de FM27 para v1
 
 El [catálogo de términos](to-be/catalogo-terminos-fm27.md) incorpora 47 atributos con el grupo y el orden de las fichas de campo y portero y los 79 roles del selector general, observados en FM27 Steam `26620374`. La evidencia se vincula a `REQ-I18N-001`, `REQ-TERM-001` y `NV-24` para la v1. Q-05 conserva el cotejo independiente y las familias pendientes.
